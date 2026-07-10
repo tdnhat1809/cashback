@@ -162,6 +162,14 @@ export const authApi = {
   },
 
   logout: (): Promise<void> => apiRequest('/api/v1/auth/logout', { method: 'POST' }),
+
+  requestPasswordReset: (input: { email: string }) => apiData<{ challengeId: string; expiresAt: string; retryAfterSeconds: number; devCode?: string }>('/api/v1/auth/password-reset/request', {
+    method: 'POST', body: input,
+  }),
+
+  confirmPasswordReset: (input: { email: string; challengeId: string; code: string; password: string }): Promise<void> => apiRequest('/api/v1/auth/password-reset/confirm', {
+    method: 'POST', body: input,
+  }),
 };
 
 export interface AffiliateLink {
@@ -274,8 +282,20 @@ export const shipmentApi = {
   sync: (id: string) => apiData<ShipmentRecord>(`/api/v1/shipments/${encodeURIComponent(id)}/sync`, { method: 'POST' }),
 };
 
+export interface SavedProductRecord {
+  id: string;
+  name: string;
+  platform: 'shopee' | 'tiktok';
+  priceVnd: number;
+  originalPriceVnd: number;
+  imageUrl: string | null;
+  shopName: string | null;
+  sourceUrl: string;
+  savedAt: string;
+}
+
 export const userFeaturesApi = {
-  savedProducts: () => apiData<{ items: DealProduct[]; total: number }>('/api/v1/saved-products'),
+  savedProducts: () => apiData<{ items: SavedProductRecord[]; total: number }>('/api/v1/saved-products'),
   toggleSavedProduct: (productId: string) => apiData<{ productId: string; saved: boolean }>(`/api/v1/saved-products/${encodeURIComponent(productId)}/toggle`, { method: 'POST' }),
   points: () => apiData<{ balance: number; entries: Array<{ id: string; amount: number; description: string; createdAt: string }> }>('/api/v1/points'),
   redeemGiftcode: (code: string) => apiData<{ code: string; points: number; balance: number; alreadyRedeemed: boolean }>('/api/v1/giftcodes/redeem', { method: 'POST', body: { code } }),

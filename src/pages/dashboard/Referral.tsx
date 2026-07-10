@@ -22,7 +22,7 @@ export const Referral: React.FC = () => {
   useEffect(() => {
     void userFeaturesApi.referrals().then((result) => setStats(result as typeof stats)).catch(() => undefined);
   }, []);
-  const referralLink = `${window.location.origin}/register?ref=${encodeURIComponent(stats.referralCode)}`;
+  const referralLink = `${window.location.origin}/login?mode=register&ref=${encodeURIComponent(stats.referralCode)}`;
 
   const copyText = async (value: string, successMessage: string) => {
     try {

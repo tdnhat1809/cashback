@@ -5,6 +5,7 @@ import { Button } from '../components/Button';
 import { ToastContainer } from '../components/Toast';
 import { defaultToastState, triggerToast } from '../components/toast-state';
 import type { ToastState } from '../components/toast-state';
+import { ApiError, authApi } from '../services/apiClient';
 
 export const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export const ForgotPassword: React.FC = () => {
   const [toast, setToast] = useState<ToastState>(defaultToastState);
   const [errorBorder, setErrorBorder] = useState(false);
 
-  const handleVerify = (e: React.FormEvent) => {
+  const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
       setErrorBorder(true);
@@ -22,20 +23,18 @@ export const ForgotPassword: React.FC = () => {
     }
 
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const reset = await authApi.requestPasswordReset({ email: email.trim() });
+      const progress = { email: email.trim(), ...reset };
+      sessionStorage.setItem('password-reset-progress', JSON.stringify(progress));
+      triggerToast(setToast, reset.devCode ? `Mã thử nghiệm: ${reset.devCode}` : 'Nếu email có tài khoản dùng mật khẩu, mã xác thực đã được gửi.', 'success');
+      navigate('/reset-password', { state: progress });
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : 'Không thể gửi mã xác thực. Vui lòng thử lại.';
+      triggerToast(setToast, message, 'error');
+    } finally {
       setLoading(false);
-      triggerToast(
-        setToast, 
-        `Hướng dẫn đặt lại mật khẩu đã được gửi đến: ${email.trim()}`,
-        'success'
-      );
-      
-      // Navigate to reset password page after 2 seconds
-      setTimeout(() => {
-        navigate('/reset-password');
-      }, 2000);
-    }, 2000);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

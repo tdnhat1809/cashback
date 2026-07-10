@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { 
   Home, ChevronRight, FileText, Shield, CreditCard, 
   AlertTriangle, Cookie, Download, Calendar, Info, Headset, X 
@@ -10,12 +10,26 @@ import { defaultToastState, triggerToast } from '../components/toast-state';
 import type { ToastState } from '../components/toast-state';
 
 type LegalTab = 'terms' | 'privacy' | 'cashback' | 'fraud' | 'cookies';
+const validTabs: LegalTab[] = ['terms', 'privacy', 'cashback', 'fraud', 'cookies'];
 
 export const LegalCenter: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<LegalTab>('terms');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queryTab = searchParams.get('tab');
+  const initialTab: LegalTab = validTabs.includes(queryTab as LegalTab) ? queryTab as LegalTab : 'terms';
+  const [activeTab, setActiveTab] = useState<LegalTab>(initialTab);
   const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [showCookieModal, setShowCookieModal] = useState(false);
   const [toast, setToast] = useState<ToastState>(defaultToastState);
+
+  useEffect(() => {
+    const next = searchParams.get('tab');
+    setActiveTab(validTabs.includes(next as LegalTab) ? next as LegalTab : 'terms');
+  }, [searchParams]);
+
+  const selectTab = (tab: LegalTab) => {
+    setActiveTab(tab);
+    setSearchParams({ tab });
+  };
 
   // Read preferences on load
   useEffect(() => {
@@ -80,7 +94,7 @@ export const LegalCenter: React.FC = () => {
             {/* Desktop Navigation */}
             <nav className="space-y-1.5 hidden md:block">
               <button 
-                onClick={() => setActiveTab('terms')}
+                onClick={() => selectTab('terms')}
                 className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all ${
                   activeTab === 'terms' 
                     ? 'bg-primary-container text-white shadow-sm' 
@@ -92,7 +106,7 @@ export const LegalCenter: React.FC = () => {
               </button>
 
               <button 
-                onClick={() => setActiveTab('privacy')}
+                onClick={() => selectTab('privacy')}
                 className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all ${
                   activeTab === 'privacy' 
                     ? 'bg-primary-container text-white shadow-sm' 
@@ -104,7 +118,7 @@ export const LegalCenter: React.FC = () => {
               </button>
 
               <button 
-                onClick={() => setActiveTab('cashback')}
+                onClick={() => selectTab('cashback')}
                 className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all ${
                   activeTab === 'cashback' 
                     ? 'bg-primary-container text-white shadow-sm' 
@@ -116,7 +130,7 @@ export const LegalCenter: React.FC = () => {
               </button>
 
               <button 
-                onClick={() => setActiveTab('fraud')}
+                onClick={() => selectTab('fraud')}
                 className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all ${
                   activeTab === 'fraud' 
                     ? 'bg-primary-container text-white shadow-sm' 
@@ -128,7 +142,7 @@ export const LegalCenter: React.FC = () => {
               </button>
 
               <button 
-                onClick={() => setActiveTab('cookies')}
+                onClick={() => selectTab('cookies')}
                 className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all ${
                   activeTab === 'cookies' 
                     ? 'bg-primary-container text-white shadow-sm' 
@@ -145,7 +159,7 @@ export const LegalCenter: React.FC = () => {
               <label className="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-wider">Chọn tài liệu pháp lý</label>
               <select 
                 value={activeTab} 
-                onChange={(e) => setActiveTab(e.target.value as LegalTab)}
+                onChange={(e) => selectTab(e.target.value as LegalTab)}
                 className="w-full px-3 py-2.5 bg-white border border-outline-variant/50 rounded-xl text-xs outline-none font-bold text-primary"
               >
                 <option value="terms">Điều khoản sử dụng</option>
@@ -343,7 +357,7 @@ export const LegalCenter: React.FC = () => {
               <p className="font-title-lg text-sm font-bold text-on-surface mb-0.5">Chúng tôi trân trọng sự riêng tư của bạn</p>
               <p className="font-body-md text-xs text-on-surface-variant leading-normal">
                 Chúng tôi sử dụng cookie để cải thiện trải nghiệm mua sắm và hoàn tiền của bạn. Bạn có thể tìm hiểu thêm tại{' '}
-                <button onClick={() => { setActiveTab('cookies'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-primary underline font-semibold">Chính sách Cookie</button>.
+                <button onClick={() => { selectTab('cookies'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-primary underline font-semibold">Chính sách Cookie</button>.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto shrink-0">

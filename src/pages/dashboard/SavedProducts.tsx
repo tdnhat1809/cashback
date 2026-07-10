@@ -3,20 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import type { Product } from '../../mockData';
 import { Card } from '../../components/Card';
 import { EmptyState } from '../../components/EmptyState';
-import { userFeaturesApi, type DealProduct } from '../../services/apiClient';
+import { userFeaturesApi, type SavedProductRecord } from '../../services/apiClient';
 
-const toProduct = (deal: DealProduct): Product => ({
+const toProduct = (deal: SavedProductRecord): Product => ({
   id: deal.id,
   name: deal.name,
-  price: deal.price_vnd,
-  originalPrice: deal.original_price_vnd,
-  cashbackValue: deal.commission_rate_bps ? Math.floor((deal.price_vnd * deal.commission_rate_bps * 0.9) / 10_000) : 0,
-  cashbackText: deal.commission_rate_bps ? `Hoàn ${Math.floor((deal.price_vnd * deal.commission_rate_bps * 0.9) / 10_000).toLocaleString('vi-VN')}đ` : 'Đang cập nhật',
+  price: deal.priceVnd,
+  originalPrice: deal.originalPriceVnd,
+  cashbackValue: 0,
+  cashbackText: 'Đang cập nhật',
   platform: deal.platform === 'shopee' ? 'Shopee' : 'TikTok Shop',
-  category: deal.price_vnd <= 10_000 ? 'under10k' : 'home',
-  imageUrl: deal.image_url ?? '',
-  shopName: deal.shop_name ?? deal.platform,
-  sourceUrl: deal.source_url,
+  category: deal.priceVnd <= 10_000 ? 'under10k' : 'home',
+  imageUrl: deal.imageUrl ?? '',
+  shopName: deal.shopName ?? deal.platform,
+  sourceUrl: deal.sourceUrl,
   saved: true,
 });
 

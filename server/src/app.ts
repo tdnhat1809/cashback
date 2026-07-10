@@ -13,7 +13,7 @@ import { seedDatabase } from './db/seed.js';
 import { decryptString, hmacSha256 } from './lib/security.js';
 import { nowIso } from './lib/ids.js';
 import { AffiliateLinkService } from './modules/affiliate/AffiliateLinkService.js';
-import { AuthError, AuthService, authErrorHandler, createAuthRouter, getSessionToken } from './modules/auth/index.js';
+import { AuthError, AuthService, authErrorHandler, createAuthRouter, createOtpDelivery, createPasswordResetDelivery, getSessionToken } from './modules/auth/index.js';
 import { WalletError, WalletService } from './modules/wallet/WalletService.js';
 import { ShipmentError, ShipmentService } from './modules/shipments/ShipmentService.js';
 import { createFinanceAdminRouter } from './modules/finance/index.js';
@@ -51,7 +51,12 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
   const database = dependencies.database ?? openDatabase(config.DATABASE_PATH);
   if (config.SEED_DEMO_DATA) seedDatabase(database);
   const auth = new AuthService({
-    database, environment: config.NODE_ENV, devOtp: config.DEV_OTP ?? '000000', sessionTtlHours: config.SESSION_TTL_HOURS,
+    database,
+    environment: config.NODE_ENV,
+    devOtp: config.DEV_OTP ?? '000000',
+    sessionTtlHours: config.SESSION_TTL_HOURS,
+    delivery: createOtpDelivery(config),
+    passwordResetDelivery: createPasswordResetDelivery(config),
   });
   const shopee = dependencies.shopeeProvider ?? ShopeeAffiliateProvider.fromConfig(config);
   const tikTok = dependencies.tikTokProvider ?? rioHubTikTokMockProvider;
@@ -68,7 +73,7 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
   app.use(cookieParser());
   app.use(pinoHttp({
     enabled: config.NODE_ENV !== 'test',
-    redact: ['req.headers.cookie', 'req.headers.authorization', 'req.body.code', 'req.body.bankAccountNumber'],
+    redact: ['req.headers.cookie', 'req.headers.authorization', 'req.body.code', 'req.body.password', 'req.body.bankAccountNumber', 'req.body.email'],
   }));
 
   const cookieOptions = { cookieName: config.SESSION_COOKIE, environment: config.NODE_ENV, sessionTtlHours: config.SESSION_TTL_HOURS } as const;

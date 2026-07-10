@@ -217,7 +217,7 @@ export const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children
             <ul className="flex flex-col gap-2">
               <li><Link to="/faq" className="text-on-surface-variant hover:text-primary text-sm">Hướng dẫn hoàn tiền</Link></li>
               <li><Link to="/faq" className="text-on-surface-variant hover:text-primary text-sm">Câu hỏi thường gặp FAQ</Link></li>
-              <li><a href="#" className="text-on-surface-variant hover:text-primary text-sm">Chính sách bảo mật</a></li>
+              <li><Link to="/legal?tab=privacy" className="text-on-surface-variant hover:text-primary text-sm">Chính sách bảo mật</Link></li>
             </ul>
           </div>
           <div className="text-left">

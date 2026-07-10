@@ -517,4 +517,22 @@ export const migrations: readonly Migration[] = [
       CREATE INDEX IF NOT EXISTS idx_google_oauth_states_expiry ON google_oauth_states(expires_at);
     `,
   },
+  {
+    version: 6,
+    name: 'password_reset_challenges',
+    sql: `
+      CREATE TABLE IF NOT EXISTS password_reset_challenges (
+        id TEXT PRIMARY KEY,
+        email TEXT NOT NULL COLLATE NOCASE,
+        user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+        code_hash TEXT NOT NULL,
+        attempts INTEGER NOT NULL DEFAULT 0,
+        expires_at TEXT NOT NULL,
+        consumed_at TEXT,
+        created_at TEXT NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS idx_password_reset_email_created
+        ON password_reset_challenges(email, created_at DESC);
+    `,
+  },
 ];

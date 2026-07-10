@@ -123,7 +123,7 @@ export const Home: React.FC = () => {
           </div>
           <div className="mt-3 flex items-center gap-2 overflow-x-auto [scrollbar-width:none]">
             <span className="text-[10px] font-bold shrink-0">Xu hướng:</span>
-            {['iPhone 15', 'Nike Jordan', 'Cosmetics'].map((trend) => <button key={trend} type="button" onClick={() => setLinkInput(trend)} className="shrink-0 rounded-full bg-surface-container px-3 py-1.5 text-[10px] font-semibold cursor-pointer">{trend}</button>)}
+            {['iPhone 15', 'Nike Jordan', 'Cosmetics'].map((trend) => <button key={trend} type="button" onClick={() => navigate(`/deals?q=${encodeURIComponent(trend)}`)} className="shrink-0 rounded-full bg-surface-container px-3 py-1.5 text-[10px] font-semibold cursor-pointer">{trend}</button>)}
           </div>
         </div>
 

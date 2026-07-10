@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Lock, Mail, Sparkles, UserRound } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
@@ -69,9 +69,14 @@ export const Login = () => {
 
   useEffect(() => {
     const authError = searchParams.get('auth_error');
-    if (!authError) return;
-    const message = AUTH_ERROR_MESSAGES[authError] ?? 'Không thể hoàn tất đăng nhập Google.';
-    setFormError(message);
+    if (authError) {
+      const message = AUTH_ERROR_MESSAGES[authError] ?? 'Không thể hoàn tất đăng nhập Google.';
+      setFormError(message);
+    }
+    if (searchParams.get('mode') === 'register') setMode('register');
+    if (searchParams.get('password_reset') === 'success') {
+      triggerToast(setToast, 'Mật khẩu đã được cập nhật. Hãy đăng nhập lại.', 'success');
+    }
   }, [searchParams]);
 
   useEffect(() => {
@@ -172,6 +177,11 @@ export const Login = () => {
             startIcon={<Lock size={18} aria-hidden="true" />} disabled={loading}
             helperText={mode === 'register' ? 'Dùng ít nhất 10 ký tự, có cả chữ cái và chữ số.' : undefined} required
           />
+          {mode === 'login' && (
+            <div className="-mt-2 text-right">
+              <Link to="/forgot-password" className="text-xs font-bold text-primary hover:underline">Quên mật khẩu?</Link>
+            </div>
+          )}
           {mode === 'register' && (
             <Input
               id="register-confirm-password" name="confirmPassword" label="Xác nhận mật khẩu" placeholder="Nhập lại mật khẩu" type="password"
