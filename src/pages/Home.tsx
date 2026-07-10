@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Badge } from '../components/Badge';
-import { mockProducts } from '../mockData';
 import type { Product } from '../mockData';
 import { Link, ShoppingCart, Percent, HelpCircle, X, ChevronRight, Share2 } from 'lucide-react';
+import { useAppData } from '../state/AppDataContext';
 
 const mobileHeroArtwork = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBZ1EuaaHRQlBrXHo-m7Yzj76hNb847_ig6pXRApl24sQvEL7zkPaA_splhcgydz6FqYcO1tsEjby7GKkvTVt2-BlrZlMj8KpReZOSgtF_qj3ELhrnil_SC7OUWcHg1e2e26oBTzo4i7G0cusvdAeU2TtTHgS1FQJ-rWKKiF3jtrNkApWEKfU1cvVBxCf-zjwRyame8QL2mSXt7po8KTI7D7cWe4lgoMU6H88WO1h9KPuaPYJD6BiZv7Q';
 
@@ -18,7 +18,7 @@ export const Home: React.FC = () => {
   const navigate = useNavigate();
   const [linkInput, setLinkInput] = useState('');
   const [activeCategory, setActiveCategory] = useState<'all' | 'Shopee' | 'TikTok Shop' | 'under10k' | 'high_cashback'>('all');
-  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const { products, toggleSavedProduct } = useAppData();
   const [showPwa, setShowPwa] = useState(false);
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
 
@@ -66,9 +66,7 @@ export const Home: React.FC = () => {
   });
 
   const handleSaveProduct = (id: string) => {
-    setProducts(prev => 
-      prev.map(p => p.id === id ? { ...p, saved: !p.saved } : p)
-    );
+    toggleSavedProduct(id);
   };
 
   const handleBuyProduct = (product: Product) => {

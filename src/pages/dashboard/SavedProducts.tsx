@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockProducts } from '../../mockData';
 import type { Product } from '../../mockData';
 import { Card } from '../../components/Card';
 import { EmptyState } from '../../components/EmptyState';
-import { Heart } from 'lucide-react';
+import { useAppData } from '../../state/AppDataContext';
+
 
 export const SavedProducts: React.FC = () => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const { products, toggleSavedProduct } = useAppData();
 
   const savedProducts = products.filter(p => p.saved);
 
   const handleSaveProduct = (id: string) => {
-    setProducts(prev => 
-      prev.map(p => p.id === id ? { ...p, saved: !p.saved } : p)
-    );
+    toggleSavedProduct(id);
   };
 
   const handleBuyProduct = (product: Product) => {
@@ -31,11 +29,8 @@ export const SavedProducts: React.FC = () => {
 
       {savedProducts.length === 0 ? (
         <EmptyState
-          title="Không có sản phẩm nào đã lưu"
-          description="Bấm vào nút hình trái tim tại các thẻ deal bên ngoài trang chủ để lưu sản phẩm vào danh sách này."
-          actionText="Khám phá deal hot"
+          variant="saved-products"
           onAction={() => navigate('/deals')}
-          icon={<Heart size={32} className="text-primary" />}
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { mockLedgerEntries } from '../../mockData';
 import type { LedgerEntry } from '../../mockData';
 import { Table } from '../../components/Table';
 import type { Column } from '../../components/Table';
@@ -10,6 +9,8 @@ import { ToastContainer } from '../../components/Toast';
 import { defaultToastState, triggerToast } from '../../components/toast-state';
 import type { ToastState } from '../../components/toast-state';
 import { Bell, Ticket, HelpCircle } from 'lucide-react';
+import { EmptyState } from '../../components/EmptyState';
+import { useAppData } from '../../state/AppDataContext';
 
 export interface ActivityLogItem {
   id: string;
@@ -21,6 +22,7 @@ export interface ActivityLogItem {
 
 // 1. Balance History (Biến động số dư)
 export const BalanceHistory: React.FC = () => {
+  const { ledgerEntries } = useAppData();
   const getEntryTypeBadge = (type: string) => {
     const badges = {
       cashback_received: <Badge variant="success">Hoàn tiền đơn hàng</Badge>,
@@ -75,7 +77,7 @@ export const BalanceHistory: React.FC = () => {
       </div>
 
       <Table
-        data={mockLedgerEntries}
+        data={ledgerEntries}
         columns={columns}
       />
     </div>
@@ -144,6 +146,10 @@ export const Notifications: React.FC = () => {
     setNotifs(prev => prev.map(n => ({ ...n, read: true })));
   };
 
+  const handleClearAll = () => {
+    setNotifs([]);
+  };
+
   return (
     <div className="space-y-6 text-left animate-fade-in max-w-xl">
       <div className="flex justify-between items-center">
@@ -151,49 +157,74 @@ export const Notifications: React.FC = () => {
           <h1 className="font-headline-md text-on-surface">Thông báo ví</h1>
           <p className="text-xs text-on-surface-variant">Theo dõi tin tức, sự kiện và biến động số dư.</p>
         </div>
-        <button 
-          onClick={handleMarkAllRead}
-          className="text-xs font-bold text-primary hover:underline cursor-pointer"
-        >
-          Đọc tất cả
-        </button>
+        <div className="flex gap-3">
+          {notifs.length > 0 && (
+            <>
+              <button 
+                onClick={handleMarkAllRead}
+                className="text-xs font-bold text-primary hover:underline cursor-pointer"
+              >
+                Đọc tất cả
+              </button>
+              <span className="text-outline-variant">|</span>
+              <button 
+                onClick={handleClearAll}
+                className="text-xs font-bold text-error hover:underline cursor-pointer"
+              >
+                Xóa tất cả
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
-      <div className="space-y-4">
-        {notifs.map((n) => (
-          <div 
-            key={n.id} 
-            className={`p-5 rounded-2xl border transition-colors flex gap-4 items-start relative
-              ${n.read 
-                ? 'bg-white border-outline-variant/30' 
-                : 'bg-primary/5 border-primary/20 shadow-soft'
-              }
-            `}
-          >
-            {!n.read && (
-              <span className="absolute top-5 right-5 w-2.5 h-2.5 bg-primary rounded-full" />
-            )}
-            
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0
-              ${n.read ? 'bg-surface-container-high text-on-surface-variant' : 'bg-primary/10 text-primary'}
-            `}>
-              <Bell size={20} />
-            </div>
+      {notifs.length === 0 ? (
+        <EmptyState 
+          variant="notifications"
+          onAction={() => {
+            setNotifs([
+              { id: 'n_mock', title: 'Thông báo giả lập', desc: 'Đây là thông báo giả lập để kiểm tra tính năng hiển thị.', time: new Date().toLocaleString(), read: false }
+            ]);
+          }}
+        />
+      ) : (
+        <div className="space-y-4">
+          {notifs.map((n) => (
+            <div 
+              key={n.id} 
+              className={`p-5 rounded-2xl border transition-colors flex gap-4 items-start relative
+                ${n.read 
+                  ? 'bg-white border-outline-variant/30' 
+                  : 'bg-primary/5 border-primary/20 shadow-soft'
+                }
+              `}
+            >
+              {!n.read && (
+                <span className="absolute top-5 right-5 w-2.5 h-2.5 bg-primary rounded-full" />
+              )}
+              
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0
+                ${n.read ? 'bg-surface-container-high text-on-surface-variant' : 'bg-primary/10 text-primary'}
+              `}>
+                <Bell size={20} />
+              </div>
 
-            <div className="space-y-1 text-left min-w-0">
-              <h4 className="font-bold text-sm text-on-surface leading-tight">{n.title}</h4>
-              <p className="text-xs text-on-surface-variant leading-relaxed">{n.desc}</p>
-              <span className="text-[10px] text-outline-variant block mt-1.5">{n.time}</span>
+              <div className="space-y-1 text-left min-w-0">
+                <h4 className="font-bold text-sm text-on-surface leading-tight">{n.title}</h4>
+                <p className="text-xs text-on-surface-variant leading-relaxed">{n.desc}</p>
+                <span className="text-[10px] text-outline-variant block mt-1.5">{n.time}</span>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
 // 4. Giftcode (Đổi mã thưởng giftcode)
 export const Giftcode: React.FC = () => {
+  const { redeemGiftCode } = useAppData();
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<ToastState>(defaultToastState);
@@ -206,16 +237,15 @@ export const Giftcode: React.FC = () => {
     }
 
     setLoading(true);
-    // Simulate Giftcode API call
-    setTimeout(() => {
+    try {
+      const rewardVnd = redeemGiftCode(code);
+      triggerToast(setToast, `Kích hoạt Giftcode thành công! Số dư khả dụng được cộng +${rewardVnd.toLocaleString('vi-VN')}đ.`, 'success');
+      setCode('');
+    } catch (error) {
+      triggerToast(setToast, error instanceof Error ? error.message : 'Không thể kích hoạt Giftcode.', 'error');
+    } finally {
       setLoading(false);
-      if (code.toUpperCase() === 'HOANTIENVIP100' || code.toUpperCase() === 'HV100') {
-        triggerToast(setToast, 'Kích hoạt Giftcode thành công! Số dư khả dụng của bạn được cộng +100.000đ!', 'success');
-        setCode('');
-      } else {
-        triggerToast(setToast, 'Mã Giftcode không tồn tại hoặc đã hết hạn sử dụng. Hãy thử mã HV100.', 'error');
-      }
-    }, 1500);
+    }
   };
 
   return (

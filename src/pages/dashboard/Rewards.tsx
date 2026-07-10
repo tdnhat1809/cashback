@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
-import { mockPoints, mockTasks, mockGifts } from '../../mockData';
-import type { RewardTask, RewardGift } from '../../mockData';
+import type { RewardGift } from '../../mockData';
 import { Button } from '../../components/Button';
 import { Badge } from '../../components/Badge';
 import { ToastContainer } from '../../components/Toast';
 import { defaultToastState, triggerToast } from '../../components/toast-state';
 import type { ToastState } from '../../components/toast-state';
 import { Award, Sparkles, Check, Gift } from 'lucide-react';
+import { useAppData } from '../../state/AppDataContext';
 
 export const Rewards: React.FC = () => {
-  const [points, setPoints] = useState(mockPoints.total);
-  const [tasks, setTasks] = useState<RewardTask[]>(mockTasks);
-  const [gifts, setGifts] = useState<RewardGift[]>(mockGifts);
+  const { points, tasks, gifts, completeRewardTask, redeemRewardGift } = useAppData();
   const [toast, setToast] = useState<ToastState>(defaultToastState);
 
   const handleCheckIn = (taskId: string) => {
     const task = tasks.find((item) => item.id === taskId);
     if (!task || task.completed) return;
-    setTasks((previous) => previous.map((item) => item.id === taskId ? { ...item, completed: true } : item));
-    setPoints((previous) => previous + task.reward);
-    triggerToast(setToast, `Điểm danh thành công! Nhận ngay +${task.reward} Xu thưởng.`, 'success');
+    try {
+      completeRewardTask(taskId);
+      triggerToast(setToast, `Điểm danh thành công! Nhận ngay +${task.reward} Xu thưởng.`, 'success');
+    } catch (error) {
+      triggerToast(setToast, error instanceof Error ? error.message : 'Không thể nhận Xu thưởng.', 'error');
+    }
   };
 
   const handleRedeem = (gift: RewardGift) => {
@@ -28,11 +29,12 @@ export const Rewards: React.FC = () => {
       return;
     }
 
-    setPoints(prev => prev - gift.cost);
-    setGifts(prev => 
-      prev.map(g => g.id === gift.id ? { ...g, stock: g.stock - 1 } : g)
-    );
-    triggerToast(setToast, `Đổi quà thành công: ${gift.title}! Vui lòng kiểm tra email của bạn.`, 'success');
+    try {
+      redeemRewardGift(gift.id);
+      triggerToast(setToast, `Đổi quà thành công: ${gift.title}! Vui lòng kiểm tra email của bạn.`, 'success');
+    } catch (error) {
+      triggerToast(setToast, error instanceof Error ? error.message : 'Không thể đổi quà.', 'error');
+    }
   };
 
   return (

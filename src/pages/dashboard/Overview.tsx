@@ -23,7 +23,7 @@ import {
   YAxis,
 } from 'recharts';
 import { Button } from '../../components/Button';
-import { mockCashbackOrders, mockWallet } from '../../mockData';
+import { useAppData } from '../../state/AppDataContext';
 
 const chartData = [
   { name: '01/06', cashback: 80000 },
@@ -62,14 +62,15 @@ const statusStyles = {
 
 export const Overview: React.FC = () => {
   const navigate = useNavigate();
-  const successfulOrders = mockCashbackOrders.filter(
+  const { cashbackOrders, wallet } = useAppData();
+  const successfulOrders = cashbackOrders.filter(
     (order) => order.status === 'Paid' || order.status === 'Confirmed',
   ).length;
 
   const summaryCards = [
     {
       label: 'Số dư khả dụng',
-      value: formatCurrency(mockWallet.available),
+      value: formatCurrency(wallet.available),
       helper: 'Sẵn sàng để rút',
       icon: Wallet,
       iconClass: 'bg-[#fbe9e5] text-primary',
@@ -79,7 +80,7 @@ export const Overview: React.FC = () => {
     },
     {
       label: 'Đang chờ duyệt',
-      value: formatCurrency(mockWallet.pending),
+      value: formatCurrency(wallet.pending),
       helper: 'Cập nhật tự động sau đối soát',
       icon: Clock3,
       iconClass: 'bg-amber-100 text-amber-600',
@@ -88,7 +89,7 @@ export const Overview: React.FC = () => {
     },
     {
       label: 'Tổng đã nhận',
-      value: formatCurrency(mockWallet.totalReceived),
+      value: formatCurrency(wallet.totalReceived),
       helper: '+12% so với tháng trước',
       icon: TrendingUp,
       iconClass: 'bg-emerald-100 text-emerald-700',
@@ -97,7 +98,7 @@ export const Overview: React.FC = () => {
     {
       label: 'Đơn thành công',
       value: `${successfulOrders} đơn`,
-      helper: `${formatCurrency(mockWallet.withdrawn)} đã rút thành công`,
+      helper: `${formatCurrency(wallet.withdrawn)} đã rút thành công`,
       icon: ShoppingBag,
       iconClass: 'bg-indigo-50 text-indigo-600',
     },
@@ -334,7 +335,7 @@ export const Overview: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/20">
-              {mockCashbackOrders.slice(0, 4).map((order) => {
+              {cashbackOrders.slice(0, 4).map((order) => {
                 const status = statusStyles[order.status];
                 const cashback = order.cashbackActual || order.cashbackEstimate;
 
@@ -388,7 +389,7 @@ export const Overview: React.FC = () => {
         </div>
 
         <div className="divide-y divide-outline-variant/20 md:hidden">
-          {mockCashbackOrders.slice(0, 4).map((order) => {
+          {cashbackOrders.slice(0, 4).map((order) => {
             const status = statusStyles[order.status];
             const cashback = order.cashbackActual || order.cashbackEstimate;
 

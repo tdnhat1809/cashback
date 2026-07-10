@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { mockCashbackOrders } from '../../mockData';
 import type { CashbackOrder } from '../../mockData';
 import { Badge } from '../../components/Badge';
 import { Tabs } from '../../components/Tabs';
@@ -9,9 +8,10 @@ import type { Column } from '../../components/Table';
 import { Modal } from '../../components/Modal';
 import { Button } from '../../components/Button';
 import { HelpCircle, Calendar } from 'lucide-react';
+import { useAppData } from '../../state/AppDataContext';
 
 export const CashbackHistory: React.FC = () => {
-  const orders = mockCashbackOrders;
+  const { cashbackOrders: orders } = useAppData();
   const [activeTab, setActiveTab] = useState('all');
   const [platformFilter, setPlatformFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<CashbackOrder | null>(null);

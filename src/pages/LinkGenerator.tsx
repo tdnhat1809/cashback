@@ -5,6 +5,7 @@ import { Input } from '../components/Input';
 import { ToastContainer } from '../components/Toast';
 import { defaultToastState, triggerToast } from '../components/toast-state';
 import type { ToastState } from '../components/toast-state';
+import { createDemoAffiliateLink } from '../services/demoAffiliateLinks';
 import { Link, Copy, ShoppingBag, Loader, AlertTriangle } from 'lucide-react';
 
 export const LinkGenerator: React.FC = () => {
@@ -23,7 +24,7 @@ export const LinkGenerator: React.FC = () => {
     const urlParam = searchParams.get('url');
     if (urlParam) {
       setInputUrl(urlParam);
-      triggerGeneration(urlParam);
+      void triggerGeneration(urlParam);
     }
   }, [searchParams]);
 
@@ -41,41 +42,22 @@ export const LinkGenerator: React.FC = () => {
     return () => clearTimeout(timer);
   }, [showRedirectModal, countdown]);
 
-  const triggerGeneration = (url: string) => {
+  const triggerGeneration = async (url: string) => {
     setErrorText('');
     setSuccess(false);
-
-    let parsedUrl: URL;
-    try {
-      parsedUrl = new URL(url);
-    } catch {
-      setErrorText('Đường dẫn phải là URL hợp lệ bắt đầu bằng http:// hoặc https://');
-      return;
-    }
-    if (parsedUrl.protocol !== 'https:' && parsedUrl.protocol !== 'http:') {
-      setErrorText('Đường dẫn phải bắt đầu bằng http:// hoặc https://');
-      return;
-    }
-    const host = parsedUrl.hostname.toLowerCase();
-    const isAllowedHost = [
-      'shopee.vn', 'shp.ee', 'tiktok.com', 'shop.tiktok.com', 'vt.tiktok.com',
-    ].some((allowedHost) => host === allowedHost || host.endsWith(`.${allowedHost}`));
-    const isSimulatedLink = host === 'shopee.vn' && parsedUrl.pathname.includes('product-detail-simulated');
-    if (!isAllowedHost && !isSimulatedLink) {
-      setErrorText('HOANTIENVIP hiện tại chỉ hỗ trợ hoàn tiền cho sàn Shopee và TikTok Shop.');
-      return;
-    }
-
     setLoading(true);
-    
-    // Simulate API call to RioHub/Shopee Link Generator
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      // Service local này là contract thay thế tạm thời cho POST /api/v1/links.
+      await new Promise((resolve) => window.setTimeout(resolve, 450));
+      const link = await createDemoAffiliateLink(url);
       setSuccess(true);
-      const randomToken = Math.random().toString(36).substr(2, 6);
-      setGeneratedLink(`https://hoantienvip.vn/r/${randomToken}`);
+      setGeneratedLink(link.shortUrl);
       triggerToast(setToast, 'Tạo link mua hàng hoàn tiền thành công!', 'success');
-    }, 2000);
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Không thể tạo link hoàn tiền. Vui lòng thử lại.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCopy = async () => {
@@ -114,7 +96,7 @@ export const LinkGenerator: React.FC = () => {
           </div>
           <Button
             variant="primary"
-            onClick={() => triggerGeneration(inputUrl)}
+            onClick={() => void triggerGeneration(inputUrl)}
             disabled={!inputUrl.trim() || loading}
             className="h-[56px] px-8"
           >

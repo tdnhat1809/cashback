@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockShipments, mockCarriersList } from '../../mockData';
+import { mockCarriersList } from '../../mockData';
 import type { Shipment } from '../../mockData';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
@@ -13,10 +13,12 @@ import { ToastContainer } from '../../components/Toast';
 import { defaultToastState, triggerToast } from '../../components/toast-state';
 import type { ToastState } from '../../components/toast-state';
 import { Truck, Search, Plus, Calendar, MapPin, Clock } from 'lucide-react';
+import { EmptyState } from '../../components/EmptyState';
+import { useAppData } from '../../state/AppDataContext';
 
 export const ShipmentTracking: React.FC = () => {
   const navigate = useNavigate();
-  const [shipments, setShipments] = useState<Shipment[]>(mockShipments);
+  const { shipments, addShipment } = useAppData();
   const [trackingNum, setTrackingNum] = useState('');
   const [selectedCarrier, setSelectedCarrier] = useState('auto');
   const [activeShipment, setActiveShipment] = useState<Shipment | null>(null);
@@ -55,12 +57,9 @@ export const ShipmentTracking: React.FC = () => {
     }
 
     setLoading(true);
-    // Simulate API tracking addition
-    setTimeout(() => {
-      setLoading(false);
-      
+    try {
       const newShipment: Shipment = {
-        id: `s_${Math.random().toString(36).substr(2, 5)}`,
+        id: `s_${globalThis.crypto?.randomUUID?.().slice(0, 8) ?? Math.random().toString(36).slice(2, 10)}`,
         trackingNumber: normalizedTrackingNumber,
         carrier: carrier,
         latestStatus: 'Đang vận chuyển',
@@ -76,11 +75,15 @@ export const ShipmentTracking: React.FC = () => {
         ]
       };
 
-      setShipments([newShipment, ...shipments]);
+      addShipment(newShipment);
       setTrackingNum('');
       setSelectedCarrier('auto');
       triggerToast(setToast, `Thêm vận đơn ${newShipment.trackingNumber} của hãng ${carrier} thành công!`, 'success');
-    }, 1200);
+    } catch (error) {
+      triggerToast(setToast, error instanceof Error ? error.message : 'Không thể thêm vận đơn.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -186,11 +189,20 @@ export const ShipmentTracking: React.FC = () => {
           <h3 className="font-title-lg text-sm font-bold flex items-center gap-1.5">
             <Truck size={18} className="text-primary" /> Vận đơn của tôi
           </h3>
-          <Table
-            data={shipments}
-            columns={columns}
-            emptyMessage="Bạn chưa thêm vận đơn nào cần theo dõi."
-          />
+          {shipments.length === 0 ? (
+            <EmptyState 
+              variant="shipments"
+              onAction={() => {
+                const input = document.getElementById('tracking-num-input') || document.querySelector('input');
+                if (input) (input as HTMLInputElement).focus();
+              }}
+            />
+          ) : (
+            <Table
+              data={shipments}
+              columns={columns}
+            />
+          )}
         </div>
       </div>
 

@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ChevronDown,
   Heart,
-  PackageOpen,
   RotateCcw,
   Search,
   ShoppingBag,
@@ -11,8 +10,9 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { Pagination } from '../components/Pagination';
-import { mockProducts } from '../mockData';
+import { EmptyState } from '../components/EmptyState';
 import type { Product } from '../mockData';
+import { useAppData } from '../state/AppDataContext';
 
 type DealFilter =
   | 'all'
@@ -203,7 +203,7 @@ export const Deals: React.FC = () => {
     normalizePlatform(searchParams.get('platform')) ??
     normalizeDealFilter(searchParams.get('filter')) ??
     'all';
-  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const { products, toggleSavedProduct } = useAppData();
   const [search, setSearch] = useState(searchParams.get('q') ?? '');
   const [activeFilter, setActiveFilter] = useState<DealFilter>(requestedFilter);
   const [sortOrder, setSortOrder] = useState('default');
@@ -215,11 +215,7 @@ export const Deals: React.FC = () => {
   }, [requestedFilter]);
 
   const handleSaveProduct = (id: string) => {
-    setProducts((currentProducts) =>
-      currentProducts.map((product) =>
-        product.id === id ? { ...product, saved: !product.saved } : product,
-      ),
-    );
+    toggleSavedProduct(id);
   };
 
   const handleBuyProduct = (product: Product) => {
@@ -404,23 +400,10 @@ export const Deals: React.FC = () => {
       </div>
 
       {filteredProducts.length === 0 ? (
-        <section className="rounded-3xl border-2 border-dashed border-outline-variant/50 bg-surface-container-low px-5 py-16 text-center sm:py-20" aria-live="polite">
-          <PackageOpen size={52} strokeWidth={1.6} className="mx-auto mb-4 text-outline" aria-hidden="true" />
-          <h2 className="mb-2 text-xl font-extrabold text-on-surface sm:text-2xl">
-            Không tìm thấy deal phù hợp
-          </h2>
-          <p className="mx-auto mb-6 max-w-md text-sm leading-relaxed text-on-surface-variant sm:text-base">
-            Hãy thử từ khóa khác hoặc làm mới bộ lọc để xem toàn bộ ưu đãi đang có.
-          </p>
-          <button
-            type="button"
-            onClick={resetFilters}
-            className="inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-primary px-6 py-3 text-sm font-extrabold text-primary transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          >
-            <RotateCcw size={17} aria-hidden="true" />
-            Làm mới bộ lọc
-          </button>
-        </section>
+        <EmptyState 
+          variant="deal-search"
+          onAction={resetFilters}
+        />
       ) : (
         <>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4 xl:grid-cols-5">

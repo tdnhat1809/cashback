@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AdminLayout, DashboardLayout, PublicLayout } from './components/Layouts';
+import { RequireRole } from './components/RequireRole';
+import { AppDataProvider } from './state/AppDataContext';
 
 const Home = lazy(async () => ({ default: (await import('./pages/Home')).Home }));
 const Deals = lazy(async () => ({ default: (await import('./pages/Deals')).Deals }));
@@ -10,6 +12,9 @@ const Login = lazy(async () => ({ default: (await import('./pages/Login')).Login
 const ForgotPassword = lazy(async () => ({ default: (await import('./pages/ForgotPassword')).ForgotPassword }));
 const ResetPassword = lazy(async () => ({ default: (await import('./pages/ResetPassword')).ResetPassword }));
 const FAQ = lazy(async () => ({ default: (await import('./pages/FAQ')).FAQ }));
+const LegalCenter = lazy(async () => ({ default: (await import('./pages/LegalCenter')).LegalCenter }));
+const Forbidden = lazy(async () => ({ default: (await import('./pages/Forbidden')).Forbidden }));
+const Maintenance = lazy(async () => ({ default: (await import('./pages/Maintenance')).Maintenance }));
 const NotFound = lazy(async () => ({ default: (await import('./pages/NotFound')).NotFound }));
 
 const Overview = lazy(async () => ({ default: (await import('./pages/dashboard/Overview')).Overview }));
@@ -33,6 +38,8 @@ const AdminCashbackRules = lazy(async () => ({ default: (await import('./pages/a
 const AdminPromotions = lazy(async () => ({ default: (await import('./pages/admin/AdminPromotions')).AdminPromotions }));
 const AdminStaffSecurity = lazy(async () => ({ default: (await import('./pages/admin/AdminStaffSecurity')).AdminStaffSecurity }));
 const AdminContentNotifications = lazy(async () => ({ default: (await import('./pages/admin/AdminContentNotifications')).AdminContentNotifications }));
+const AdminProviderSync = lazy(async () => ({ default: (await import('./pages/admin/AdminProviderSync')).AdminProviderSync }));
+const AdminPaymentSettings = lazy(async () => ({ default: (await import('./pages/admin/AdminPaymentSettings')).AdminPaymentSettings }));
 
 const RouteLoader = () => (
   <div className="min-h-[65vh] max-w-[1280px] mx-auto px-5 py-10" aria-label="Đang tải nội dung">
@@ -47,8 +54,9 @@ const RouteLoader = () => (
 
 function App() {
   return (
-    <Router>
-      <Suspense fallback={<RouteLoader />}>
+    <AppDataProvider>
+      <Router>
+        <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
           <Route path="/deals" element={<PublicLayout><Deals /></PublicLayout>} />
@@ -58,6 +66,9 @@ function App() {
           <Route path="/forgot-password" element={<PublicLayout><ForgotPassword /></PublicLayout>} />
           <Route path="/reset-password" element={<PublicLayout><ResetPassword /></PublicLayout>} />
           <Route path="/faq" element={<PublicLayout><FAQ /></PublicLayout>} />
+          <Route path="/legal" element={<PublicLayout><LegalCenter /></PublicLayout>} />
+          <Route path="/403" element={<Forbidden />} />
+          <Route path="/maintenance" element={<Maintenance />} />
 
           <Route path="/dashboard" element={<DashboardLayout><Overview /></DashboardLayout>} />
           <Route path="/dashboard/cashback" element={<DashboardLayout><CashbackHistory /></DashboardLayout>} />
@@ -74,17 +85,20 @@ function App() {
           <Route path="/dashboard/notifications" element={<DashboardLayout><Notifications /></DashboardLayout>} />
           <Route path="/dashboard/giftcode" element={<DashboardLayout><Giftcode /></DashboardLayout>} />
 
-          <Route path="/admin" element={<AdminLayout><AdminOverview /></AdminLayout>} />
-          <Route path="/admin/management" element={<AdminLayout><AdminManagement /></AdminLayout>} />
-          <Route path="/admin/cashback-rules" element={<AdminLayout><AdminCashbackRules /></AdminLayout>} />
-          <Route path="/admin/promotions" element={<AdminLayout><AdminPromotions /></AdminLayout>} />
-          <Route path="/admin/staff-security" element={<AdminLayout><AdminStaffSecurity /></AdminLayout>} />
-          <Route path="/admin/content-notifications" element={<AdminLayout><AdminContentNotifications /></AdminLayout>} />
+          <Route path="/admin" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminOverview /></AdminLayout></RequireRole>} />
+          <Route path="/admin/management" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminManagement /></AdminLayout></RequireRole>} />
+          <Route path="/admin/cashback-rules" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminCashbackRules /></AdminLayout></RequireRole>} />
+          <Route path="/admin/promotions" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminPromotions /></AdminLayout></RequireRole>} />
+          <Route path="/admin/staff-security" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminStaffSecurity /></AdminLayout></RequireRole>} />
+          <Route path="/admin/content-notifications" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminContentNotifications /></AdminLayout></RequireRole>} />
+          <Route path="/admin/provider-sync" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminProviderSync /></AdminLayout></RequireRole>} />
+          <Route path="/admin/payment-settings" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminPaymentSettings /></AdminLayout></RequireRole>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Suspense>
-    </Router>
+        </Suspense>
+      </Router>
+    </AppDataProvider>
   );
 }
 

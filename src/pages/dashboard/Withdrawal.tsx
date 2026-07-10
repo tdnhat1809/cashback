@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { mockWallet, mockWithdrawalRequests, mockUserProfile } from '../../mockData';
 import type { WithdrawalRequest } from '../../mockData';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
@@ -10,14 +9,14 @@ import { ToastContainer } from '../../components/Toast';
 import { defaultToastState, triggerToast } from '../../components/toast-state';
 import type { ToastState } from '../../components/toast-state';
 import { CreditCard, Landmark, AlertCircle, ArrowUpRight } from 'lucide-react';
+import { useAppData } from '../../state/AppDataContext';
 
 export const Withdrawal: React.FC = () => {
-  const [availableBalance, setAvailableBalance] = useState(mockWallet.available);
+  const { wallet, withdrawals: requests, profile, requestWithdrawal } = useAppData();
   const [withdrawalAmount, setWithdrawalAmount] = useState('');
-  const bankName = mockUserProfile.bankName;
-  const accountNumber = mockUserProfile.bankAccount;
-  const accountName = mockUserProfile.bankAccountName;
-  const [requests, setRequests] = useState<WithdrawalRequest[]>(mockWithdrawalRequests);
+  const bankName = profile.bankName;
+  const accountNumber = profile.bankAccount;
+  const accountName = profile.bankAccountName;
   const [errorAmount, setErrorAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<ToastState>(defaultToastState);
@@ -37,30 +36,16 @@ export const Withdrawal: React.FC = () => {
       return;
     }
 
-    if (amount > availableBalance) {
-      setErrorAmount('Số dư khả dụng không đủ để thực hiện yêu cầu.');
-      return;
-    }
-
     setLoading(true);
-    // Simulate API withdrawal request submission
-    setTimeout(() => {
+    try {
+      requestWithdrawal(amount);
       setLoading(false);
-      const newRequest: WithdrawalRequest = {
-        id: `w_${Math.random().toString(36).substr(2, 5)}`,
-        amount: amount,
-        bankName: bankName,
-        accountNumber: accountNumber,
-        accountName: accountName,
-        status: 'Pending',
-        date: new Date().toISOString().replace('T', ' ').substring(0, 16)
-      };
-
-      setRequests([newRequest, ...requests]);
-      setAvailableBalance(prev => prev - amount);
       setWithdrawalAmount('');
       triggerToast(setToast, 'Gửi yêu cầu rút tiền thành công! Vận hành đang xử lý.', 'success');
-    }, 1500);
+    } catch (error) {
+      setLoading(false);
+      setErrorAmount(error instanceof Error ? error.message : 'Không thể tạo yêu cầu rút tiền.');
+    }
   };
 
   const getStatusBadge = (status: WithdrawalRequest['status']) => {
@@ -124,7 +109,7 @@ export const Withdrawal: React.FC = () => {
             <div className="text-left">
               <span className="text-[10px] text-on-surface-variant uppercase font-bold block mb-1">Số dư khả dụng</span>
               <span className="text-2xl font-black text-tertiary tracking-tight">
-                {availableBalance.toLocaleString('vi-VN')}đ
+                {wallet.available.toLocaleString('vi-VN')}đ
               </span>
             </div>
             <CreditCard className="text-tertiary opacity-40" size={32} />
