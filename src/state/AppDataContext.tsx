@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import {
   mockCashbackOrders,
   mockGifts,
@@ -64,8 +64,6 @@ interface AppDataContextValue extends PersistedState {
   resetDemoData: () => void;
 }
 
-const STORAGE_KEY = 'hoantienvip.app-data.v1';
-
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 
 const now = () => new Date().toISOString().replace('T', ' ').slice(0, 16);
@@ -97,32 +95,14 @@ const createInitialState = (): PersistedState => ({
   redeemedGiftCodes: [],
 });
 
-const readInitialState = (): PersistedState => {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return createInitialState();
-    const parsed = JSON.parse(raw) as PersistedState;
-    if (!parsed.wallet || !Array.isArray(parsed.products) || !Array.isArray(parsed.withdrawals)) return createInitialState();
-    const fallback = createInitialState();
-    return {
-      ...fallback,
-      ...parsed,
-      domainLedger: parsed.domainLedger ?? fallback.domainLedger,
-      redeemedGiftCodes: parsed.redeemedGiftCodes ?? [],
-    };
-  } catch {
-    return createInitialState();
-  }
-};
+// Transitional visual state for screens not yet backed by an API. Financial data
+// and bank information must never be persisted in the browser.
+const readInitialState = (): PersistedState => createInitialState();
 
 const AppDataContext = createContext<AppDataContextValue | null>(null);
 
 export const AppDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<PersistedState>(readInitialState);
-
-  useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state]);
 
   const toggleSavedProduct = useCallback((productId: string) => {
     setState((previous) => ({

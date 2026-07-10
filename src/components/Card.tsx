@@ -21,11 +21,11 @@ export const Card: React.FC<CardProps> = ({
     <article className="bg-white rounded-2xl overflow-hidden shadow-soft group hover:-translate-y-1 transition-all duration-300 border border-outline-variant/30 flex flex-col h-full min-w-0">
       {/* Product Image Section */}
       <div className="relative h-40 sm:h-56 lg:h-64 overflow-hidden bg-surface-container-low">
-        <img
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          src={imageUrl}
-          alt={name}
-        />
+        {imageUrl ? (
+          <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={imageUrl} alt={name} loading="lazy" />
+        ) : (
+          <span className="flex h-full items-center justify-center text-lg font-black text-primary">{platform === 'Shopee' ? 'S' : 'TT'}</span>
+        )}
         
         {/* Floating Cashback Badge */}
         <div className="absolute top-3 right-3 transform group-hover:scale-105 transition-all duration-300">
