@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sản phẩm đã lưu - HOANTIENVIP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #fff8f6;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-header {
+            background: rgba(255, 248, 246, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .product-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .product-card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(181, 38, 3, 0.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e3beb6;
+            border-radius: 10px;
+        }
+    </style>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#ffdad2",
+                    "primary-container": "#ff5a36",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#3e2c28",
+                    "surface-container-high": "#ffe2dc",
+                    "secondary-container": "#d7dff9",
+                    "secondary": "#565e74",
+                    "on-background": "#271814",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed": "#3d0600",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#f0d4ce",
+                    "tertiary": "#006c49",
+                    "surface-container": "#ffe9e5",
+                    "surface-bright": "#fff8f6",
+                    "outline-variant": "#e3beb6",
+                    "primary-fixed-dim": "#ffb4a3",
+                    "on-surface-variant": "#5b403a",
+                    "on-surface": "#271814",
+                    "on-secondary-container": "#5a6278",
+                    "error-container": "#ffdad6",
+                    "background": "#fff8f6",
+                    "tertiary-container": "#00a773",
+                    "surface": "#fff8f6",
+                    "on-tertiary-fixed": "#002113",
+                    "surface-tint": "#b52603",
+                    "on-primary-fixed-variant": "#8c1900",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#131b2e",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "tertiary-fixed": "#6ffbbe",
+                    "inverse-on-surface": "#ffede9",
+                    "primary": "#b52603",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#3f465b",
+                    "surface-container-highest": "#f9dcd6",
+                    "surface-variant": "#f9dcd6",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#fff0ed",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "on-tertiary-container": "#003320",
+                    "secondary-fixed-dim": "#bec6df",
+                    "outline": "#8f7069",
+                    "secondary-fixed": "#dae2fc",
+                    "on-primary-container": "#5a0c00",
+                    "inverse-primary": "#ffb4a3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1280px",
+                    "3xl": "64px",
+                    "2xl": "48px",
+                    "base": "4px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "xs": "4px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "headline-md": ["Be Vietnam Pro"],
+                    "display-lg": ["Be Vietnam Pro"],
+                    "body-md": ["Be Vietnam Pro"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "title-lg": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="flex min-h-screen bg-background">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-lg z-40 bg-surface-container-low dark:bg-surface-container-highest h-screen w-64 rounded-r-xl shadow-md">
+<div class="mb-xl px-md">
+<h1 class="font-headline-md text-headline-md text-primary tracking-tight">HOANTIENVIP</h1>
+</div>
+<div class="flex items-center gap-md p-md mb-xl bg-surface-container-high rounded-xl">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a smiling young Vietnamese tech professional, warm indoor lighting, wearing a minimalist white shirt, against a soft blurred office background with warm orange accents to match the brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxjrIIRleYDDcmjoEMgtsIfhKBYWnveAcfA4RnI9KRT0HktvmOiii9rgk3EdPXb5WegafWTi9UQo98BhcZHkOrW3bXgsEIkcJgfvT8dLPiZm4zqlxgWUCQjD4SZWJdEVRBicI5LqstkAOZXQY9MKllPNesXRTQ1QdArskdad31NXf2k-r6sBc7zmLxAQ-CxKjRMAT-fyHEXftsQ2DTbpVaJwSGLIIejitpDDWR5AkhCi-naAX_vA_hBg"/>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-bold">Ngườidùng VIP</p>
+<p class="text-[12px] text-on-surface-variant">Thành viên bạc</p>
+</div>
+</div>
+<nav class="flex-1 space-y-sm overflow-y-auto custom-scrollbar">
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg p-md transition-all" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Ví của tôi</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg p-md transition-all" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-label-md">Lịch sử</span>
+</a>
+<a class="flex items-center gap-md bg-primary-container text-on-primary-container rounded-lg p-md shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+<span class="font-label-md text-label-md">Sản phẩm đã lưu</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg p-md transition-all" href="#">
+<span class="material-symbols-outlined">campaign</span>
+<span class="font-label-md text-label-md">Tiếp thị liên kết</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg p-md transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Rút tiền</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg p-md transition-all" href="#">
+<span class="material-symbols-outlined">redeem</span>
+<span class="font-label-md text-label-md">Giftcode</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg p-md transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Cài đặt</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg p-md transition-all" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-md text-label-md">Thông báo</span>
+</a>
+</nav>
+<div class="mt-auto pt-lg">
+<button class="w-full bg-primary py-md rounded-xl text-on-primary font-label-md hover:opacity-90 transition-all flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                Nâng cấp VIP
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 flex flex-col min-w-0">
+<!-- Header Section -->
+<header class="sticky top-0 z-30 glass-header px-xl py-lg flex justify-between items-center">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Sản phẩm đã lưu</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Bạn đang có 12 sản phẩm đang chờ chốt deal hoàn tiền.</p>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative">
+<input class="bg-surface-container-highest border-none rounded-full px-xl py-md w-64 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Tìm kiếm deal đã lưu..." type="text"/>
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+</div>
+<button class="p-md rounded-full bg-surface-container-high text-on-surface-variant hover:bg-primary-container/10 transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</header>
+<!-- Product Grid Section -->
+<section class="p-xl overflow-y-auto">
+<div class="bento-grid" id="productGrid">
+<!-- Product Card 1 (Shopee) -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm product-card-hover flex flex-col relative group">
+<button class="absolute top-md right-md z-10 bg-white/90 backdrop-blur-sm p-sm rounded-full text-error opacity-0 group-hover:opacity-100 transition-opacity hover:bg-error-container" onclick="this.closest('.group').remove()">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<div class="relative h-56">
+<img class="w-full h-full object-cover" data-alt="High-resolution commercial product shot of a pair of minimalist white leather sneakers on a clean peach-colored background. Professional studio lighting with soft shadows, highlighting texture and premium quality. Minimalist aesthetic, clean lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEzD3JNo_dbGpIJl_d0jjoI00K6WWSFKwRq0PEHXCfy7Oc2STLomZChHyWmXKjdCdKMBCGG2V5nPoewKQEXZTN50WhJDPLWNED-xYBzSErPA4yw2gdzB-hZRNHw9BN37ggszB_w408QY4buKvKj63KQMnOVC80SCdhsFz9IjbqrwMH8SdcpHkQUao7IvBKl4RdsI_Y7rgYMjewEPfcHfI6e5315BbHI5Ni5LJH0PvB7JOKg_5A9XozLw"/>
+<div class="absolute top-md left-md px-md py-xs bg-[#EE4D2D] text-white text-[10px] font-bold rounded-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+                            SHOPEE
+                        </div>
+<div class="absolute bottom-md right-md px-md py-sm bg-primary-container text-white font-bold rounded-lg text-sm shadow-md">
+                            Hoàn 15%
+                        </div>
+</div>
+<div class="p-md flex-1 flex flex-col">
+<h3 class="font-title-lg text-title-lg text-on-surface line-clamp-2 mb-sm">Giày Sneaker Nam Trắng Minimalist Cao Cấp 2024</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-sm mb-md">
+<span class="text-primary font-bold text-xl">890.000đ</span>
+<span class="text-on-surface-variant line-through text-sm">1.250.000đ</span>
+</div>
+<div class="flex items-center gap-xs text-tertiary font-bold text-sm mb-lg">
+<span class="material-symbols-outlined text-[18px]">savings</span>
+                                Hoàn tiền ước tính: ~133.500đ
+                            </div>
+<button class="w-full py-md bg-primary-container text-white rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-transform flex items-center justify-center gap-sm">
+                                Mua ngay để nhận hoàn tiền
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 (TikTok Shop) -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm product-card-hover flex flex-col relative group">
+<button class="absolute top-md right-md z-10 bg-white/90 backdrop-blur-sm p-sm rounded-full text-error opacity-0 group-hover:opacity-100 transition-opacity hover:bg-error-container" onclick="this.closest('.group').remove()">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<div class="relative h-56">
+<img class="w-full h-full object-cover" data-alt="A modern matte black mechanical keyboard with RGB lighting glowing softly in purple and orange. Shot in a dark room with dramatic rim lighting on the keys. Tech-focused high-end aesthetic, sleek and professional look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlw1OllOarrtc15b5H-hmxh_IbWtU9orQq4PM4V9McjrnzcMZyxD_xuZFq5YndJCG_DGfGV5jWiiQljiN0fZGINSIKggYd9f_6bqQTiQx7fE40iXpHXztJCztVRh_IMvJQ9ykH4KwZHKlGkiVaBAJ6rMZyxYkwzKtWh_TNTdzVXvUHz6k3UAd7IaYw2rNxA1n4jPNUTjBWISM-MAbEGCoipmVp-Vr5iQIA5M8-41rreg-TNLWe_L6rzQ"/>
+<div class="absolute top-md left-md px-md py-xs bg-black text-white text-[10px] font-bold rounded-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+                            TIKTOK SHOP
+                        </div>
+<div class="absolute bottom-md right-md px-md py-sm bg-primary-container text-white font-bold rounded-lg text-sm shadow-md">
+                            Hoàn 20%
+                        </div>
+</div>
+<div class="p-md flex-1 flex flex-col">
+<h3 class="font-title-lg text-title-lg text-on-surface line-clamp-2 mb-sm">Bàn phím cơ không dây TKL Matte Black RGB</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-sm mb-md">
+<span class="text-primary font-bold text-xl">1.450.000đ</span>
+<span class="text-on-surface-variant line-through text-sm">2.100.000đ</span>
+</div>
+<div class="flex items-center gap-xs text-tertiary font-bold text-sm mb-lg">
+<span class="material-symbols-outlined text-[18px]">savings</span>
+                                Hoàn tiền ước tính: ~290.000đ
+                            </div>
+<button class="w-full py-md bg-primary-container text-white rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-transform flex items-center justify-center gap-sm">
+                                Mua ngay để nhận hoàn tiền
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 (Shopee) -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm product-card-hover flex flex-col relative group">
+<button class="absolute top-md right-md z-10 bg-white/90 backdrop-blur-sm p-sm rounded-full text-error opacity-0 group-hover:opacity-100 transition-opacity hover:bg-error-container" onclick="this.closest('.group').remove()">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<div class="relative h-56">
+<img class="w-full h-full object-cover" data-alt="Close-up lifestyle photo of a high-end designer perfume bottle with rose gold cap, placed on a marble surface. Soft sunlight streaming through a window creating beautiful reflections. Luxury, clean, bright, light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBpp5q8ImmHdmBFIebskaXCaGDBt6h8ySsbRjjNqEmO0miEDuaWZvohIbCELN9WO0iYvUPCF4MJNWoIjivswdmx2DUNClThzxPou8qPqHTCg8smdn1FIgMvV2a5v8QLb3IdhLjv_AOy2aMUFFzp_GU9JGw6ymgne_2EEGEfA-mB88VTF9c-s9FJwJd-Li0J3ajgpICGx1aYipb-AVjtoq1ci4rnIdCC7K83vL3cFCR2YeodazW2d8iDw"/>
+<div class="absolute top-md left-md px-md py-xs bg-[#EE4D2D] text-white text-[10px] font-bold rounded-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+                            SHOPEE
+                        </div>
+<div class="absolute bottom-md right-md px-md py-sm bg-primary-container text-white font-bold rounded-lg text-sm shadow-md">
+                            Hoàn 12%
+                        </div>
+</div>
+<div class="p-md flex-1 flex flex-col">
+<h3 class="font-title-lg text-title-lg text-on-surface line-clamp-2 mb-sm">Nước Hoa Nữ Rose Gold Eau de Parfum 50ml</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-sm mb-md">
+<span class="text-primary font-bold text-xl">2.350.000đ</span>
+<span class="text-on-surface-variant line-through text-sm">2.800.000đ</span>
+</div>
+<div class="flex items-center gap-xs text-tertiary font-bold text-sm mb-lg">
+<span class="material-symbols-outlined text-[18px]">savings</span>
+                                Hoàn tiền ước tính: ~282.000đ
+                            </div>
+<button class="w-full py-md bg-primary-container text-white rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-transform flex items-center justify-center gap-sm">
+                                Mua ngay để nhận hoàn tiền
+                            </button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 (TikTok Shop) -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm product-card-hover flex flex-col relative group">
+<button class="absolute top-md right-md z-10 bg-white/90 backdrop-blur-sm p-sm rounded-full text-error opacity-0 group-hover:opacity-100 transition-opacity hover:bg-error-container" onclick="this.closest('.group').remove()">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<div class="relative h-56">
+<img class="w-full h-full object-cover" data-alt="A stylish set of ceramic mugs and plates in a soft sage green color, arranged on a rustic wooden table. Warm morning light, cozy home atmosphere. High-quality lifestyle photography, focus on texture and natural colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCTQACiwefZFnTGYMrtwlnAhg-lIcuD1hk5cnF2jVvJeF3zEcXB09VEuShNVXF6ktHgewYLkdLaF7Ze2i58d63ZkThvyunbC66rqXWjaYzPkcEYo4zdrh8qfEtdHv55bsw3YY_9aTBiJtueTC5a1S7uI-VeeUhAaC7FYhxoBdUXbMjSSPFfMW49_JE_offo6BRN7Wi9pxo2G2Ln1hxp_FXONHIK5bfDqAV0PE-TF-WnoY6kFpqICduzw"/>
+<div class="absolute top-md left-md px-md py-xs bg-black text-white text-[10px] font-bold rounded-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+                            TIKTOK SHOP
+                        </div>
+<div class="absolute bottom-md right-md px-md py-sm bg-primary-container text-white font-bold rounded-lg text-sm shadow-md">
+                            Hoàn 25%
+                        </div>
+</div>
+<div class="p-md flex-1 flex flex-col">
+<h3 class="font-title-lg text-title-lg text-on-surface line-clamp-2 mb-sm">Bộ Đồ Ăn Gốm Sứ Sage Green Handmade (12 món)</h3>
+<div class="mt-auto">
+<div class="flex items-baseline gap-sm mb-md">
+<span class="text-primary font-bold text-xl">450.000đ</span>
+<span class="text-on-surface-variant line-through text-sm">620.000đ</span>
+</div>
+<div class="flex items-center gap-xs text-tertiary font-bold text-sm mb-lg">
+<span class="material-symbols-outlined text-[18px]">savings</span>
+                                Hoàn tiền ước tính: ~112.500đ
+                            </div>
+<button class="w-full py-md bg-primary-container text-white rounded-xl font-bold hover:scale-[1.02] active:scale-95 transition-transform flex items-center justify-center gap-sm">
+                                Mua ngay để nhận hoàn tiền
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="mt-auto w-full py-2xl px-gutter grid grid-cols-1 md:grid-cols-3 gap-xl max-w-container-max mx-auto bg-surface-container-highest border-t border-outline-variant">
+<div>
+<h4 class="font-headline-md text-headline-md text-primary mb-md">HOANTIENVIP</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 HOANTIENVIP. Hoàn tiền tối đa, mua sắm thả ga.</p>
+</div>
+<div class="flex flex-col gap-sm">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Liên hệ</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Chính sách bảo mật</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Điều khoản sử dụng</a>
+</div>
+<div class="flex gap-md">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span> Facebook</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">play_circle</span> YouTube</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">video_library</span> TikTok</a>
+</div>
+</footer>
+</main>
+<!-- Success Toast (Hidden by default) -->
+<div class="fixed bottom-lg left-1/2 -translate-x-1/2 bg-on-background text-white px-xl py-md rounded-full shadow-2xl flex items-center gap-md opacity-0 translate-y-8 transition-all z-50 pointer-events-none" id="toast">
+<span class="material-symbols-outlined text-tertiary-fixed">check_circle</span>
+<span class="font-label-md text-label-md">Đã xóa sản phẩm khỏi danh sách lưu.</span>
+</div>
+<script>
+        // Micro-interaction for deleting items
+        document.querySelectorAll('button[onclick*="remove"]').forEach(btn => {
+            const originalOnClick = btn.onclick;
+            btn.onclick = (e) => {
+                const card = btn.closest('.group');
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    card.remove();
+                    showToast();
+                }, 300);
+            };
+        });
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-0', 'translate-y-8');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-8');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+    </script>
+</body></html>

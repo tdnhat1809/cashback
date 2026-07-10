@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #b52603;
+  --color-primary-container: #ff5a36;
+  --color-primary-fixed: #ffdad2;
+  --color-on-primary: #ffffff;
+  --color-secondary: #565e74;
+  --color-secondary-container: #d7dff9;
+  --color-tertiary: #006c49;
+  --color-tertiary-container: #00a773;
+  --color-on-tertiary: #ffffff;
+  --color-background: #fff8f6;
+  --color-surface: #fff8f6;
+  --color-surface-container: #ffe9e5;
+  --color-surface-container-low: #fff0ed;
+  --color-surface-container-high: #ffe2dc;
+  --color-surface-container-highest: #f9dcd6;
+  --color-on-surface: #271814;
+  --color-on-surface-variant: #5b403a;
+  --color-outline: #8f7069;
+  --color-outline-variant: #e3beb6;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-accent: #ea580c;
+
+  --font-vietnam: "Be Vietnam Pro", sans-serif;
+  --radius-2xl: 20px;
+}
+
+:root {
+  font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+  background-color: #fff8f6;
+  color: #271814;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #fff8f6;
+  overflow-x: hidden;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(255, 90, 54, 0.3);
+  outline-offset: 2px;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.hero-gradient {
+  background: radial-gradient(circle at top right, #ffdad2 0%, #fff8f6 60%);
+}
+
+.shadow-soft {
+  box-shadow: 0 4px 24px -4px rgba(181, 38, 3, 0.08);
+}
+
+.pwa-entry {
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 220ms ease-out both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Base custom font utility classes from reference */
+:where(.font-display-lg) {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 48px;
+  line-height: 56px;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+:where(.font-headline-lg) {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+:where(.font-headline-md) {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+}
+
+:where(.font-title-lg) {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+:where(.font-body-lg) {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 400;
+}
+
+:where(.font-body-md) {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+:where(.font-label-md) {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+}
+
+:where(.font-label-sm) {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+@media (min-width: 1024px) {
+  .sidebar-desktop-layout {
+    width: 232px !important;
+  }
+  .content-desktop-layout {
+    padding-left: 232px !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  :where(.font-display-lg) {
+    font-size: 36px;
+    line-height: 42px;
+  }
+
+  :where(.font-headline-lg) {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}

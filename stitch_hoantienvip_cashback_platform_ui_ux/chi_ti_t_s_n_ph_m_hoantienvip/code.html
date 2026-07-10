@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chi tiết sản phẩm | HOANTIENVIP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(227, 190, 182, 0.3);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-surface": "#271814",
+                "surface-bright": "#fff8f6",
+                "tertiary": "#006c49",
+                "primary": "#b52603",
+                "on-primary-fixed": "#3d0600",
+                "tertiary-fixed-dim": "#4edea3",
+                "secondary-container": "#d7dff9",
+                "surface-container-high": "#ffe2dc",
+                "surface-dim": "#f0d4ce",
+                "inverse-primary": "#ffb4a3",
+                "outline-variant": "#e3beb6",
+                "primary-container": "#ff5a36",
+                "inverse-on-surface": "#ffede9",
+                "on-tertiary": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "on-tertiary-fixed": "#002113",
+                "on-secondary": "#ffffff",
+                "on-error-container": "#93000a",
+                "primary-fixed": "#ffdad2",
+                "error": "#ba1a1a",
+                "primary-fixed-dim": "#ffb4a3",
+                "surface": "#fff8f6",
+                "on-secondary-fixed": "#131b2e",
+                "surface-variant": "#f9dcd6",
+                "secondary": "#565e74",
+                "surface-container-highest": "#f9dcd6",
+                "on-primary": "#ffffff",
+                "surface-tint": "#b52603",
+                "on-tertiary-fixed-variant": "#005236",
+                "on-background": "#271814",
+                "error-container": "#ffdad6",
+                "on-surface-variant": "#5b403a",
+                "on-primary-container": "#5a0c00",
+                "on-error": "#ffffff",
+                "on-secondary-fixed-variant": "#3f465b",
+                "tertiary-container": "#00a773",
+                "secondary-fixed-dim": "#bec6df",
+                "outline": "#8f7069",
+                "background": "#fff8f6",
+                "inverse-surface": "#3e2c28",
+                "on-primary-fixed-variant": "#8c1900",
+                "secondary-fixed": "#dae2fc",
+                "on-tertiary-container": "#003320",
+                "on-secondary-container": "#5a6278",
+                "surface-container-low": "#fff0ed",
+                "tertiary-fixed": "#6ffbbe",
+                "surface-container": "#ffe9e5"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "container-max": "1280px",
+                "gutter": "24px",
+                "base": "4px",
+                "xl": "32px",
+                "2xl": "48px",
+                "xs": "4px",
+                "sm": "8px",
+                "md": "16px",
+                "lg": "24px",
+                "3xl": "64px"
+            },
+            "fontFamily": {
+                "headline-md": ["Be Vietnam Pro"],
+                "title-lg": ["Be Vietnam Pro"],
+                "label-md": ["Be Vietnam Pro"],
+                "headline-lg": ["Be Vietnam Pro"],
+                "display-lg": ["Be Vietnam Pro"],
+                "body-md": ["Be Vietnam Pro"],
+                "headline-lg-mobile": ["Be Vietnam Pro"],
+                "body-lg": ["Be Vietnam Pro"],
+                "label-sm": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<nav class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto">
+<div class="flex items-center gap-xl">
+<a class="font-display-lg text-headline-md font-black tracking-tighter text-primary" href="#">HOANTIENVIP</a>
+<div class="hidden md:flex gap-lg items-center">
+<a class="text-primary border-b-2 border-primary font-bold pb-1 font-label-md text-label-md" href="#">Trang chủ</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Deal hot</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Shopee</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">TikTok Shop</a>
+</div>
+</div>
+<div class="flex gap-md">
+<button class="px-md py-sm rounded-xl text-primary font-bold font-label-md text-label-md transition-transform active:scale-90">Đăng nhập</button>
+<button class="bg-primary-container text-on-primary px-md py-sm rounded-xl font-bold font-label-md text-label-md shadow-sm hover:opacity-90 transition-all active:scale-95">Đăng ký</button>
+</div>
+</nav>
+</header>
+<main class="pt-24 pb-3xl max-w-container-max mx-auto px-gutter">
+<!-- Breadcrumb -->
+<nav class="flex items-center gap-sm mb-lg text-on-surface-variant font-label-md text-label-md">
+<a class="hover:text-primary transition-colors" href="#">Trang chủ</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Shopee</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-on-surface font-semibold">Điện tử</span>
+</nav>
+<!-- Main Product Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-2xl items-start">
+<!-- Left: Product Gallery -->
+<div class="lg:col-span-5 sticky top-24">
+<div class="group relative rounded-3xl overflow-hidden shadow-sm bg-white aspect-square mb-md border border-outline-variant/30">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A professional studio product shot of the Sony WH-1000XM5 wireless noise-canceling headphones in elegant silver. The lighting is soft and high-key, emphasizing the smooth textures and minimalist curves of the hardware. The background is a clean, neutral gradient of warm white and soft peach, aligning with a premium minimalist light-mode aesthetic. High resolution with sharp focus on the earcups and headband." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsZrgXxvw5vqNvysW5pCD7R_V8coyqKuyAX2lsxMRfDSv25QRVRMU_7Vd4X-4Kkqvb5UiK4eAtCu1r3jeww_7bheMrU7U-bPXszap0ShsDwxINwh9phL5l_pTvJ5bA_rscNs0SpBHBka4hkAZLCQZhtk5x7wt2lgXmgNisFxVQnli-ELAzzpa6FIB9ucoN2ILuuGiBlczolYtSvtILoHj8OSYutS0JtBhOvLk8DNLJdLFzZlxlBIHymw"/>
+<div class="absolute top-md right-md bg-primary text-white px-md py-xs rounded-full font-bold text-label-md shadow-lg">
+                        -15% GIẢM
+                    </div>
+</div>
+<div class="grid grid-cols-4 gap-md">
+<div class="rounded-xl overflow-hidden border-2 border-primary aspect-square cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="Close-up detail of the Sony WH-1000XM5 earcup showing the high-quality synthetic leather and the copper-colored noise-canceling microphone. Soft warm lighting, minimalist style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFWrnbfCox-MdnypcezbDCcK-Bgn3HJIEG0xYtTJseKweFMZ479Ul2pUDDIL5lAdV5jjbRpoW6ozmmMottJmGcpBNVncmo0zYQJmJGdW7WiOroFm4KWMgRFzWuclncpqGKzsrxyf-CaLJVnqLFcgOyUp1nltvLzlCXqO-SgUBFsNVI3HWdNPOaM719ITyCD3LWuNy1SLEyLvW84ZHlXmZ4EMvJuZheqr2eIV5jrXSChEp1n-ls44jcdQ"/>
+</div>
+<div class="rounded-xl overflow-hidden border border-outline-variant/30 aspect-square cursor-pointer hover:border-primary/50 transition-colors">
+<img class="w-full h-full object-cover" data-alt="A lifestyle photo of the Sony headphones resting on a minimalist wooden desk next to a modern silver laptop. Soft daylight, clean shadows, optimistic professional mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlmBAthdfAu_iBR2hq50ZCZGQmuAmvB0TENw8zLEkitCT-0gyFEB6ZYJAWefkUtj0yLJMNOpG3B4aMLCs-IujL0HDZUTQmEPpeRNEn9L3JaFxlIIWTTQnHTD0QWfVUoz6WqWOC7xD-PvOjnzKcZiwjohY2PdBeTiDf1F__aFqo3C7MyLe6JEQEF9Pt_QImD2x40vQeZ_R1-0syULX0UJmeMXmFiVXlI6ZXocLbgdMj7FiVbUFxd66_Qg"/>
+</div>
+<div class="rounded-xl overflow-hidden border border-outline-variant/30 aspect-square cursor-pointer hover:border-primary/50 transition-colors">
+<img class="w-full h-full object-cover" data-alt="Side profile of the Sony WH-1000XM5 headphones showing the adjustable headband and sleek hinge design. Studio lighting, pure white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTCEdNt5xzIm8bXFkhzPg3BxqIs0AcCm1tPfYGrdzyupppPfzgpWvrzZ4Hn1L4aZA5J3U4z4epzjRplREnq1z001-3e5TjA9yFAtv5DmTFOtl6ofEWqPTlY_WZOtEKGwLPSg5VYV0tTpQJTPVJHNb9n5wowvUqedTo31TcES3sZMkrZsd4nztZ6iutjPdPcxdduh5xmm3865wX36mB2rea796VPVEk4J3e1gxnL-QBKDetnNYjpi-Dlw"/>
+</div>
+<div class="rounded-xl overflow-hidden border border-outline-variant/30 aspect-square cursor-pointer hover:border-primary/50 transition-colors">
+<img class="w-full h-full object-cover" data-alt="The Sony WH-1000XM5 headphones neatly folded inside their premium grey fabric carrying case. Soft top-down lighting, minimalist composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8LBF9desbReIWFp7DffSACCXCKkG8RcbAFGtbscQX2cpxlskdlGGZozOLCyPV1DKItu39sFmho2x6lNBPaz0PkL3Lk5VrOfjpWjBgb-4P_UzEetmGf6EGFa3ewZ45PjmdwZIT3Vw5rnp11FHCDBnn9rYQ3mrUV5UVttpWLPxYFGG-KQF8oj2CUk_ObzGTkef1FYkBY-aCZtuHB5lO5X-SvlSzefNGdHvhkvA9jcIIo-QVIKq2vczAjQ"/>
+</div>
+</div>
+</div>
+<!-- Right: Product Information -->
+<div class="lg:col-span-7 flex flex-col gap-xl">
+<div class="space-y-sm">
+<div class="flex items-center gap-sm">
+<span class="bg-secondary-container text-on-secondary-container px-sm py-1 rounded text-label-sm font-bold uppercase tracking-wider">Shopee Mall</span>
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-on-surface-variant text-label-md">(452 đánh giá)</span>
+</div>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface leading-tight">Tai nghe Sony WH-1000XM5 Wireless Noise Cancelling Headphones - Chính hãng</h1>
+</div>
+<div class="p-lg bg-surface-container-low rounded-3xl border border-outline-variant/20">
+<div class="flex items-baseline gap-md mb-xs">
+<span class="text-primary font-display-lg text-headline-lg">7.290.000đ</span>
+<span class="text-on-surface-variant line-through font-body-md text-body-md">8.490.000đ</span>
+</div>
+<!-- Cashback Badge -->
+<div class="flex items-center gap-md bg-tertiary-container/10 border border-tertiary-container/30 p-md rounded-2xl">
+<div class="bg-tertiary-container text-white p-sm rounded-xl">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest">Ưu đãi độc quyền</p>
+<p class="text-tertiary font-bold font-title-lg text-title-lg">Hoàn tiền ước tính: 45.000đ</p>
+</div>
+</div>
+</div>
+<!-- Cashback Conditions -->
+<div class="space-y-md">
+<h3 class="font-headline-md text-title-lg flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">info</span>
+                        Điều kiện nhận Cashback
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="flex gap-md items-start p-md bg-white rounded-2xl border border-outline-variant/10 shadow-sm">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+<p class="font-body-md text-body-md">Hoàn tất thanh toán trong <strong>01 phiên</strong> truy cập từ HOANTIENVIP.</p>
+</div>
+<div class="flex gap-md items-start p-md bg-white rounded-2xl border border-outline-variant/10 shadow-sm">
+<span class="material-symbols-outlined text-error">cancel</span>
+<p class="font-body-md text-body-md"><strong>Không sử dụng</strong> mã giảm giá từ các nguồn bên ngoài hệ thống.</p>
+</div>
+<div class="flex gap-md items-start p-md bg-white rounded-2xl border border-outline-variant/10 shadow-sm">
+<span class="material-symbols-outlined text-tertiary">history</span>
+<p class="font-body-md text-body-md">Cashback được ghi nhận sau <strong>2-4h</strong> và duyệt sau 60-90 ngày.</p>
+</div>
+<div class="flex gap-md items-start p-md bg-white rounded-2xl border border-outline-variant/10 shadow-sm">
+<span class="material-symbols-outlined text-primary">devices</span>
+<p class="font-body-md text-body-md">Chỉ áp dụng khi mua trên ứng dụng di động Shopee hoặc Website.</p>
+</div>
+</div>
+</div>
+<!-- CTA -->
+<div class="flex flex-col sm:flex-row gap-md pt-md">
+<button class="flex-1 h-14 bg-primary-container text-white rounded-2xl font-bold font-title-lg text-title-lg shadow-lg hover:shadow-primary-container/20 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-md">
+<span class="material-symbols-outlined">shopping_cart_checkout</span>
+                        Mua nhận hoàn tiền
+                    </button>
+<button class="px-xl h-14 border-2 border-outline text-on-surface rounded-2xl font-bold hover:bg-surface-container transition-colors flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined">share</span>
+                        Chia sẻ
+                    </button>
+</div>
+</div>
+</div>
+<!-- Asymmetric Info Layout -->
+<div class="mt-3xl grid grid-cols-1 lg:grid-cols-3 gap-2xl">
+<!-- FAQ & Shop Info -->
+<div class="lg:col-span-2 space-y-2xl">
+<section>
+<h2 class="font-headline-md text-headline-md mb-lg">Câu hỏi thường gặp</h2>
+<div class="space-y-md">
+<div class="glass-card p-lg rounded-2xl">
+<details class="group">
+<summary class="list-none cursor-pointer flex justify-between items-center font-bold font-body-lg text-body-lg">
+                                    Tại sao tôi không thấy hoàn tiền ngay lập tức?
+                                    <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-md text-on-surface-variant font-body-md text-body-md leading-relaxed">
+                                    Hệ thống cần thời gian để đối soát dữ liệu với sàn thương mại điện tử. Thông thường, số dư "Chờ duyệt" sẽ xuất hiện trong vòng 2-24 giờ sau khi bạn đặt hàng thành công.
+                                </p>
+</details>
+</div>
+<div class="glass-card p-lg rounded-2xl">
+<details class="group">
+<summary class="list-none cursor-pointer flex justify-between items-center font-bold font-body-lg text-body-lg">
+                                    Tôi có được hoàn tiền nếu hủy đơn hoặc đổi trả không?
+                                    <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-md text-on-surface-variant font-body-md text-body-md leading-relaxed">
+                                    Rất tiếc, các đơn hàng bị hủy, hoàn trả hoặc không thanh toán thành công sẽ không được tính hoàn tiền theo chính sách của sàn.
+                                </p>
+</details>
+</div>
+</div>
+</section>
+<section class="bg-surface-container-high rounded-3xl p-xl flex flex-col md:flex-row gap-xl items-center">
+<div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Minimalist circular logo for Sony Official Store on an e-commerce platform. Clean typography, professional branding, high-contrast black and white." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_NSC-v789BaYhaVyoCbEXnRbkwTnn4UBrttcY8sVU_JrBaOe4_Ky3JFIn1nqz5F-oQr2_bE9oui7s8zYDRqryTH97ur7q75ij2HsDs6gd-qRo7q_5Flm1ueV_gPDpQMs4Wl_oGWvELtzMDjztI6sTUyvzkcH7Y75lVmp-UrA503cRYl1_450W5fSmEXmVBSqZdtH8E53lVn1sPCMXO0rCL_gFeJUj6XUjyRo1QAG9qEMaZNf5ifZ2Tw"/>
+</div>
+<div class="flex-1 text-center md:text-left">
+<h4 class="font-headline-md text-headline-md">Sony Official Store</h4>
+<p class="text-on-surface-variant font-body-md text-body-md mb-md">Cung cấp bởi Sony Việt Nam. Cam kết 100% hàng chính hãng.</p>
+<div class="flex flex-wrap justify-center md:justify-start gap-md">
+<div class="px-md py-xs bg-white/50 rounded-full text-label-sm font-bold flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">verified</span> 1.2M Theo dõi
+                            </div>
+<div class="px-md py-xs bg-white/50 rounded-full text-label-sm font-bold flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary">chat</span> 99% Phản hồi
+                            </div>
+</div>
+</div>
+<button class="px-xl py-md bg-on-surface text-surface rounded-2xl font-bold hover:bg-on-surface-variant transition-all">Xem Shop</button>
+</section>
+</div>
+<!-- Similar Products (Sticky Sidebar) -->
+<div class="space-y-xl">
+<h2 class="font-headline-md text-headline-md">Sản phẩm tương tự</h2>
+<div class="space-y-lg">
+<!-- Related Item 1 -->
+<div class="flex gap-md group cursor-pointer">
+<div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="Sleek black Bose QuietComfort Ultra headphones on a minimalist dark grey background. High-end tech aesthetic, soft focus, dramatic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNI2ZXVEVX7KNMUytRMleqG4HNlPuXYx5Ejq7xdPpuglJ0V-ybtFxHDVGWKBPqXDCG6hJJosrKd_zwnTXlSkDGh-2kHSGpPsKG7yI3ovYsfFIyaQexwig4CnY9cd1Fqqmu8IzrvOTFEWlUhT8VSejYxPnGHZ7rrwZUA-Pij4fOZ7vgs3iSw-XjcCVImcue5F7k45lLrHfgywerWZ4z6SWDMckfbsdcXc9TaMXedY9L6r4JqgakApehNw"/>
+</div>
+<div class="flex flex-col justify-center">
+<h5 class="font-bold text-on-surface line-clamp-2 leading-tight group-hover:text-primary transition-colors">Bose QuietComfort Ultra Headphones</h5>
+<p class="text-primary font-bold text-label-md mt-1">8.500.000đ</p>
+<span class="text-tertiary text-label-sm font-bold">+52.000đ Hoàn tiền</span>
+</div>
+</div>
+<!-- Related Item 2 -->
+<div class="flex gap-md group cursor-pointer">
+<div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="Apple AirPods Max in Space Grey against a clean light mode studio background. Professional photography, minimalist lines, high-tech vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbkS-4XJtpP6zJpDb5_Mv1Fu79WgBbINcDKIHMY__0WXwpnnJKLuxZqXBfZgpV4rP7eubUv-TYu5J4xaPrpXjyRwPI6tNsADvXBXJJA5HgYE8lVwUzWENxiVjOHeXRxCreSApg5MAWynJxxcbL_99EkBQHt7V3kvYVyx0gd_6-gDNgA2eNZHFH7bqz3BsL9Qp3_NdwnjfLpKZBznkN-ACCkWUXn65VHll64tDnnPoYmukD827hbv3o3A"/>
+</div>
+<div class="flex flex-col justify-center">
+<h5 class="font-bold text-on-surface line-clamp-2 leading-tight group-hover:text-primary transition-colors">Apple AirPods Max - Space Grey</h5>
+<p class="text-primary font-bold text-label-md mt-1">11.200.000đ</p>
+<span class="text-tertiary text-label-sm font-bold">+85.000đ Hoàn tiền</span>
+</div>
+</div>
+<!-- Related Item 3 -->
+<div class="flex gap-md group cursor-pointer">
+<div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="Sennheiser Momentum 4 wireless headphones in white and copper. Minimalist studio lighting, elegant shadows, premium consumer electronic product photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIkZIpYIuMtHc_TK5E9spQPKU29xokmi01WQeeC8COlSp9NLnMCd_bRvxbamnHqPF1rpjOymXodjOO290M3RNk2dqxjlaGqc9GDbaTLLbe4rRSINEvOgrIhSqpjYAHCiMvzhD0Bc9bZ-KzuPdnFjCMXnR3rGYhK2z9pgQYhd37ab9czoYCZr7yxoTbUeVUaDwHwesxxhW0TLspT7GmHcrCUhB7Q02zFX-1EQ9NW_7nmW04dFlpB1C14w"/>
+</div>
+<div class="flex flex-col justify-center">
+<h5 class="font-bold text-on-surface line-clamp-2 leading-tight group-hover:text-primary transition-colors">Sennheiser Momentum 4 Wireless</h5>
+<p class="text-primary font-bold text-label-md mt-1">6.990.000đ</p>
+<span class="text-tertiary text-label-sm font-bold">+38.000đ Hoàn tiền</span>
+</div>
+</div>
+</div>
+<button class="w-full py-md border-2 border-primary/20 text-primary rounded-2xl font-bold hover:bg-primary/5 transition-all">Xem tất cả deal điện tử</button>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant/30 w-full pt-3xl pb-xl mt-3xl">
+<div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-4 gap-xl">
+<div class="col-span-1 md:col-span-2">
+<a class="font-headline-md text-headline-md font-black text-primary mb-md block" href="#">HOANTIENVIP</a>
+<p class="text-on-surface-variant font-body-md text-body-md max-w-md">Chúng tôi giúp bạn tiết kiệm hàng triệu đồng mỗi năm khi mua sắm trực tuyến thông qua hệ thống hoàn tiền thông minh và tin cậy.</p>
+</div>
+<div>
+<h6 class="font-label-md text-label-md font-bold uppercase mb-lg">Hỗ trợ khách hàng</h6>
+<ul class="space-y-sm">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">Chính sách bảo mật</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">Điều khoản sử dụng</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">Câu hỏi thường gặp</a></li>
+</ul>
+</div>
+<div>
+<h6 class="font-label-md text-label-md font-bold uppercase mb-lg">Liên hệ</h6>
+<ul class="space-y-sm">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">Liên hệ quảng cáo</a></li>
+<li class="text-on-surface-variant text-label-md">Email: hotro@hoantienvip.vn</li>
+<li class="text-on-surface-variant text-label-md">Hotline: 1900 6789</li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-gutter mt-2xl pt-lg border-t border-outline-variant/10 text-center">
+<p class="text-on-surface-variant font-label-sm text-label-sm">© 2024 HOANTIENVIP - Hệ thống hoàn tiền uy tín số 1 Việt Nam</p>
+</div>
+</footer>
+<!-- Mobile Navigation Bar -->
+<div class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 pb-safe bg-surface/90 backdrop-blur-lg shadow-[0_-4px_12px_rgba(0,0,0,0.04)] z-50">
+<a class="flex flex-col items-center justify-center text-primary scale-110 font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-sm">Trang chủ</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70" href="#">
+<span class="material-symbols-outlined">local_fire_department</span>
+<span class="text-label-sm">Deal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-label-sm">Hoàn tiền</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-sm">Cá nhân</span>
+</a>
+</div>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('details').forEach((el) => {
+            el.addEventListener('toggle', (e) => {
+                if (el.open) {
+                    const content = el.querySelector('p');
+                    content.style.opacity = '0';
+                    content.style.transform = 'translateY(-10px)';
+                    requestAnimationFrame(() => {
+                        content.style.transition = 'all 0.3s ease-out';
+                        content.style.opacity = '1';
+                        content.style.transform = 'translateY(0)';
+                    });
+                }
+            });
+        });
+
+        // Image Gallery Swapping (Simulation)
+        const thumbnails = document.querySelectorAll('.grid.grid-cols-4 img');
+        const mainImage = document.querySelector('.lg\\:col-span-5 img');
+        
+        thumbnails.forEach(thumb => {
+            thumb.parentElement.addEventListener('click', () => {
+                const tempSrc = mainImage.src;
+                const tempAlt = mainImage.getAttribute('data-alt');
+                
+                mainImage.src = thumb.src;
+                mainImage.setAttribute('data-alt', thumb.getAttribute('data-alt'));
+                
+                // Add a quick fade animation
+                mainImage.style.opacity = '0.5';
+                setTimeout(() => {
+                    mainImage.style.opacity = '1';
+                }, 100);
+
+                // Update border styles
+                thumbnails.forEach(t => t.parentElement.classList.remove('border-primary'));
+                thumbnails.forEach(t => t.parentElement.classList.add('border-outline-variant/30'));
+                thumb.parentElement.classList.remove('border-outline-variant/30');
+                thumb.parentElement.classList.add('border-primary');
+            });
+        });
+    </script>
+</body></html>

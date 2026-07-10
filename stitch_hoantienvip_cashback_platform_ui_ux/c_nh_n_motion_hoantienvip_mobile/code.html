@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Cá nhân - HOANTIENVIP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#ff5a36",
+                    "on-primary-fixed": "#3d0600",
+                    "background": "#fff8f6",
+                    "secondary": "#565e74",
+                    "error": "#ba1a1a",
+                    "on-surface": "#271814",
+                    "inverse-on-surface": "#ffede9",
+                    "on-secondary-fixed-variant": "#3f465b",
+                    "on-primary-container": "#5a0c00",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "on-tertiary-container": "#003320",
+                    "surface-variant": "#f9dcd6",
+                    "surface-container-low": "#fff0ed",
+                    "primary-fixed-dim": "#ffb4a3",
+                    "tertiary-container": "#00a773",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary-fixed": "#6ffbbe",
+                    "surface-dim": "#f0d4ce",
+                    "inverse-surface": "#3e2c28",
+                    "secondary-fixed-dim": "#bec6df",
+                    "surface-container-high": "#ffe2dc",
+                    "surface-container": "#ffe9e5",
+                    "on-secondary-container": "#5a6278",
+                    "on-surface-variant": "#5b403a",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#d7dff9",
+                    "outline": "#8f7069",
+                    "outline-variant": "#e3beb6",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "primary": "#b52603",
+                    "primary-fixed": "#ffdad2",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#271814",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#006c49",
+                    "surface-bright": "#fff8f6",
+                    "on-secondary-fixed": "#131b2e",
+                    "on-primary-fixed-variant": "#8c1900",
+                    "secondary-fixed": "#dae2fc",
+                    "surface-tint": "#b52603",
+                    "surface": "#fff8f6",
+                    "inverse-primary": "#ffb4a3",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#f9dcd6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "2xl": "48px",
+                    "3xl": "64px",
+                    "xs": "4px",
+                    "container-max": "1280px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "title-lg": ["Be Vietnam Pro"],
+                    "headline-md": ["Be Vietnam Pro"],
+                    "display-lg": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "body-md": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Optimization for high-performance transitions */
+        .will-change-transform {
+            will-change: transform, opacity;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .nav-item-animate {
+            opacity: 0;
+            animation: slideInRight 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm flex justify-between items-center h-16 px-md">
+<div class="flex items-center gap-sm">
+<button class="material-symbols-outlined p-xs hover:bg-surface-container-high transition-colors active:scale-95 duration-150 text-on-surface-variant">menu</button>
+<span class="text-headline-md font-headline-md text-primary tracking-tight font-black">HOANTIENVIP</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="material-symbols-outlined p-xs hover:bg-surface-container-high transition-colors active:scale-95 duration-150 text-on-surface-variant">notifications</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 pt-20 pb-32 px-md space-y-lg overflow-y-auto">
+<!-- Profile Header Section -->
+<section class="flex items-center gap-md p-sm animate-fade-in will-change-transform">
+<div class="relative">
+<div class="w-16 h-16 rounded-full border-2 border-primary p-0.5 overflow-hidden">
+<img class="w-full h-full object-cover rounded-full" data-alt="A professional studio portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN88RKR3bmzdd9_PkMmqVuKsE1f_zaLy3bYCZWGufxgIThYlF47CMoFE5w58Ic8HsCvxY6hC_hQpITFkRfo5rDJQMtoZ5a2p8QF_yQay48gsoIprCEEZUJTrF4V1sa-fj_cjXoPG3x_w0czSXw_TNMFIscO9mgGFNcilRnwWBZIoMjig7JQH9DQkH5-zxHk-suCAkmbx8P4LQWhxyspW_Juh1BZ2nZvQctM_2piA-W2wxwswNEryD4TQ"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary rounded-full p-1 border-2 border-background">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex flex-col">
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface">Chào bạn, Minh!</h2>
+<div class="flex items-center gap-xs">
+<span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                        Thành viên Vàng
+                    </span>
+</div>
+</div>
+</section>
+<!-- Wallet Widget Bento Box -->
+<section class="grid grid-cols-1 gap-md animate-fade-in will-change-transform" style="animation-delay: 0.1s;">
+<div class="bg-primary-container text-on-primary rounded-[24px] p-lg shadow-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 opacity-10 -translate-y-1/4 translate-x-1/4">
+<span class="material-symbols-outlined text-[180px]">account_balance_wallet</span>
+</div>
+<div class="relative z-10 space-y-md">
+<div>
+<p class="font-label-sm text-label-sm text-on-primary/80 uppercase tracking-widest">Số dư khả dụng</p>
+<h3 class="font-headline-lg text-headline-lg-mobile text-on-primary">1.250.000đ</h3>
+</div>
+<div class="flex justify-between items-end border-t border-on-primary/10 pt-md">
+<div>
+<p class="font-label-sm text-label-sm text-on-primary/70">Đang chờ duyệt</p>
+<p class="font-title-lg text-on-primary/90">450.000đ</p>
+</div>
+<button class="bg-surface text-primary px-lg py-sm rounded-xl font-bold flex items-center gap-xs active:scale-95 transition-all duration-200 shadow-lg will-change-transform">
+                            Rút tiền ngay
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Menu List Items -->
+<section class="space-y-sm">
+<h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-[0.1em] px-sm opacity-0 animate-fade-in" style="animation-delay: 0.2s;">Quản lý tài khoản</h4>
+<div class="bg-surface-container rounded-[24px] overflow-hidden divide-y divide-outline-variant/30">
+<!-- Ví của tôi -->
+<a class="nav-item-animate flex items-center justify-between p-md hover:bg-surface-container-high transition-all active:scale-[0.98] duration-200 will-change-transform" href="#" style="animation-delay: 0.3s;">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">account_balance_wallet</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Ví của tôi</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</a>
+<!-- Lịch sử -->
+<a class="nav-item-animate flex items-center justify-between p-md hover:bg-surface-container-high transition-all active:scale-[0.98] duration-200 will-change-transform" href="#" style="animation-delay: 0.35s;">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">history</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Lịch sử nhận tiền</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</a>
+<!-- Sản phẩm đã lưu -->
+<a class="nav-item-animate flex items-center justify-between p-md hover:bg-surface-container-high transition-all active:scale-[0.98] duration-200 will-change-transform" href="#" style="animation-delay: 0.4s;">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">bookmark</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Sản phẩm đã lưu</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</a>
+<!-- Tiếp thị liên kết -->
+<a class="nav-item-animate flex items-center justify-between p-md hover:bg-surface-container-high transition-all active:scale-[0.98] duration-200 will-change-transform" href="#" style="animation-delay: 0.45s;">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">group</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Tiếp thị liên kết</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</a>
+<!-- Rút tiền -->
+<a class="nav-item-animate flex items-center justify-between p-md hover:bg-surface-container-high transition-all active:scale-[0.98] duration-200 will-change-transform" href="#" style="animation-delay: 0.5s;">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-xl bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">payments</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Yêu cầu rút tiền</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</a>
+<!-- Cài đặt -->
+<a class="nav-item-animate flex items-center justify-between p-md hover:bg-surface-container-high transition-all active:scale-[0.98] duration-200 will-change-transform" href="#" style="animation-delay: 0.55s;">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">settings</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Cài đặt tài khoản</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</a>
+</div>
+</section>
+<!-- Logout Button -->
+<button class="w-full p-md text-error font-bold flex items-center justify-center gap-sm bg-error-container/30 rounded-xl active:scale-95 transition-all duration-200 will-change-transform mb-4 opacity-0 animate-fade-in" style="animation-delay: 0.65s;">
+<span class="material-symbols-outlined">logout</span>
+            Đăng xuất
+        </button>
+</main>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/90 backdrop-blur-lg border-t border-outline-variant/30 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] flex justify-around items-center h-20 pb-safe px-sm">
+<a class="flex flex-col items-center justify-center text-on-secondary-fixed-variant hover:bg-primary-container/10 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Trang chủ</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary-fixed-variant hover:bg-primary-container/10 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">local_fire_department</span>
+<span class="font-label-sm text-label-sm">Deal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary-fixed-variant hover:bg-primary-container/10 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Hoàn tiền</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-bold hover:bg-primary-container/10 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">Cá nhân</span>
+</a>
+</nav>
+<script>
+        // High-performance micro-interactions
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('touchstart', () => {
+                // Pre-warm the element for animation if needed
+            }, {passive: true});
+        });
+    </script>
+</body></html>

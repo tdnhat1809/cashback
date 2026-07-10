@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Chi tiết sản phẩm - HOANTIENVIP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Theme Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-secondary": "#ffffff",
+                "on-primary-fixed": "#3d0600",
+                "on-secondary-fixed-variant": "#3f465b",
+                "on-tertiary": "#ffffff",
+                "surface-tint": "#b52603",
+                "on-surface": "#271814",
+                "tertiary-fixed-dim": "#4edea3",
+                "primary-fixed-dim": "#ffb4a3",
+                "secondary-fixed": "#dae2fc",
+                "primary-fixed": "#ffdad2",
+                "tertiary-fixed": "#6ffbbe",
+                "error-container": "#ffdad6",
+                "surface-container-low": "#fff0ed",
+                "secondary": "#565e74",
+                "primary": "#b52603",
+                "surface-container-lowest": "#ffffff",
+                "outline-variant": "#e3beb6",
+                "surface-container-high": "#ffe2dc",
+                "on-tertiary-fixed-variant": "#005236",
+                "on-primary": "#ffffff",
+                "on-primary-fixed-variant": "#8c1900",
+                "background": "#fff8f6",
+                "on-secondary-fixed": "#131b2e",
+                "tertiary-container": "#00a773",
+                "surface-variant": "#f9dcd6",
+                "inverse-primary": "#ffb4a3",
+                "error": "#ba1a1a",
+                "secondary-container": "#d7dff9",
+                "on-secondary-container": "#5a6278",
+                "on-error": "#ffffff",
+                "primary-container": "#ff5a36",
+                "on-error-container": "#93000a",
+                "tertiary": "#006c49",
+                "surface-container-highest": "#f9dcd6",
+                "on-surface-variant": "#5b403a",
+                "surface-dim": "#f0d4ce",
+                "outline": "#8f7069",
+                "on-primary-container": "#5a0c00",
+                "on-tertiary-fixed": "#002113",
+                "on-background": "#271814",
+                "surface": "#fff8f6",
+                "surface-container": "#ffe9e5",
+                "on-tertiary-container": "#003320",
+                "secondary-fixed-dim": "#bec6df",
+                "inverse-on-surface": "#ffede9",
+                "surface-bright": "#fff8f6",
+                "inverse-surface": "#3e2c28"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "xs": "4px",
+                "md": "16px",
+                "lg": "24px",
+                "3xl": "64px",
+                "sm": "8px",
+                "gutter": "24px",
+                "2xl": "48px",
+                "base": "4px",
+                "container-max": "1280px",
+                "xl": "32px"
+            },
+            "fontFamily": {
+                "headline-lg-mobile": ["Be Vietnam Pro"],
+                "body-lg": ["Be Vietnam Pro"],
+                "title-lg": ["Be Vietnam Pro"],
+                "headline-lg": ["Be Vietnam Pro"],
+                "body-md": ["Be Vietnam Pro"],
+                "display-lg": ["Be Vietnam Pro"],
+                "headline-md": ["Be Vietnam Pro"],
+                "label-md": ["Be Vietnam Pro"],
+                "label-sm": ["Be Vietnam Pro"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .glass-header {
+            background: rgba(255, 248, 246, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        @keyframes gentle-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(255, 90, 54, 0.1), 0 4px 6px -2px rgba(255, 90, 54, 0.05); }
+            50% { transform: scale(1.03); box-shadow: 0 12px 20px -3px rgba(255, 90, 54, 0.25), 0 4px 6px -2px rgba(255, 90, 54, 0.1); }
+        }
+        .animate-pulse-subtle {
+            animation: gentle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes slide-up-entrance {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-up {
+            animation: slide-up-entrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .details-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        details[open] + .details-content {
+            grid-template-rows: 1fr;
+        }
+        
+        /* Image interaction */
+        .gallery-image {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .gallery-image:active {
+            transform: scale(1.05);
+        }
+
+        /* Pagination dot transition */
+        .dot {
+            transition: all 0.3s ease;
+        }
+        .dot.active {
+            width: 1.5rem;
+            background-color: white;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container/30">
+<!-- Top App Bar -->
+<nav class="fixed top-0 w-full z-50 glass-header flex items-center justify-between px-md h-14">
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container-high transition-colors active:scale-90 duration-100">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-on-surface truncate px-4">Theo dõi vận đơn</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-primary hover:bg-surface-container-high transition-colors active:scale-90 duration-100">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</nav>
+<main class="pt-14 pb-32">
+<!-- Image Gallery -->
+<section class="relative w-full aspect-square overflow-hidden bg-surface-container">
+<div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-full scroll-smooth" id="gallery-scroller">
+<div class="flex-none w-full h-full snap-center overflow-hidden">
+<img class="w-full h-full object-cover gallery-image cursor-zoom-in" data-alt="iPhone 15 Pro Max Product Shot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACwneIuaLNQTrMsl_o3Io23WtblSMNrB_G142f3-LDvWbNAMUm7cEw460jYMXssaD9CdJRS039x36n96ym-dNBWLNgj2Fo5g5VBQt4ZfsXdF2EK5J0HO_-UUTOpIQteOT8rCN5YF3LBGGTEC0cfx08F6IXek8_Dt5JiGTiKNMUxidlEH5PuXtYdAFmdk_vMwFxkTcaMVtJdToHR7NP7GqICBcNhj8SG-9ps7sNdq7I-2_VH16g-WkTbg"/>
+</div>
+<div class="flex-none w-full h-full snap-center overflow-hidden">
+<img class="w-full h-full object-cover gallery-image cursor-zoom-in" data-alt="Camera Detail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCidLoHvu4zWlb0axOTpYKiNKweR5f4Um-Fi5UbXo4a0l-QptNHg1kp9BLG2OA6FlngzPfsjFQO-uaqPvfN6tw3g1KygLwK6wY-ok8gdzqTga3eyb_7zw65xOWPggIR3XalbpsMZJ0RJMQdSy9LCnJne_zedhpgZrGslvNXIvBRpcX56DSs-f4rCXbxL71wUHjiMEq2ENkbeWEpjPD9-hWFx4IaTSs8srg4fib3I4VVgKmyryVI9acaSA"/>
+</div>
+<div class="flex-none w-full h-full snap-center overflow-hidden">
+<img class="w-full h-full object-cover gallery-image cursor-zoom-in" data-alt="Lifestyle Shot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNk7PSjHs39hp3svOjDNCYLVEvY_KAOhT9nHfZG64zqSPpWK7UGwEfgyhmXC4LkA22r-eNKs9pCsRcYt9S6WEPUivAF5LhStBqtGQjN5DYrQ2vMClIUE50iwOQMLgFJERi8oenlSiQ5zBA3AylOzhrWpX3ezcsZkw0hgaoPmGZ7eKYBb76hUa3ebKV8d5LsLq5ubBNfqR2sFQcMZ58usuGhiuCf_ikL2YCIpOtIIPS-wKU99T7_3z_uQ"/>
+</div>
+</div>
+<!-- Pagination Dots -->
+<div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-sm">
+<div class="dot active w-2 h-2 rounded-full bg-white"></div>
+<div class="dot w-2 h-2 rounded-full bg-white/40"></div>
+<div class="dot w-2 h-2 rounded-full bg-white/40"></div>
+</div>
+<!-- Platform Tag -->
+<div class="absolute top-4 right-4 flex items-center gap-1.5 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full shadow-sm">
+<div class="w-5 h-5 rounded-full bg-[#EE4D2D] flex items-center justify-center overflow-hidden">
+<span class="text-[10px] text-white font-bold">S</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Shopee Mall</span>
+</div>
+</section>
+<!-- Product Info Content -->
+<div class="px-md mt-6 space-y-6">
+<!-- Title & Pricing -->
+<div class="space-y-2">
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight">iPhone 15 Pro Max 256GB - Chính hãng VN/A</h2>
+<div class="flex items-end gap-3 pt-2">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant line-through">34.990.000đ</span>
+<span class="font-display-lg text-display-lg text-primary leading-none tracking-tighter">29.450.000đ</span>
+</div>
+<div class="mb-1">
+<div class="bg-primary-container text-on-primary-container px-3 py-1 rounded-lg font-bold text-lg flex items-center gap-1 animate-pulse-subtle">
+<span class="material-symbols-outlined text-[20px]" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span>-15% Hoàn</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-2 text-tertiary font-medium">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_balance_wallet" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Bạn được hoàn lại 4.417.500đ vào ví</span>
+</div>
+</div>
+<!-- Bento Grid Stats -->
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-low p-4 rounded-2xl flex flex-col justify-between h-24 transition-transform active:scale-95">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Thời gian duyệt</span>
+<span class="font-title-lg text-title-lg text-on-surface">45-60 ngày</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl flex flex-col justify-between h-24 transition-transform active:scale-95">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Tỷ lệ thành công</span>
+<span class="font-title-lg text-title-lg text-tertiary">98.5%</span>
+</div>
+</div>
+<!-- Shortcut Description -->
+<div class="space-y-3">
+<h3 class="font-title-lg text-title-lg text-on-surface">Mô tả sản phẩm</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3">
+                    iPhone 15 Pro Max là chiếc điện thoại mạnh mẽ nhất từng được Apple ra mắt. Với khung viền Titanium siêu bền, chip A17 Pro đỉnh cao và hệ thống camera zoom quang học 5x chuyên nghiệp. Màn hình ProMotion 120Hz mượt mà cùng cổng sạc USB-C mới...
+                </p>
+<button class="text-primary font-label-md text-label-md flex items-center gap-1 hover:underline active:opacity-60 transition-all">
+                    Xem thêm chi tiết <span class="material-symbols-outlined text-sm" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+</div>
+<!-- Conditions Section -->
+<div class="bg-surface-container p-6 rounded-3xl space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Điều kiện hoàn tiền</h3>
+</div>
+<ul class="space-y-3">
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-tertiary text-[20px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Phải bấm từ nút "Mua nhận hoàn tiền" của ứng dụng.</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-tertiary text-[20px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Không sử dụng trình duyệt ẩn danh khi mua hàng.</span>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-tertiary text-[20px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Đơn hàng không bị hủy hoặc đổi trả trong 7 ngày.</span>
+</li>
+</ul>
+</div>
+<!-- FAQ Section -->
+<div class="space-y-4">
+<h3 class="font-title-lg text-title-lg text-on-surface">Câu hỏi thường gặp</h3>
+<div class="space-y-2">
+<details class="group bg-surface rounded-2xl border border-outline-variant overflow-hidden">
+<summary class="flex items-center justify-between p-4 cursor-pointer list-none outline-none select-none active:bg-surface-container-low transition-colors">
+<span class="font-label-md text-label-md text-on-surface">Khi nào tôi nhận được tiền?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180" data-icon="expand_more">expand_more</span>
+</summary>
+<div class="overflow-hidden transition-all duration-300 max-h-0 group-open:max-h-40">
+<div class="px-4 pb-4 font-body-md text-body-md text-on-surface-variant">
+                                Tiền hoàn sẽ được ghi nhận tạm tính sau 24h và có thể rút về ví sau khi sàn xác nhận đơn hàng thành công (thường từ 30-60 ngày).
+                            </div>
+</div>
+</details>
+<details class="group bg-surface rounded-2xl border border-outline-variant overflow-hidden">
+<summary class="flex items-center justify-between p-4 cursor-pointer list-none outline-none select-none active:bg-surface-container-low transition-colors">
+<span class="font-label-md text-label-md text-on-surface">Có áp dụng mã giảm giá sàn không?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180" data-icon="expand_more">expand_more</span>
+</summary>
+<div class="overflow-hidden transition-all duration-300 max-h-0 group-open:max-h-40">
+<div class="px-4 pb-4 font-body-md text-body-md text-on-surface-variant">
+                                Có, bạn hoàn toàn có thể áp dụng thêm mã giảm giá của Shopee/Lazada và vẫn nhận được tiền hoàn từ HOANTIENVIP.
+                            </div>
+</div>
+</details>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Sticky CTA -->
+<div class="fixed bottom-0 left-0 w-full glass-header px-md py-4 pb-safe-bottom shadow-[0_-8px_24px_rgba(0,0,0,0.08)] z-50 animate-slide-up">
+<div class="max-w-md mx-auto flex items-center gap-4">
+<button class="w-12 h-12 flex-none rounded-2xl border-2 border-primary text-primary flex items-center justify-center active:scale-90 active:bg-primary/5 transition-all">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</button>
+<button class="flex-1 h-14 bg-primary-container text-white rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary-container/30 active:scale-[0.98] active:brightness-90 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+                Mua nhận hoàn tiền
+            </button>
+</div>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        // Gallery Scroll & Pagination Dot Logic
+        const scroller = document.getElementById('gallery-scroller');
+        const dots = document.querySelectorAll('.dot');
+        
+        scroller.addEventListener('scroll', () => {
+            const index = Math.round(scroller.scrollLeft / scroller.clientWidth);
+            dots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active');
+                    dot.classList.remove('bg-white/40');
+                    dot.classList.add('bg-white');
+                } else {
+                    dot.classList.remove('active');
+                    dot.classList.add('bg-white/40');
+                    dot.classList.remove('bg-white');
+                }
+            });
+        });
+
+        // Add to cart interaction
+        const ctaBtn = document.querySelector('button.flex-1');
+        ctaBtn.addEventListener('click', () => {
+            const originalContent = ctaBtn.innerHTML;
+            ctaBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span> Đang chuyển hướng...';
+            ctaBtn.classList.add('opacity-90');
+            
+            setTimeout(() => {
+                ctaBtn.innerHTML = originalContent;
+                ctaBtn.classList.remove('opacity-90');
+                console.log("Redirecting to Shopee...");
+            }, 1200);
+        });
+
+        // Smooth Accordion Support (Prevent double jump if any)
+        document.querySelectorAll('details').forEach((el) => {
+            el.addEventListener('toggle', (e) => {
+                if (el.open) {
+                    // Logic to close other details if needed (optional)
+                }
+            });
+        });
+    </script>
+</body></html>

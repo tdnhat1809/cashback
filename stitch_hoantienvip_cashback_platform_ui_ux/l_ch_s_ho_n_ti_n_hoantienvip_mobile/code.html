@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Lịch sử Hoàn tiền - HOANTIENVIP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#ff5a36",
+                    "on-primary-fixed": "#3d0600",
+                    "background": "#fff8f6",
+                    "secondary": "#565e74",
+                    "error": "#ba1a1a",
+                    "on-surface": "#271814",
+                    "inverse-on-surface": "#ffede9",
+                    "on-secondary-fixed-variant": "#3f465b",
+                    "on-primary-container": "#5a0c00",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "on-tertiary-container": "#003320",
+                    "surface-variant": "#f9dcd6",
+                    "surface-container-low": "#fff0ed",
+                    "primary-fixed-dim": "#ffb4a3",
+                    "tertiary-container": "#00a773",
+                    "on-tertiary-fixed": "#002113",
+                    "tertiary-fixed": "#6ffbbe",
+                    "surface-dim": "#f0d4ce",
+                    "inverse-surface": "#3e2c28",
+                    "secondary-fixed-dim": "#bec6df",
+                    "surface-container-high": "#ffe2dc",
+                    "surface-container": "#ffe9e5",
+                    "on-secondary-container": "#5a6278",
+                    "on-surface-variant": "#5b403a",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#d7dff9",
+                    "outline": "#8f7069",
+                    "outline-variant": "#e3beb6",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "primary": "#b52603",
+                    "primary-fixed": "#ffdad2",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#271814",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#006c49",
+                    "surface-bright": "#fff8f6",
+                    "on-secondary-fixed": "#131b2e",
+                    "on-primary-fixed-variant": "#8c1900",
+                    "secondary-fixed": "#dae2fc",
+                    "surface-tint": "#b52603",
+                    "surface": "#fff8f6",
+                    "inverse-primary": "#ffb4a3",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#f9dcd6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "2xl": "48px",
+                    "3xl": "64px",
+                    "xs": "4px",
+                    "container-max": "1280px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "title-lg": ["Be Vietnam Pro"],
+                    "headline-md": ["Be Vietnam Pro"],
+                    "display-lg": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "body-md": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm flex justify-between items-center h-16 px-md">
+<div class="flex items-center gap-sm">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md-mobile text-primary tracking-tight font-black">Lịch sử nhận tiền</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="help">help</span>
+</button>
+</header>
+<main class="pt-20 px-md space-y-lg">
+<!-- Balance Summary Card -->
+<section class="bg-primary-container p-lg rounded-xl text-on-primary-container shadow-lg flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-sm text-label-sm opacity-90 uppercase tracking-wider">Tổng tích lũy</p>
+<h2 class="font-display-lg text-[32px] leading-tight font-black">1.250.000đ</h2>
+</div>
+<div class="bg-on-primary-container/20 px-sm py-xs rounded-lg flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="workspace_premium" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="font-label-sm text-label-sm">Thành viên Vàng</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md mt-md pt-md border-t border-on-primary-container/10">
+<div>
+<p class="font-label-sm text-label-sm opacity-80">Chờ duyệt</p>
+<p class="font-title-lg text-title-lg">450.000đ</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm opacity-80">Đã nhận</p>
+<p class="font-title-lg text-title-lg">800.000đ</p>
+</div>
+</div>
+</section>
+<!-- Filters Section -->
+<section class="space-y-md">
+<div class="flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-title-lg text-title-lg">Bộ lọc</h3>
+<button class="text-primary font-label-md text-label-md">Xóa lọc</button>
+</div>
+<!-- Time Filter -->
+<div class="flex gap-sm overflow-x-auto hide-scrollbar pb-xs">
+<button class="px-md py-sm rounded-full bg-primary text-on-primary font-label-md text-label-md whitespace-nowrap">Tất cả</button>
+<button class="px-md py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap">Tháng này</button>
+<button class="px-md py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap">Tháng 10</button>
+<button class="px-md py-sm rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap">Tháng 09</button>
+</div>
+<!-- Status Filter -->
+<div class="flex gap-sm overflow-x-auto hide-scrollbar">
+<button class="px-md py-sm rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md whitespace-nowrap flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle">check_circle</span>
+                        Thành công
+                    </button>
+<button class="px-md py-sm rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md whitespace-nowrap flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]" data-icon="schedule">schedule</span>
+                        Chờ duyệt
+                    </button>
+<button class="px-md py-sm rounded-full border border-outline-variant text-on-surface-variant font-label-md text-label-md whitespace-nowrap flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]" data-icon="shopping_cart">shopping_cart</span>
+                        Sàn TMĐT
+                    </button>
+</div>
+</div>
+</section>
+<!-- Transaction List -->
+<section class="space-y-md">
+<div class="flex items-center justify-between">
+<h3 class="font-title-lg text-title-lg">Đơn hàng gần đây</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">24 giao dịch</span>
+</div>
+<div class="space-y-sm">
+<!-- Item 1: Success -->
+<div class="bg-surface-container-lowest p-md rounded-xl flex gap-md items-center shadow-sm hover:shadow-md transition-shadow active:scale-[0.98] duration-150 border border-outline-variant/10">
+<div class="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A professional high-quality close-up of a modern smartphone with sleek glass and metal finishes, positioned against a minimalist background. The lighting is soft and directional, highlighting the premium design of the device. The overall aesthetic is clean and high-tech, fitting for an e-commerce platform that emphasizes reliability and premium savings on electronics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU2IrXE0PMbkpjb16VxeRXFLPN7DYFcrw9qX3FetOcc21Npo44DT6VBJiyV6mPEsaR8fWGphK936OW9xePFglnbK4lz3R9Ocxs56jpsyhUyBvYkLsgI_tbhgm_7gTJc4lKBf594SGmQRzg6y9I7jcHaW8GRl9NfNvukocaDugvTeWN6AaM5Rk5SnKiOv5aanS45_CpFUBjbx_TCrgvey_3QROwcs54tdt31AcvUfG81lneqmOXLwD7xA"/>
+<div class="absolute top-0 left-0 bg-primary-container px-1 rounded-br-lg">
+<span class="text-[10px] font-bold text-on-primary-container">SHP</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between h-full py-xs">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md font-bold text-on-surface line-clamp-1">iPhone 15 Pro Max 256GB Titanium</h4>
+<p class="font-title-lg text-title-lg text-tertiary-container font-black">+124.500đ</p>
+</div>
+<div class="flex justify-between items-end mt-xs">
+<p class="font-label-sm text-label-sm text-on-surface-variant">20/10/2023 • 14:30</p>
+<span class="px-sm py-[2px] rounded-full bg-tertiary-container/10 text-tertiary text-[10px] font-bold flex items-center gap-xs">
+<span class="material-symbols-outlined text-[12px]" data-icon="check" style="font-variation-settings: 'wght' 700;">check</span>
+                                THÀNH CÔNG
+                            </span>
+</div>
+</div>
+</div>
+<!-- Item 2: Pending -->
+<div class="bg-surface-container-lowest p-md rounded-xl flex gap-md items-center shadow-sm hover:shadow-md transition-shadow active:scale-[0.98] duration-150 border border-outline-variant/10">
+<div class="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A crisp, studio photograph of a pair of high-performance wireless earbuds in a sleek charging case, set on a smooth, reflective white surface. The lighting is bright and modern, creating soft shadows that emphasize the product's ergonomic curves. The style is contemporary minimalist, perfect for representing high-end tech accessories in a financial rewards application context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtbtbgp9EtWICDmwM4azWLhKHqGtT81a4BaTgzRdCFfry8yOizNJNintV81wCwYYnxNFqQTHPxyFcqbhtwCj_ErP8JfSKdBVIqZlu4Z7oLxoacVrW9knnwHA9CXEqZDbxUlsMflKCu2PRywZSrDusfAOtEq5ZVfkOX47wEEh6cWKfRyhJiQt9jDsdqoDloiD5xGRgb_yfQz01c81smokkR_ChpYuEoPLG8Qj4il6xaa8Npldg4A-_f3w"/>
+<div class="absolute top-0 left-0 bg-[#00f2ea] px-1 rounded-br-lg text-black">
+<span class="text-[10px] font-bold">TKT</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between h-full py-xs">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md font-bold text-on-surface line-clamp-1">Tai nghe Sony WH-1000XM5</h4>
+<p class="font-title-lg text-title-lg text-[#F59E0B] font-black">+85.200đ</p>
+</div>
+<div class="flex justify-between items-end mt-xs">
+<p class="font-label-sm text-label-sm text-on-surface-variant">18/10/2023 • 09:12</p>
+<span class="px-sm py-[2px] rounded-full bg-[#F59E0B]/10 text-[#F59E0B] text-[10px] font-bold flex items-center gap-xs">
+<span class="material-symbols-outlined text-[12px]" data-icon="history" style="font-variation-settings: 'wght' 700;">history</span>
+                                CHỜ DUYỆT
+                            </span>
+</div>
+</div>
+</div>
+<!-- Item 3: Success -->
+<div class="bg-surface-container-lowest p-md rounded-xl flex gap-md items-center shadow-sm hover:shadow-md transition-shadow active:scale-[0.98] duration-150 border border-outline-variant/10">
+<div class="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="An elegant and high-fashion leather handbag captured with soft, atmospheric lighting that brings out the texture of the grain. The color palette is composed of warm earth tones, complementing the luxury brand feel. The photography is clean and sophisticated, suitable for a lifestyle cashback interface, conveying quality and value to the user looking for fashion rewards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjKAqFHozoX3jVFRqAQUoFnqYA2hjUjVLRDQtRgHyqftlWGxNXN5PRJ5t0jArxRasWA1Zaq-XWn8ep1NPiwnmJQaEjykA3rrC7ePpCvdR6xVJ2HfEhsffvfhzb4xQYi8IxpbBi_n9xQ1I7rzcLVcHxN7jNG5p_zZhcuITJv6dlftzIJhwrK19PWGE4iAG5-LWRAvUAjvwrYw47qDCuRY3HldUXPcVqwWFg58owMhN-Q4fM0tLEdb7aag"/>
+<div class="absolute top-0 left-0 bg-[#146eb4] px-1 rounded-br-lg text-white">
+<span class="text-[10px] font-bold">LAZ</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between h-full py-xs">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md font-bold text-on-surface line-clamp-1">Túi xách Coach Morgan Satchel</h4>
+<p class="font-title-lg text-title-lg text-tertiary-container font-black">+210.000đ</p>
+</div>
+<div class="flex justify-between items-end mt-xs">
+<p class="font-label-sm text-label-sm text-on-surface-variant">15/10/2023 • 21:05</p>
+<span class="px-sm py-[2px] rounded-full bg-tertiary-container/10 text-tertiary text-[10px] font-bold flex items-center gap-xs">
+<span class="material-symbols-outlined text-[12px]" data-icon="check" style="font-variation-settings: 'wght' 700;">check</span>
+                                THÀNH CÔNG
+                            </span>
+</div>
+</div>
+</div>
+<!-- Item 4: Pending -->
+<div class="bg-surface-container-lowest p-md rounded-xl flex gap-md items-center shadow-sm hover:shadow-md transition-shadow active:scale-[0.98] duration-150 border border-outline-variant/10">
+<div class="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A set of high-end skincare bottles arranged artistically on a white marble surface, illuminated by bright, diffused sunlight. The scene is pristine and refreshing, focusing on clear glass and elegant typography. This imagery represents health and beauty categories with a sense of clarity and reliability, maintaining the professional fintech-meets-lifestyle aesthetic of the cashback app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKjLPpakHPYsMIsCSMijff-ZkN4PtHpFk6Ss0Z8ZsqRDTmfbpULsfJ6odfmu3z0Kv5a6NBwYLB4BgiTB34MY46BjUYwKgp7Bv8s6_uTQGgGeLKI9MxWu0AiMg0HTZlRPAEDByNTL1EANeP6us7wUYvZAlNSjyjf_hbCkiLitYF1S7VjdD-JeZrFBGgp3WhjBpDzfGm4ZGXTiX1dlxXFYic2m1RwqC2xXM67sYO-YZJx-SdUxeJxowiOg"/>
+<div class="absolute top-0 left-0 bg-primary-container px-1 rounded-br-lg">
+<span class="text-[10px] font-bold text-on-primary-container">SHP</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between h-full py-xs">
+<div class="flex justify-between items-start">
+<h4 class="font-label-md text-label-md font-bold text-on-surface line-clamp-1">Combo Skincare Estee Lauder 5 Món</h4>
+<p class="font-title-lg text-title-lg text-[#F59E0B] font-black">+42.000đ</p>
+</div>
+<div class="flex justify-between items-end mt-xs">
+<p class="font-label-sm text-label-sm text-on-surface-variant">12/10/2023 • 11:20</p>
+<span class="px-sm py-[2px] rounded-full bg-[#F59E0B]/10 text-[#F59E0B] text-[10px] font-bold flex items-center gap-xs">
+<span class="material-symbols-outlined text-[12px]" data-icon="history" style="font-variation-settings: 'wght' 700;">history</span>
+                                CHỜ DUYỆT
+                            </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Empty State Mock (for demonstration) -->
+<section class="hidden py-xl flex flex-col items-center justify-center text-center space-y-md">
+<span class="material-symbols-outlined text-[64px] text-outline-variant" data-icon="receipt_long">receipt_long</span>
+<div class="space-y-xs">
+<h3 class="font-title-lg text-title-lg text-on-surface-variant">Chưa có giao dịch</h3>
+<p class="font-body-md text-body-md text-on-surface-variant px-xl">Hãy mua sắm để nhận được những khoản hoàn tiền hấp dẫn đầu tiên!</p>
+</div>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-full font-label-md text-label-md shadow-lg active:scale-95 transition-transform">Sắm ngay</button>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/90 backdrop-blur-lg border-t border-outline-variant/30 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] flex justify-around items-center h-20 pb-safe px-sm">
+<button class="flex flex-col items-center justify-center text-on-secondary-fixed-variant hover:bg-primary-container/20 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Trang chủ</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-secondary-fixed-variant hover:bg-primary-container/20 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="local_fire_department">local_fire_department</span>
+<span class="font-label-sm text-label-sm">Deal</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary font-bold hover:bg-primary-container/20 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Hoàn tiền</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-secondary-fixed-variant hover:bg-primary-container/20 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Cá nhân</span>
+</button>
+</nav>
+<script>
+        // Simple active state toggle for filter buttons
+        document.querySelectorAll('.flex.gap-sm button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // If it's a pill filter
+                if(this.classList.contains('rounded-full')) {
+                    const parent = this.parentElement;
+                    parent.querySelectorAll('button').forEach(b => {
+                        b.classList.remove('bg-primary', 'text-on-primary');
+                        b.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                        // Also handle border variations if any
+                        if(b.classList.contains('border')) {
+                            b.classList.remove('bg-primary', 'text-on-primary', 'border-transparent');
+                            b.classList.add('border-outline-variant', 'text-on-surface-variant');
+                        }
+                    });
+                    this.classList.remove('bg-surface-container-high', 'text-on-surface-variant', 'border-outline-variant');
+                    this.classList.add('bg-primary', 'text-on-primary', 'border-transparent');
+                }
+            });
+        });
+
+        // Pull to refresh simulation (visual only)
+        let touchstartY = 0;
+        document.addEventListener('touchstart', e => {
+            touchstartY = e.touches[0].screenY;
+        }, false);
+
+        document.addEventListener('touchend', e => {
+            const touchendY = e.changedTouches[0].screenY;
+            if (touchendY > touchstartY + 100 && window.scrollY === 0) {
+                // Trigger refresh animation
+                document.body.style.opacity = "0.7";
+                setTimeout(() => {
+                    document.body.style.opacity = "1";
+                }, 500);
+            }
+        }, false);
+    </script>
+</body></html>

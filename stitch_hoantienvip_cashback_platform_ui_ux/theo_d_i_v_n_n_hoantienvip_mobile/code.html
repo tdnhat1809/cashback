@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Theo dõi vận đơn | Cashback Platform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#b52603",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#fff0ed",
+                        "secondary-fixed": "#dae2fc",
+                        "on-tertiary-fixed": "#002113",
+                        "surface-bright": "#fff8f6",
+                        "surface-container-high": "#ffe2dc",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#ffede9",
+                        "background": "#fff8f6",
+                        "primary-container": "#ff5a36",
+                        "secondary-fixed-dim": "#bec6df",
+                        "on-primary": "#ffffff",
+                        "on-background": "#271814",
+                        "surface-container-highest": "#f9dcd6",
+                        "on-surface-variant": "#5b403a",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "inverse-primary": "#ffb4a3",
+                        "tertiary-container": "#00a773",
+                        "tertiary": "#006c49",
+                        "secondary-container": "#d7dff9",
+                        "surface-variant": "#f9dcd6",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#5a0c00",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface-container": "#ffe9e5",
+                        "secondary": "#565e74",
+                        "on-tertiary-container": "#003320",
+                        "surface": "#fff8f6",
+                        "on-secondary-container": "#5a6278",
+                        "on-primary-fixed-variant": "#8c1900",
+                        "inverse-surface": "#3e2c28",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#b52603",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-dim": "#f0d4ce",
+                        "primary-fixed": "#ffdad2",
+                        "outline": "#8f7069",
+                        "on-secondary-fixed-variant": "#3f465b",
+                        "on-primary-fixed": "#3d0600",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#ffb4a3",
+                        "outline-variant": "#e3beb6",
+                        "on-surface": "#271814"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "2xl": "48px",
+                        "md": "16px",
+                        "3xl": "64px",
+                        "gutter": "24px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "title-lg": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md flex items-center justify-between px-md h-14 w-full">
+<button class="active:scale-95 duration-100 hover:bg-surface-container-high transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-on-surface">Theo dõi vận đơn</h1>
+<button class="active:scale-95 duration-100 hover:bg-surface-container-high transition-colors p-2 rounded-full flex items-center justify-center relative">
+<span class="material-symbols-outlined text-on-surface" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-surface"></span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 pt-14 pb-24 px-md">
+<!-- Add Tracking Number Button Section -->
+<section class="mt-lg">
+<button class="w-full h-14 bg-primary-container text-on-primary font-title-lg flex items-center justify-center gap-2 rounded-xl shadow-lg active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                Thêm mã vận đơn
+            </button>
+</section>
+<!-- List Filters (Micro-interaction) -->
+<div class="flex gap-2 overflow-x-auto py-md custom-scrollbar mt-4">
+<button class="px-4 py-2 bg-primary-container/10 text-primary rounded-full text-label-md whitespace-nowrap font-bold">Tất cả</button>
+<button class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full text-label-md whitespace-nowrap hover:bg-surface-container-high transition-colors">Đang giao</button>
+<button class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full text-label-md whitespace-nowrap hover:bg-surface-container-high transition-colors">Đã giao</button>
+<button class="px-4 py-2 bg-surface-container text-on-surface-variant rounded-full text-label-md whitespace-nowrap hover:bg-surface-container-high transition-colors">Chờ xác nhận</button>
+</div>
+<!-- Tracking Cards List -->
+<div class="space-y-md mt-2" id="tracking-list">
+<!-- Card 1: Delivering -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_12px_rgba(39,24,20,0.04)] active:scale-[0.97] transition-all cursor-pointer border border-outline-variant/30" onclick="openDetails('VN-82736412')">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center p-1 overflow-hidden">
+<img class="w-full h-full object-contain" data-alt="A small minimalist logistics company logo, high contrast orange and white vector style, clean flat design icons for a shipping brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4u0EHr140d0Gu9BzGHgqHcDlRFU73NuaeKmux6Qfyhcrxsrqpi6CRYR4V6ft81ddMOwurqY6dCK_g7uDWdEN3adwGgWI9Q5iU3kwPOZm7uqcj4P3_69udZiZpjMt8x4XBAqk24y0sRmk-xWNHvqojszJnnC-UI-75zyDvizPkbaRhzofJ7rfsHj7sCnBfd0-QIRoc_VGa81T8Dnym3tuZxuks_BAwgy_nNv5rULtShirX_SZwkBIICA"/>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant font-bold">VNPOST</p>
+<h3 class="text-title-lg text-primary font-bold tracking-tight">VN-82736412</h3>
+</div>
+</div>
+<span class="px-3 py-1 bg-tertiary/10 text-tertiary text-label-sm rounded-full font-bold">Đang giao</span>
+</div>
+<div class="relative pl-6 space-y-4">
+<div class="absolute left-1.5 top-2 bottom-2 w-0.5 bg-outline-variant"></div>
+<div class="relative">
+<div class="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-tertiary border-2 border-surface"></div>
+<p class="text-label-md font-bold text-on-surface">Đã đến kho trung chuyển Hà Nội</p>
+<p class="text-label-sm text-on-surface-variant">Hôm nay, 14:20</p>
+</div>
+</div>
+<div class="mt-md pt-md border-t border-outline-variant/30 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="calendar_today">calendar_today</span>
+<p class="text-label-sm text-on-surface-variant">Dự kiến nhận: <span class="text-on-surface font-bold">Thứ 4, 15/10</span></p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Card 2: Pending -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_12px_rgba(39,24,20,0.04)] active:scale-[0.97] transition-all cursor-pointer border border-outline-variant/30">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center p-1 overflow-hidden">
+<img class="w-full h-full object-contain" data-alt="A minimalist logo for a delivery service featuring a fast-moving package icon, bright blue and white color palette, professional fintech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDacj1A2bdctGgH8tpKiJyrEGMUItegl-RrrXAvWScOosMzBr9ucqnQLPSJDinNZXX0M9wfWzRI1fC-p6QSLxxU1HQcIO5tT4dWWvf1tjEoQmyVthaeo6_eEZcNHUua7jSHdiggTzzetgu7_6sDMJrBnhMs5vU7Q-itY7zbm7aSS5iTAXjtjN2IKg3cq3EdkiuMWrv-gtsegyIPQlAwFn8ZQqpekvV4yz3q3ueZbeCONKLJsCgWF_G5nA"/>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant font-bold">GIAO HÀNG NHANH</p>
+<h3 class="text-title-lg text-primary font-bold tracking-tight">GHN-P10293</h3>
+</div>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-label-sm rounded-full font-bold">Đang chuẩn bị</span>
+</div>
+<div class="relative pl-6 space-y-4">
+<div class="absolute left-1.5 top-2 bottom-2 w-0.5 bg-outline-variant"></div>
+<div class="relative">
+<div class="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-outline border-2 border-surface"></div>
+<p class="text-label-md font-bold text-on-surface">Người gửi đang chuẩn bị hàng</p>
+<p class="text-label-sm text-on-surface-variant">12/10, 09:15</p>
+</div>
+</div>
+<div class="mt-md pt-md border-t border-outline-variant/30 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="calendar_today">calendar_today</span>
+<p class="text-label-sm text-on-surface-variant">Dự kiến nhận: <span class="text-on-surface font-bold">Thứ 6, 17/10</span></p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Empty State Section (Initially Hidden in JS) -->
+<div class="hidden flex flex-col items-center justify-center py-12 px-xl text-center" id="empty-state">
+<div class="w-48 h-48 bg-surface-container-low rounded-full flex items-center justify-center mb-6 relative overflow-hidden">
+
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Chưa có vận đơn nào</h2>
+<p class="text-body-md text-on-surface-variant mb-8 px-4">Hãy thêm mã vận đơn để bắt đầu theo dõi hành trình đơn hàng của bạn và nhận cashback hấp dẫn.</p>
+<button class="bg-primary text-on-primary px-8 py-3 rounded-full font-label-md hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+                    Tìm kiếm ưu đãi
+                </button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface/90 dark:bg-surface-container-highest/90 backdrop-blur-md rounded-t-xl z-50 shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Trang chủ</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="sell">sell</span>
+<span class="font-label-sm text-label-sm">Ưu đãi</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary bg-primary-container/10 rounded-xl px-3 py-1 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span class="font-label-sm text-label-sm font-bold">Vận đơn</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Ví</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Cá nhân</span>
+</a>
+</nav>
+<!-- Detailed View Modal (Slide-up effect) -->
+<div class="fixed inset-0 z-[100] bg-black/50 invisible opacity-0 transition-all duration-300" id="details-modal">
+<div class="absolute bottom-0 left-0 w-full h-[90%] bg-surface rounded-t-[24px] transition-transform duration-500 translate-y-full flex flex-col" id="modal-content">
+<!-- Drag Handle -->
+<div class="w-12 h-1 bg-outline-variant rounded-full mx-auto my-3"></div>
+<!-- Modal Header -->
+<div class="px-md flex items-center justify-between pb-4 border-b border-outline-variant/20">
+<h2 class="text-title-lg font-bold">Chi tiết vận đơn</h2>
+<button class="p-2 hover:bg-surface-container rounded-full" onclick="closeDetails()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-md space-y-lg">
+<div class="flex items-center gap-4 p-md bg-surface-container-low rounded-xl">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center p-2">
+<img class="w-full h-full object-contain" data-alt="A modern tech-oriented courier service logo, minimal clean lines in dark navy and bright orange, sharp professional graphics for a logistics application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzLWf7UJ1w3kd4FeTDkaB3mLFqy9oujO-UwKrnGF5_VgIPMqNk_l7Cd_BT7tGeSp6ZABqIRNLtxItilkdB8u81D8oLvYA7l4dyYsmNB5cEeqPCqaK3SLGv-WhTmJuwGlpyMSOXdGE7QCSZqUwYgKCCv4-_wxjuFI-2YGK9U7CkxrhZSN6RFiUot_IeULdrVlNLnLRrOH5NcZldHtA84R9MXh66PNZZU6u9uo91epiwhNJz-2JkFXVsVg"/>
+</div>
+<div>
+<p class="text-headline-md text-primary font-bold" id="modal-id">VN-82736412</p>
+<p class="text-label-md text-on-surface-variant">Giao hàng tiết kiệm • 2.4kg</p>
+</div>
+</div>
+<!-- Full Timeline -->
+<div class="space-y-6 relative pl-8">
+<div class="absolute left-3.5 top-2 bottom-2 w-0.5 bg-outline-variant"></div>
+<div class="relative">
+<div class="absolute -left-[26px] top-1 w-5 h-5 rounded-full bg-tertiary border-4 border-surface-container-high"></div>
+<p class="text-body-md font-bold text-on-surface">Đã đến kho trung chuyển Hà Nội</p>
+<p class="text-label-sm text-on-surface-variant">Hôm nay, 14:20 • Kho 01, Gia Lâm</p>
+</div>
+<div class="relative opacity-60">
+<div class="absolute -left-[26px] top-1 w-5 h-5 rounded-full bg-outline border-4 border-surface"></div>
+<p class="text-body-md text-on-surface">Rời kho trung chuyển HCM</p>
+<p class="text-label-sm text-on-surface-variant">14/10, 08:30</p>
+</div>
+<div class="relative opacity-60">
+<div class="absolute -left-[26px] top-1 w-5 h-5 rounded-full bg-outline border-4 border-surface"></div>
+<p class="text-body-md text-on-surface">Đã nhập kho trung chuyển HCM</p>
+<p class="text-label-sm text-on-surface-variant">13/10, 22:15</p>
+</div>
+<div class="relative opacity-60">
+<div class="absolute -left-[26px] top-1 w-5 h-5 rounded-full bg-outline border-4 border-surface"></div>
+<p class="text-body-md text-on-surface">Người gửi đã bàn giao hàng</p>
+<p class="text-label-sm text-on-surface-variant">12/10, 16:45 • Shop Thời Trang X</p>
+</div>
+</div>
+<!-- Shipping Info Card -->
+<div class="bg-surface-container p-md rounded-xl space-y-md">
+<h3 class="font-bold text-label-md uppercase tracking-wider text-on-surface-variant">Thông tin nhận hàng</h3>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
+<div>
+<p class="text-label-md font-bold">Nguyễn Văn A</p>
+<p class="text-label-md text-on-surface-variant">Số 123, Đường Láng, Đống Đa, Hà Nội</p>
+<p class="text-label-md text-on-surface-variant">090xxxx123</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="p-md bg-surface border-t border-outline-variant/20">
+<button class="w-full h-12 border-2 border-primary text-primary rounded-xl font-bold active:bg-primary/5">
+                    Liên hệ tổng đài
+                </button>
+</div>
+</div>
+</div>
+<script>
+        function openDetails(id) {
+            const modal = document.getElementById('details-modal');
+            const content = document.getElementById('modal-content');
+            document.getElementById('modal-id').innerText = id;
+            
+            modal.classList.remove('invisible', 'opacity-0');
+            modal.classList.add('visible', 'opacity-100');
+            content.classList.remove('translate-y-full');
+            content.classList.add('translate-y-0');
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetails() {
+            const modal = document.getElementById('details-modal');
+            const content = document.getElementById('modal-content');
+            
+            content.classList.remove('translate-y-0');
+            content.classList.add('translate-y-full');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.remove('visible');
+                modal.classList.add('invisible');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Handle clicking outside modal to close
+        document.getElementById('details-modal').addEventListener('click', function(e) {
+            if(e.target === this) closeDetails();
+        });
+
+        // Simple Toggle for Demo Empty State
+        window.toggleEmpty = () => {
+            const list = document.getElementById('tracking-list');
+            const empty = document.getElementById('empty-state');
+            const items = list.querySelectorAll(':scope > div:not(#empty-state)');
+            
+            items.forEach(item => item.classList.toggle('hidden'));
+            empty.classList.toggle('hidden');
+        };
+    </script>
+</body></html>

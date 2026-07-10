@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+
+<html class="light scroll-smooth" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HOANTIENVIP - Mua sắm thông minh, nhận tiền hoàn mỗi ngày</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#b52603",
+                        "tertiary": "#006c49",
+                        "secondary-container": "#d7dff9",
+                        "secondary-fixed": "#dae2fc",
+                        "on-error": "#ffffff",
+                        "on-surface": "#271814",
+                        "on-primary-container": "#5a0c00",
+                        "on-secondary": "#ffffff",
+                        "primary": "#b52603",
+                        "on-primary-fixed": "#3d0600",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface-variant": "#f9dcd6",
+                        "inverse-on-surface": "#ffede9",
+                        "tertiary-fixed": "#6ffbbe",
+                        "on-secondary-fixed-variant": "#3f465b",
+                        "secondary-fixed-dim": "#bec6df",
+                        "background": "#fff8f6",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#ffb4a3",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-tertiary-container": "#003320",
+                        "surface-bright": "#fff8f6",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#e3beb6",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-secondary-container": "#5a6278",
+                        "surface": "#fff8f6",
+                        "on-tertiary-fixed": "#002113",
+                        "inverse-surface": "#3e2c28",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#ffdad2",
+                        "on-background": "#271814",
+                        "surface-container": "#ffe9e5",
+                        "on-surface-variant": "#5b403a",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#ffb4a3",
+                        "surface-container-low": "#fff0ed",
+                        "error": "#ba1a1a",
+                        "outline": "#8f7069",
+                        "surface-container-highest": "#f9dcd6",
+                        "primary-container": "#ff5a36",
+                        "on-primary-fixed-variant": "#8c1900",
+                        "tertiary-container": "#00a773",
+                        "secondary": "#565e74",
+                        "surface-dim": "#f0d4ce",
+                        "surface-container-high": "#ffe2dc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "20px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "md": "16px",
+                        "2xl": "48px",
+                        "3xl": "64px",
+                        "sm": "8px",
+                        "xl": "32px",
+                        "container-max": "1280px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "title-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #fff8f6; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .hero-gradient { background: radial-gradient(circle at top right, #ffdad2 0%, #fff8f6 60%); }
+        .shadow-soft { box-shadow: 0 4px 24px -4px rgba(181, 38, 3, 0.08); }
+        .pwa-entry { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideUp { from { transform: translateY(100%) scale(0.9); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+
+        /* Micro-interactions & Animations */
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background-color: currentColor; transition: width 0.3s ease; }
+        .nav-link:hover::after { width: 100%; }
+
+        .float-animation { animation: floating 6s ease-in-out infinite; }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .btn-scale { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-scale:active { transform: scale(0.95); }
+        .btn-scale:focus-visible { outline: 2px solid theme('colors.primary'); outline-offset: 2px; }
+    </style>
+</head>
+<body class="text-on-surface overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto">
+<div class="flex items-center gap-xl">
+<span class="font-display-lg text-display-lg font-black tracking-tighter text-primary cursor-pointer hover:opacity-90 transition-opacity">HOANTIENVIP</span>
+<nav class="hidden md:flex items-center gap-lg">
+<a class="nav-link text-primary border-b-2 border-primary font-bold pb-1 font-label-md text-label-md" href="#">Trang chủ</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Deal hot</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Shopee</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">TikTok Shop</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Kiếm tiền</a>
+<a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Rút tiền</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="btn-scale px-md py-sm font-label-md text-label-md text-primary hover:bg-surface-container-high/50 rounded-lg transition-all">Đăng nhập</button>
+<button class="btn-scale px-lg py-sm font-label-md text-label-md bg-primary-container text-white rounded-lg shadow-soft hover:brightness-110 active:scale-95 transition-all">Đăng ký</button>
+</div>
+</div>
+</header>
+<main class="pt-16">
+<!-- Hero Section -->
+<section class="hero-gradient relative overflow-hidden py-3xl px-gutter">
+<div class="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-2 gap-2xl items-center relative z-10">
+<div class="flex flex-col gap-xl">
+<h1 class="font-display-lg text-[56px] leading-[1.1] text-on-surface font-black reveal active">
+                    Mua sắm thông minh,<br/>
+<span class="text-primary">nhận tiền hoàn</span> mỗi ngày
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl reveal active" style="transition-delay: 0.2s;">
+                    Tiết kiệm đến 20% khi mua sắm tại Shopee &amp; TikTok Shop qua HOANTIENVIP. Hệ thống tự động theo dõi và tích lũy tiền hoàn cho bạn.
+                </p>
+<!-- Link Converter Box -->
+<div class="mt-md p-md bg-white rounded-2xl shadow-soft flex flex-col md:flex-row gap-sm items-center border border-primary-fixed reveal active" style="transition-delay: 0.4s;">
+<div class="flex-1 w-full relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">link</span>
+<input class="w-full pl-12 pr-4 py-4 rounded-xl border-none bg-surface-container-low focus:ring-2 focus:ring-primary/20 text-body-md font-body-md transition-all" placeholder="Dán link sản phẩm Shopee hoặc TikTok Shop tại đây..." type="text"/>
+</div>
+<button class="btn-scale w-full md:w-auto px-xl py-4 bg-primary-container text-white font-label-md text-label-md rounded-xl hover:shadow-lg transition-all active:scale-95 whitespace-nowrap">
+                        Lấy link hoàn tiền
+                    </button>
+</div>
+<div class="flex items-center gap-md reveal active" style="transition-delay: 0.6s;">
+<div class="flex -space-x-3">
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover hover:z-10 transition-transform hover:scale-110" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBLm8yyajBWeqOC1ju0zaEscm5EnHf3KlNDMNJ7gFQ1rsBl_9hMXIRZEH1zcNfy86elcsri8udbyhMof1YUeXsY0YFvXv8R_YaeHWn9lSxqFNOxHw7x_Xph0vTtpqBw_UAXBc8HTBESHHzCm79cVl_7AQj8asOVwDenUZse4aItt2kljsN5EKpSDxUTFMQqpKIM5u8CzmpNZ6vgkMwKriwRz1PNGYuLWntw8ArY91A2zFbfn-Ln5JFOg"/>
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover hover:z-10 transition-transform hover:scale-110" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAP0qTAImVJL-Ws3ZoAv8pufenRRSjTSvVolCKq21GxYszEyBdfjvfAgrj2i5Zm0eQ8puLUqiycXaLBnEdi49k9-4JYus90_QcRZvagZeiMyxTW64Uy0ewhy6CoHF9Z5FeWFqqjH9ryqQo34q81pfL0RVB_mMzpkMu1gx94T-siwmFN5VeZqE3eGG4H0e2u_rfpC3Rniz9Str95SOEXrRT_6zSsOVz-Wm21iS-aXdWEngugzqj3poljlw"/>
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover hover:z-10 transition-transform hover:scale-110" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7Lvp_gteHtRnw2eM0mNyfpR8n5z3D3NH-S0_avrfdFISntcfOXdGIcwVJ9CtFN0nnh2SyKO83gWpC5bQlsGaGnswQGdkKn79aAfBMoQFEAAUgJ4PdtjwdhQ4JToSyxRXjgk81XQi91jVF3PulbCw_US0PPeDIEQ-Ou3M90NU66Zp22jZSnuolGHqGxLqoforc2HUkb3TzPtlSiaI501_CKekb8Sh35LHnIFHwOTTMlA37E5bSqmEV8w"/>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Hơn <span class="text-primary font-bold">1.2M</span> người dùng đã tin tưởng</p>
+</div>
+</div>
+<div class="hidden lg:block relative reveal active" style="transition-delay: 0.3s;">
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="relative glass-card p-xl rounded-2xl shadow-soft float-animation">
+<img class="w-full rounded-xl object-contain drop-shadow-2xl" data-alt="Fintech dashboard 3D render" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAoUKpMthxeoafljyIXiKCMQYpKcU31mFketPjSqDDkC-Tf2Wcmj7o7MMhIDvJxTEHkDpU2zEf0u9TrsoyJsenNDJacHrJYfW5twYtMLkMaJYSCjEU4OW8r5f6jDIXE3RrEDUJf-MzHWdEzSl1PtdDXfSo8Oj_YqmlDpr2fLUH6YTVjCA9FDoA7dQWVZeTFGnkUuZxBoL_vNA5PL_uQQul0lI7vu4FRap4kkeUeAih64n6mZK5WXpY_w"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Steps Section -->
+<section class="py-3xl px-gutter bg-white reveal">
+<div class="max-w-container-max mx-auto">
+<div class="text-center mb-2xl">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Bắt đầu tiết kiệm chỉ với 3 bước</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-xl">
+<!-- Step 1 -->
+<div class="flex flex-col items-center text-center p-xl group cursor-default">
+<div class="w-20 h-20 bg-primary-fixed rounded-2xl flex items-center justify-center mb-lg group-hover:rotate-6 group-hover:scale-110 transition-all duration-300">
+<span class="material-symbols-outlined text-primary text-[40px]">link</span>
+</div>
+<h3 class="font-title-lg text-title-lg mb-sm group-hover:text-primary transition-colors">1. Dán link</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Sao chép link sản phẩm từ Shopee hoặc TikTok và dán vào HOANTIENVIP.</p>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center text-center p-xl group cursor-default">
+<div class="w-20 h-20 bg-primary-fixed rounded-2xl flex items-center justify-center mb-lg group-hover:-rotate-6 group-hover:scale-110 transition-all duration-300">
+<span class="material-symbols-outlined text-primary text-[40px]">shopping_cart</span>
+</div>
+<h3 class="font-title-lg text-title-lg mb-sm group-hover:text-primary transition-colors">2. Mua hàng</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Tiếp tục mua hàng như bình thường trên ứng dụng của sàn.</p>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center text-center p-xl group cursor-default">
+<div class="w-20 h-20 bg-primary-fixed rounded-2xl flex items-center justify-center mb-lg group-hover:rotate-6 group-hover:scale-110 transition-all duration-300">
+<span class="material-symbols-outlined text-primary text-[40px]">payments</span>
+</div>
+<h3 class="font-title-lg text-title-lg mb-sm group-hover:text-primary transition-colors">3. Nhận cashback</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Nhận lại tiền hoàn vào ví HOANTIENVIP và rút về tài khoản ngân hàng.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Section -->
+<section class="py-2xl bg-primary text-white overflow-hidden relative reveal">
+<div class="max-w-container-max mx-auto px-gutter grid grid-cols-2 md:grid-cols-4 gap-xl relative z-10">
+<div class="text-center group">
+<div class="font-display-lg text-[40px] font-black group-hover:scale-110 transition-transform cursor-default">150 tỷ</div>
+<div class="text-label-md opacity-80 uppercase tracking-widest">VNĐ đã hoàn</div>
+</div>
+<div class="text-center group">
+<div class="font-display-lg text-[40px] font-black group-hover:scale-110 transition-transform cursor-default">1.2M</div>
+<div class="text-label-md opacity-80 uppercase tracking-widest">thành viên</div>
+</div>
+<div class="text-center group">
+<div class="font-display-lg text-[40px] font-black group-hover:scale-110 transition-transform cursor-default">50,000+</div>
+<div class="text-label-md opacity-80 uppercase tracking-widest">deal hôm nay</div>
+</div>
+<div class="text-center group">
+<div class="font-display-lg text-[40px] font-black group-hover:scale-110 transition-transform cursor-default">99%</div>
+<div class="text-label-md opacity-80 uppercase tracking-widest">hài lòng</div>
+</div>
+</div>
+</section>
+<!-- Deal Hot & Categories -->
+<section class="py-3xl px-gutter reveal">
+<div class="max-w-container-max mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-2xl gap-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg mb-md">Deal Hot Hôm Nay</h2>
+<div class="flex flex-wrap gap-sm">
+<button class="btn-scale px-lg py-2 bg-primary text-white rounded-full font-label-md text-label-md shadow-md">Tất cả</button>
+<button class="btn-scale px-lg py-2 bg-surface-container hover:bg-surface-container-high transition-colors rounded-full font-label-md text-label-md text-on-surface-variant">Shopee</button>
+<button class="btn-scale px-lg py-2 bg-surface-container hover:bg-surface-container-high transition-colors rounded-full font-label-md text-label-md text-on-surface-variant">TikTok Shop</button>
+<button class="btn-scale px-lg py-2 bg-surface-container hover:bg-surface-container-high transition-colors rounded-full font-label-md text-label-md text-on-surface-variant">Dưới 10K</button>
+<button class="btn-scale px-lg py-2 bg-surface-container hover:bg-surface-container-high transition-colors rounded-full font-label-md text-label-md text-on-surface-variant">Hoa hồng cao</button>
+<button class="btn-scale px-lg py-2 bg-surface-container hover:bg-surface-container-high transition-colors rounded-full font-label-md text-label-md text-on-surface-variant">Mã giảm giá</button>
+</div>
+</div>
+<a class="text-primary font-bold flex items-center gap-xs hover:underline transition-all group" href="#">
+                    Xem tất cả deal <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<!-- Product Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg">
+<!-- Product Card 1 -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-soft group hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Headphone product" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN1ON5K24LxO--mpXzHQ68mNEgo_VvD_bx_EenXc4XIJNNyKkIH9MfwOImCE1_aNnjo4qP__nSA5gaYZ_L3hDhC_qzsUBfQV8AE_I8O-DTb0QuBsEzNni34D91hBL5bWLVFTLNTBAkLaaNQLwelbP4b4TCpWoup9PfjqLkx5OdLa39jAwZmDM-yBoUNefH6mbSRi7wwyiLZ4kz27cIbZvPQ7yyTxyJkLEKSnA57pMvLwIm7k_Roe--Dg"/>
+<div class="absolute top-3 right-3 bg-primary text-white text-[12px] font-bold px-3 py-1 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                            Hoàn 15.000đ
+                        </div>
+<div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg flex items-center gap-1">
+<span class="text-[10px] font-bold text-[#EE4D2D]">Shopee</span>
+</div>
+</div>
+<div class="p-lg">
+<h3 class="font-title-lg text-title-lg mb-md line-clamp-2 min-h-[56px] group-hover:text-primary transition-colors">Tai Nghe Không Dây Bluetooth 5.3 Pro Chống Ồn</h3>
+<div class="flex items-baseline gap-sm mb-md">
+<span class="text-primary font-bold text-xl">199.000đ</span>
+<span class="text-outline text-label-sm line-through">350.000đ</span>
+</div>
+<button class="btn-scale w-full py-3 bg-surface-container-high hover:bg-primary hover:text-white transition-colors rounded-xl font-bold text-label-md">
+                            Mua nhận hoàn tiền
+                        </button>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-soft group hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Humidifier product" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcdvW35RELtG6k8yR6pJAyK4s_fC23BJQTJjF-jLpLNf4gO4Vvt2LMsoqVfEN59gFmZMt4BzuFZ1FUg0UdkBzLujq8fxmLXegV1hK8N94ANSpH9_3TtMjc166sx9jp-fA9p_fRf-Wbi3GcePcj2al2_2rrspv3iPp6gt13FsFFlpUSZ3qVQaR5YS3T3xLdc7JS1kjFADtS3i5-J5vWDkzhh48cl8n50kwDP0qsiKNqzxAC-EwdunplHw"/>
+<div class="absolute top-3 right-3 bg-primary text-white text-[12px] font-bold px-3 py-1 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                            Hoàn 12.000đ
+                        </div>
+<div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg flex items-center gap-1">
+<span class="text-[10px] font-bold text-black">TikTok</span>
+</div>
+</div>
+<div class="p-lg">
+<h3 class="font-title-lg text-title-lg mb-md line-clamp-2 min-h-[56px] group-hover:text-primary transition-colors">Máy Phun Sương Tạo Ẩm Tinh Dầu Cao Cấp</h3>
+<div class="flex items-baseline gap-sm mb-md">
+<span class="text-primary font-bold text-xl">145.000đ</span>
+<span class="text-outline text-label-sm line-through">280.000đ</span>
+</div>
+<button class="btn-scale w-full py-3 bg-surface-container-high hover:bg-primary hover:text-white transition-colors rounded-xl font-bold text-label-md">
+                            Mua nhận hoàn tiền
+                        </button>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-soft group hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Lamp product" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwDzSuIbKykqRn9FSBonBmkn7jsv5MQBxbNoemTAtfX-UWEQSLrQZOPA7XMiEmRUQ4-MjQDNjNMjgT1Z7fe3QlH70EhhgCFyL8Uq4tPkcDSRzdoPJaeNy0-X7RSp8HwBKWL3dOH3jTUZ7JguLjOnNW2kdrO2xjD7CtOCSvC12huSBqu7UEAcNfNOJji-s9T2incZ79l75PyZ_UvIfdQ0b0Jx76pP4AFUL3yhe6fRMMd6uljmHTW8Ukkg"/>
+<div class="absolute top-3 right-3 bg-primary text-white text-[12px] font-bold px-3 py-1 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                            Hoàn 25.000đ
+                        </div>
+<div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg flex items-center gap-1">
+<span class="text-[10px] font-bold text-[#EE4D2D]">Shopee</span>
+</div>
+</div>
+<div class="p-lg">
+<h3 class="font-title-lg text-title-lg mb-md line-clamp-2 min-h-[56px] group-hover:text-primary transition-colors">Đèn Học Chống Cận Thị Tích Hợp Sạc Không Dây</h3>
+<div class="flex items-baseline gap-sm mb-md">
+<span class="text-primary font-bold text-xl">285.000đ</span>
+<span class="text-outline text-label-sm line-through">450.000đ</span>
+</div>
+<button class="btn-scale w-full py-3 bg-surface-container-high hover:bg-primary hover:text-white transition-colors rounded-xl font-bold text-label-md">
+                            Mua nhận hoàn tiền
+                        </button>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-soft group hover:-translate-y-2 hover:shadow-xl transition-all duration-300">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Skincare product" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClBHLNmc6rEg_rlhREvk63WnSymf1gHRjqt4udmMQ2_9d2AAJrpw8NgX4BGruqv-f3o-_HDmP48yelMzn1sudxGHA0Q7JYMlLv-5Z7OPbGEwEh19LTPWHTC_ycWDrFL9isT87UYIeQYIU0E196Pn1o2zJdPWyBPsUbQgrzWEf9qxaZZdu9yDdpUoJgtcbXEgeKhOiB_XfjaceacdDlE4cgeA7LXP2jHvtJPNFsZNKUAhJ596YI1FNYCg"/>
+<div class="absolute top-3 right-3 bg-primary text-white text-[12px] font-bold px-3 py-1 rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                            Hoàn 8.500đ
+                        </div>
+<div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg flex items-center gap-1">
+<span class="text-[10px] font-bold text-black">TikTok</span>
+</div>
+</div>
+<div class="p-lg">
+<h3 class="font-title-lg text-title-lg mb-md line-clamp-2 min-h-[56px] group-hover:text-primary transition-colors">Bộ Chăm Sóc Da Toàn Diện Organic Tự Nhiên</h3>
+<div class="flex items-baseline gap-sm mb-md">
+<span class="text-primary font-bold text-xl">120.000đ</span>
+<span class="text-outline text-label-sm line-through">199.000đ</span>
+</div>
+<button class="btn-scale w-full py-3 bg-surface-container-high hover:bg-primary hover:text-white transition-colors rounded-xl font-bold text-label-md">
+                            Mua nhận hoàn tiền
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Referral CTA Banner -->
+<section class="py-3xl px-gutter reveal">
+<div class="max-w-container-max mx-auto bg-gradient-to-r from-primary to-[#ff8c70] rounded-3xl p-xl md:p-3xl overflow-hidden relative shadow-2xl group cursor-default">
+<div class="absolute right-0 top-0 w-1/2 h-full opacity-10 pointer-events-none"></div>
+<div class="relative z-10 grid md:grid-cols-2 gap-xl items-center">
+<div class="text-white">
+<div class="bg-white/20 backdrop-blur-md inline-block px-4 py-1 rounded-full text-label-sm mb-md uppercase tracking-widest font-bold">Chương trình hot</div>
+<h2 class="font-display-lg text-[40px] font-black mb-md leading-tight group-hover:scale-[1.02] origin-left transition-transform duration-500">Mời bạn bè,<br/>nhận ngay 50.000đ</h2>
+<p class="font-body-lg text-body-lg opacity-90 mb-xl max-w-md">Nhận ngay hoa hồng trọn đời từ mỗi đơn hàng thành công của người bạn giới thiệu. Không giới hạn số lượng!</p>
+<button class="btn-scale bg-white text-primary px-3xl py-4 rounded-xl font-bold text-label-md hover:shadow-xl transition-all shadow-lg">Giới thiệu ngay</button>
+</div>
+<div class="hidden md:flex justify-center">
+<div class="bg-white p-6 rounded-2xl shadow-2xl rotate-3 group-hover:rotate-6 transition-transform duration-500">
+<img class="w-64 h-64 object-contain float-animation" data-alt="Reward treasure chest 3D" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiMgyb20Ou1as3LSjq9DJKhdWUXGN143vlAky0w-HfzCatRs6sDKJKtkDQWX4DGfcoVYa5Yz3mKBO767T2OAE6JN6l7F33rtui8FmSM6rblQ0L_Kg5UUI5DxXf58mkOVm1D71AfznpjTnX3WGL3slgkSMuUCLGvR-_g1OZVV94nJR4Vft1Se4J_4rKV1uQMoZ0B0vRko4OTt6enJkgViuZ1sNvSaiDPVr7ocbt3c4aKHwFpVGo1_8hAQ"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ & Warning -->
+<section class="py-2xl px-gutter bg-surface-container-low reveal">
+<div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-2 gap-2xl items-center">
+<div>
+<h2 class="font-headline-md text-headline-md mb-xl">Câu hỏi thường gặp</h2>
+<div class="space-y-md">
+<div class="bg-white p-lg rounded-2xl border border-outline-variant shadow-sm hover:shadow-md transition-all cursor-pointer group">
+<h4 class="font-title-lg text-title-lg mb-sm group-hover:text-primary transition-colors">Bao lâu thì nhận được tiền hoàn?</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Thông thường sau 24h kể từ khi đơn hàng được giao thành công, bạn sẽ thấy số dư chờ duyệt.</p>
+</div>
+<div class="bg-white p-lg rounded-2xl border border-outline-variant shadow-sm hover:shadow-md transition-all cursor-pointer group">
+<h4 class="font-title-lg text-title-lg mb-sm group-hover:text-primary transition-colors">Tại sao đơn hàng bị mất hoàn tiền?</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Lỗi thường gặp do bạn nhấn vào quảng cáo khác trước khi mua, hoặc sử dụng mã giảm giá không cho phép hoàn tiền.</p>
+</div>
+</div>
+</div>
+<div class="bg-primary/5 p-xl rounded-3xl border border-primary/10 hover:bg-primary/[0.08] transition-colors">
+<div class="flex gap-md mb-md">
+<span class="material-symbols-outlined text-primary animate-pulse">warning</span>
+<h4 class="font-title-lg text-title-lg text-primary">Lưu ý quan trọng</h4>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md">
+                    HOANTIENVIP là nền tảng trung gian. Việc đối soát và phê duyệt tiền hoàn phụ thuộc hoàn toàn vào hệ thống của các sàn TMĐT (Shopee, TikTok Shop). 
+                </p>
+<ul class="space-y-sm">
+<li class="flex items-center gap-sm text-label-md text-on-surface-variant group">
+<span class="material-symbols-outlined text-primary text-[18px] group-hover:scale-125 transition-transform">check_circle</span>
+                        Không dùng trình duyệt ẩn danh
+                    </li>
+<li class="flex items-center gap-sm text-label-md text-on-surface-variant group">
+<span class="material-symbols-outlined text-primary text-[18px] group-hover:scale-125 transition-transform">check_circle</span>
+                        Hoàn tất thanh toán trong 1 phiên truy cập
+                    </li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-3xl pb-xl mt-3xl bg-surface-container-lowest border-t border-outline-variant/30 reveal">
+<div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-4 gap-xl">
+<div class="col-span-1 md:col-span-1 flex flex-col gap-md">
+<span class="font-headline-md text-headline-md font-black text-primary cursor-default">HOANTIENVIP</span>
+<p class="font-body-md text-body-md text-on-surface-variant">Nền tảng hoàn tiền mua sắm trực tuyến hàng đầu Việt Nam, giúp người tiêu dùng tiết kiệm hàng tỷ đồng mỗi tháng.</p>
+</div>
+<div>
+<h4 class="font-title-lg text-title-lg mb-lg">Dịch vụ</h4>
+<ul class="flex flex-col gap-sm">
+<li><a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm inline-block" href="#">Hoàn tiền Shopee</a></li>
+<li><a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm inline-block" href="#">Hoàn tiền TikTok Shop</a></li>
+<li><a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm inline-block" href="#">Hoàn tiền Lazada</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-title-lg text-title-lg mb-lg">Hỗ trợ</h4>
+<ul class="flex flex-col gap-sm">
+<li><a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm inline-block" href="#">Chính sách bảo mật</a></li>
+<li><a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm inline-block" href="#">Điều khoản sử dụng</a></li>
+<li><a class="nav-link text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm inline-block" href="#">Câu hỏi thường gặp</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-title-lg text-title-lg mb-lg">Kết nối</h4>
+<div class="flex gap-md mb-xl">
+<a class="btn-scale w-10 h-10 bg-surface-container rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-sm" href="#"><span class="material-symbols-outlined">face_nod</span></a>
+<a class="btn-scale w-10 h-10 bg-surface-container rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-sm" href="#"><span class="material-symbols-outlined">smart_display</span></a>
+<a class="btn-scale w-10 h-10 bg-surface-container rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-sm" href="#"><span class="material-symbols-outlined">share</span></a>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Email: hotro@hoantienvip.vn</p>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-gutter mt-2xl pt-lg border-t border-outline-variant/10 text-center">
+<p class="text-on-surface-variant font-label-sm text-label-sm">© 2024 HOANTIENVIP - Hệ thống hoàn tiền uy tín số 1 Việt Nam</p>
+</div>
+</footer>
+<!-- PWA Popup -->
+<div class="hidden fixed bottom-6 right-6 z-[60] w-80 bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.15)] border border-primary-fixed overflow-hidden pwa-entry" id="pwa-popup">
+<div class="p-md flex items-start gap-md">
+<div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-xl shadow-lg animate-bounce">HV</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h5 class="font-title-lg text-label-md font-bold text-on-surface">Cài đặt ứng dụng</h5>
+<button class="text-outline hover:text-on-surface transition-colors btn-scale" onclick="closePwa()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant mt-1 leading-relaxed">Nhận thông báo deal hot và kiểm tra ví nhanh hơn với app HOANTIENVIP.</p>
+<button class="btn-scale mt-md w-full py-2 bg-primary text-white rounded-lg font-bold text-label-sm shadow-md hover:brightness-110 transition-all">Cài đặt ngay</button>
+</div>
+</div>
+<div class="h-1 w-full bg-surface-container">
+<div class="h-full bg-primary w-0 transition-all" id="pwa-progress"></div>
+</div>
+</div>
+<script>
+    function closePwa() {
+        document.getElementById('pwa-popup').classList.add('hidden');
+    }
+
+    // Scroll reveal logic
+    function reveal() {
+        const reveals = document.querySelectorAll(".reveal");
+        for (let i = 0; i < reveals.length; i++) {
+            const windowHeight = window.innerHeight;
+            const elementTop = reveals[i].getBoundingClientRect().top;
+            const elementVisible = 100;
+            if (elementTop < windowHeight - elementVisible) {
+                reveals[i].classList.add("active");
+            }
+        }
+    }
+    window.addEventListener("scroll", reveal);
+    reveal(); // Initial check
+
+    // Simulate PWA popup appearing after 5s
+    setTimeout(() => {
+        const popup = document.getElementById('pwa-popup');
+        popup.classList.remove('hidden');
+        
+        let width = 0;
+        const progress = document.getElementById('pwa-progress');
+        const interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval);
+            } else {
+                width += 0.5;
+                progress.style.width = width + '%';
+            }
+        }, 50);
+    }, 5000);
+</script>
+</body></html>

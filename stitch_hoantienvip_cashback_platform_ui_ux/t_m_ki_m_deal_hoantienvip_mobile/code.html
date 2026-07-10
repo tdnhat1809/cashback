@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Tìm kiếm Deal - HOANTIENVIP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary-container": "#ff5a36",
+                "on-primary-fixed": "#3d0600",
+                "background": "#fff8f6",
+                "secondary": "#565e74",
+                "error": "#ba1a1a",
+                "on-surface": "#271814",
+                "inverse-on-surface": "#ffede9",
+                "on-secondary-fixed-variant": "#3f465b",
+                "on-primary-container": "#5a0c00",
+                "on-error-container": "#93000a",
+                "on-tertiary-fixed-variant": "#005236",
+                "on-tertiary-container": "#003320",
+                "surface-variant": "#f9dcd6",
+                "surface-container-low": "#fff0ed",
+                "primary-fixed-dim": "#ffb4a3",
+                "tertiary-container": "#00a773",
+                "on-tertiary-fixed": "#002113",
+                "tertiary-fixed": "#6ffbbe",
+                "surface-dim": "#f0d4ce",
+                "inverse-surface": "#3e2c28",
+                "secondary-fixed-dim": "#bec6df",
+                "surface-container-high": "#ffe2dc",
+                "surface-container": "#ffe9e5",
+                "on-secondary-container": "#5a6278",
+                "on-surface-variant": "#5b403a",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#d7dff9",
+                "outline": "#8f7069",
+                "outline-variant": "#e3beb6",
+                "on-primary": "#ffffff",
+                "tertiary-fixed-dim": "#4edea3",
+                "primary": "#b52603",
+                "primary-fixed": "#ffdad2",
+                "on-tertiary": "#ffffff",
+                "on-background": "#271814",
+                "error-container": "#ffdad6",
+                "tertiary": "#006c49",
+                "surface-bright": "#fff8f6",
+                "on-secondary-fixed": "#131b2e",
+                "on-primary-fixed-variant": "#8c1900",
+                "secondary-fixed": "#dae2fc",
+                "surface-tint": "#b52603",
+                "surface": "#fff8f6",
+                "inverse-primary": "#ffb4a3",
+                "on-error": "#ffffff",
+                "on-secondary": "#ffffff",
+                "surface-container-highest": "#f9dcd6"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "sm": "8px",
+                "md": "16px",
+                "lg": "24px",
+                "gutter": "24px",
+                "xl": "32px",
+                "2xl": "48px",
+                "3xl": "64px",
+                "xs": "4px",
+                "container-max": "1280px",
+                "base": "4px"
+            },
+            "fontFamily": {
+                "headline-lg-mobile": ["Be Vietnam Pro"],
+                "headline-lg": ["Be Vietnam Pro"],
+                "title-lg": ["Be Vietnam Pro"],
+                "headline-md": ["Be Vietnam Pro"],
+                "display-lg": ["Be Vietnam Pro"],
+                "label-md": ["Be Vietnam Pro"],
+                "label-sm": ["Be Vietnam Pro"],
+                "body-lg": ["Be Vietnam Pro"],
+                "body-md": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .search-container {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .deal-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .deal-card:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+<!-- Top Navigation Bar & Search -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex flex-col px-md py-sm gap-sm">
+<!-- Brand & Icons Row -->
+<div class="flex justify-between items-center h-12">
+<div class="text-primary font-black text-headline-md tracking-tight">HOANTIENVIP</div>
+<div class="flex gap-sm">
+<button class="p-xs hover:bg-surface-container-high transition-colors active:scale-95 duration-150 rounded-full">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<button class="p-xs hover:bg-surface-container-high transition-colors active:scale-95 duration-150 rounded-full">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+</div>
+</div>
+<!-- Modern Search Bar -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">search</span>
+</div>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-md pl-12 pr-md focus:ring-2 focus:ring-primary-container text-body-md text-on-surface-variant transition-all outline-none" placeholder="Tìm kiếm deal, sản phẩm..." type="text" value="Tai nghe bluetooth"/>
+<button class="absolute inset-y-0 right-0 pr-md flex items-center">
+<span class="material-symbols-outlined text-primary">mic</span>
+</button>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-sm overflow-x-auto hide-scrollbar py-xs -mx-md px-md">
+<button class="flex-none px-md py-xs rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm shadow-sm active:scale-95 transition-transform">
+                    Shopee
+                </button>
+<button class="flex-none px-md py-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm border border-outline-variant/30 active:scale-95 transition-transform">
+                    TikTok
+                </button>
+<button class="flex-none px-md py-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm border border-outline-variant/30 active:scale-95 transition-transform">
+                    Dưới 10K
+                </button>
+<button class="flex-none px-md py-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm border border-outline-variant/30 active:scale-95 transition-transform">
+                    Freeship
+                </button>
+<button class="flex-none px-md py-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm border border-outline-variant/30 active:scale-95 transition-transform">
+                    Mới nhất
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="mt-48 px-md space-y-md">
+<!-- Search Results Count -->
+<div class="flex justify-between items-center py-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">248 kết quả cho "Tai nghe"</span>
+<button class="flex items-center gap-xs text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                Lọc thêm
+            </button>
+</div>
+<!-- Deal List (List View Layout) -->
+<div class="flex flex-col gap-md">
+<!-- Deal Item 1 -->
+<div class="deal-card flex bg-surface border border-outline-variant/20 rounded-xl overflow-hidden shadow-sm">
+<div class="w-32 h-32 flex-none relative">
+<img class="w-full h-full object-cover" data-alt="A professional product shot of high-quality white wireless earbuds resting in their sleek charging case. The lighting is soft and airy, highlighting the minimalist design and smooth textures. The background is a clean, neutral surface that emphasizes the product's premium feel, aligning with a modern e-commerce aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNzxwQRKh0U_rlzGsL3AsUDodmrraO36mJJO0sbfRCtOVn84VNTp768HuRwRneKF0K0grgtqDSsJQy6rkp9IBbk7Ef88Dfuj_9jWKJRXqsekNNZl4iv7IvSF-yKD_MW2Iz0cvS47TCTp62HaqBpdQXSiJJV1qlj_4Oxysz_53gc-MWX9b4J-MeeFdNqJDQ8_ZCxKR2D5B0uNfM2mlEwRlXtOm-ZC6t0EgrihGsJX-8Mv8Vah9PyEjuyg"/>
+<div class="absolute top-2 right-2 bg-primary-container text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        Hot
+                    </div>
+</div>
+<div class="flex-1 p-md flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-1">
+<span class="text-label-sm font-label-sm text-primary uppercase">Shopee</span>
+<span class="flex items-center text-tertiary font-bold text-label-sm">
+<span class="material-symbols-outlined text-[14px] mr-0.5" style="font-variation-settings: 'FILL' 1;">stars</span>
+                                +15% Hoàn
+                            </span>
+</div>
+<h3 class="text-body-md font-semibold text-on-surface line-clamp-2 leading-tight">Tai nghe Bluetooth 5.3 Pro Gen 4 bản quốc tế - Âm thanh cực đỉnh</h3>
+</div>
+<div class="flex items-baseline gap-sm mt-xs">
+<span class="text-primary font-bold text-title-lg">159.000đ</span>
+<span class="text-on-surface-variant/60 line-through text-label-sm">350.000đ</span>
+</div>
+</div>
+</div>
+<!-- Deal Item 2 -->
+<div class="deal-card flex bg-surface border border-outline-variant/20 rounded-xl overflow-hidden shadow-sm">
+<div class="w-32 h-32 flex-none relative">
+<img class="w-full h-full object-cover" data-alt="A vibrant and colorful lifestyle product photograph of pink noise-canceling headphones placed on a wooden desk. The scene includes a small potted plant and a soft-focus office background, creating a cozy and inviting atmosphere. High-key lighting accentuates the vivid colors and matte finish of the device, conveying a youthful and energetic brand personality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr2ZaKSlzpjQ6t1MXKD2PzKCDsuVbqqljVAdYqfL6s-ruNq8dqvgppeKu-U1iD4H5FHdAm8HO7YTPzHTWF4Cc-l93mzKuMG-GoUDJ8mp4953kpLl-kJoS4bUntaigeogp-fVk0dWnMUQSl7nijhTSbwxz3kOYK02H8PEqKwx61o7HHfc24LW4s_Q68A1CheJEkLhKXjc04Kkozi-t6wU1jbEjl4RRJRT7o8Tj31Pvl7FXIuAf0EEu4DA"/>
+<div class="absolute top-2 right-2 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        Trend
+                    </div>
+</div>
+<div class="flex-1 p-md flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-1">
+<span class="text-label-sm font-label-sm text-secondary uppercase">TikTok Shop</span>
+<span class="flex items-center text-tertiary font-bold text-label-sm">
+<span class="material-symbols-outlined text-[14px] mr-0.5" style="font-variation-settings: 'FILL' 1;">stars</span>
+                                +20k Hoàn
+                            </span>
+</div>
+<h3 class="text-body-md font-semibold text-on-surface line-clamp-2 leading-tight">Tai nghe Chụp tai Wireless Hifi Bass mạnh mẽ thời thượng</h3>
+</div>
+<div class="flex items-baseline gap-sm mt-xs">
+<span class="text-primary font-bold text-title-lg">285.000đ</span>
+<span class="text-on-surface-variant/60 line-through text-label-sm">520.000đ</span>
+</div>
+</div>
+</div>
+<!-- Banner Ad / Featured Section -->
+<div class="relative w-full aspect-[21/9] rounded-2xl overflow-hidden shadow-md my-sm">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary-container/40 z-10"></div>
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A cinematic, high-speed action shot of a person running through a futuristic urban environment at dusk, wearing modern sportswear and earbuds. Neon lights reflect off wet pavement, creating a dynamic and exciting visual narrative. The overall mood is energetic and aspirational, highlighting themes of fitness and technology in a premium, high-contrast light-mode style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbyk9EYbn1yG0MrlyeUHMBa7o83Kzagg22BARHncL7JOUBzmvNuJmpdIUgvVO385nIpajwq43jxJAghXuvHlyRqp7UOJ3Gf3YhpIKQigjFxWyDo9fbh-OQDKpKllvSAR1LO703EqEJNymCD_DSVCk9KJM-8htTsnjqLJ5_SZdtc4fWZKbzRv8vCXicBrRwkcKUp8wkJecez7NRJoGT74_n-TsmyWwon9kYlskdfKfPsNjRoR-uaypkew"/>
+<div class="absolute inset-0 z-20 flex flex-col justify-center p-lg">
+<span class="text-white font-bold text-label-sm uppercase tracking-widest mb-1">Đặc quyền Vip</span>
+<h2 class="text-white font-headline-md text-headline-md leading-tight">Săn Deal 0đ Mỗi Ngày</h2>
+<p class="text-white/80 text-label-md font-label-md mt-1">Dành riêng cho thành viên Vàng</p>
+</div>
+</div>
+<!-- Deal Item 3 -->
+<div class="deal-card flex bg-surface border border-outline-variant/20 rounded-xl overflow-hidden shadow-sm">
+<div class="w-32 h-32 flex-none relative">
+<img class="w-full h-full object-cover" data-alt="A minimalist overhead shot of several sets of wired and wireless earphones arranged neatly on a clean white background. Subtle soft shadows give the products a tactile, three-dimensional quality. The composition is balanced and airy, reflecting a clean, frictionless user experience and high visual breathability, typical of modern fintech and e-commerce design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuyWQqyOP-CfVIv5tfVFevfix2t2moZhEWaZDGmRsHs8m9fmS0c1g0pQMtJaki2mDij-Tilmk0CeAO6Hx40MAa883v97iFce_5C0REtokD9Rz86YBzQ_yiqrVS1wPW3fA9pQUmZX1DxQnn16Mc5plVCD1cE-BhDLb7bpnZTISaoDFXODsbpojO0v0M_XLE4I-5WNXM1SlXWCK2KlaLQ_If5zf6ntCkwTuq1qqySlyIqXsH2BeHHcPDbQ"/>
+</div>
+<div class="flex-1 p-md flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-1">
+<span class="text-label-sm font-label-sm text-primary uppercase">Shopee</span>
+<span class="flex items-center text-tertiary font-bold text-label-sm">
+<span class="material-symbols-outlined text-[14px] mr-0.5" style="font-variation-settings: 'FILL' 1;">stars</span>
+                                +8% Hoàn
+                            </span>
+</div>
+<h3 class="text-body-md font-semibold text-on-surface line-clamp-2 leading-tight">Tai nghe nhét tai Samsung AKG chính hãng chống ồn</h3>
+</div>
+<div class="flex items-baseline gap-sm mt-xs">
+<span class="text-primary font-bold text-title-lg">45.000đ</span>
+<span class="text-on-surface-variant/60 line-through text-label-sm">99.000đ</span>
+</div>
+</div>
+</div>
+<!-- Deal Item 4 -->
+<div class="deal-card flex bg-surface border border-outline-variant/20 rounded-xl overflow-hidden shadow-sm">
+<div class="w-32 h-32 flex-none relative">
+<img class="w-full h-full object-cover" data-alt="An artistic close-up of a gaming headset with subtle RGB lighting glowing in soft blue and purple hues. The product is set against a dark, textured background that makes the light-colored accents pop. Professional studio lighting highlights the premium materials like leather and brushed metal, evoking a sense of reliability and high-performance gaming gear." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzb8pOD7Kx_LR02lWkRd0pzIdXSXIcyZdbaiJkID43iVQoTgARgpbivsDRg8KuY3sfjSVaO11dELUreBI41ruz5eQrCsKAYRsxqNF4EAesBI6dnUHBQU4lVOJTP5um9N2mwPgmdDlQPkabcd2JEa1KDqUQo6UG8cP6T1TjM96FNshRPgy_TARwtzFi_TEdTOdPZ4yjR3dURiNkNY2J60m_H8UhwDBjkREItGNwwk-mlXqlgpTo57mU5g"/>
+<div class="absolute top-2 right-2 bg-error-container text-error text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        Sắp hết
+                    </div>
+</div>
+<div class="flex-1 p-md flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-1">
+<span class="text-label-sm font-label-sm text-secondary uppercase">TikTok Shop</span>
+<span class="flex items-center text-tertiary font-bold text-label-sm">
+<span class="material-symbols-outlined text-[14px] mr-0.5" style="font-variation-settings: 'FILL' 1;">stars</span>
+                                +50k Hoàn
+                            </span>
+</div>
+<h3 class="text-body-md font-semibold text-on-surface line-clamp-2 leading-tight">Tai nghe Gaming G Pro X Surround 7.1 - Mic siêu lọc âm</h3>
+</div>
+<div class="flex items-baseline gap-sm mt-xs">
+<span class="text-primary font-bold text-title-lg">1.250.000đ</span>
+<span class="text-on-surface-variant/60 line-through text-label-sm">1.800.000đ</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More State -->
+<div class="flex justify-center py-xl">
+<button class="flex items-center gap-sm px-xl py-md border-2 border-primary-container text-primary-container rounded-full font-bold active:scale-95 transition-all">
+                Xem thêm deal hấp dẫn
+                <span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/90 backdrop-blur-lg border-t border-outline-variant/30 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] h-20 pb-safe px-sm flex justify-around items-center">
+<!-- Trang chủ -->
+<a class="flex flex-col items-center justify-center text-on-secondary-fixed-variant hover:bg-primary-container/20 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm mt-1">Trang chủ</span>
+</a>
+<!-- Deal (Active) -->
+<a class="flex flex-col items-center justify-center text-primary font-bold hover:bg-primary-container/20 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-label-sm text-label-sm mt-1">Deal</span>
+</a>
+<!-- Hoàn tiền -->
+<a class="flex flex-col items-center justify-center text-on-secondary-fixed-variant hover:bg-primary-container/20 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm mt-1">Hoàn tiền</span>
+</a>
+<!-- Cá nhân -->
+<a class="flex flex-col items-center justify-center text-on-secondary-fixed-variant hover:bg-primary-container/20 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Cá nhân</span>
+</a>
+</nav>
+<!-- Interaction Script -->
+<script>
+        // Micro-interactions for Filter Chips
+        const filterChips = document.querySelectorAll('.flex-none.px-md');
+        filterChips.forEach(chip => {
+            chip.addEventListener('click', function() {
+                filterChips.forEach(c => {
+                    c.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-sm');
+                    c.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                });
+                this.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+                this.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-sm');
+            });
+        });
+
+        // Simple scroll header effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const header = document.querySelector('header');
+            
+            if (currentScroll <= 0) {
+                header.classList.remove('shadow-md');
+                return;
+            }
+            
+            if (currentScroll > lastScroll) {
+                // Scrolling down
+                header.style.transform = 'translateY(-10px)';
+            } else {
+                // Scrolling up
+                header.style.transform = 'translateY(0)';
+                header.classList.add('shadow-md');
+            }
+            lastScroll = currentScroll;
+        });
+    </script>
+</body></html>

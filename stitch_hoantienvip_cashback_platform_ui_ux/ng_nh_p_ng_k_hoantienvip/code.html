@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Đăng nhập / Đăng ký - HOANTIENVIP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-variant": "#f9dcd6",
+                "primary-fixed-dim": "#ffb4a3",
+                "primary-fixed": "#ffdad2",
+                "inverse-primary": "#ffb4a3",
+                "surface-dim": "#f0d4ce",
+                "outline": "#8f7069",
+                "tertiary-container": "#00a773",
+                "on-tertiary-container": "#003320",
+                "surface-container-high": "#ffe2dc",
+                "surface-container-low": "#fff0ed",
+                "primary": "#b52603",
+                "secondary-container": "#d7dff9",
+                "surface-container-highest": "#f9dcd6",
+                "on-surface-variant": "#5b403a",
+                "on-primary-fixed": "#3d0600",
+                "tertiary-fixed": "#6ffbbe",
+                "primary-container": "#ff5a36",
+                "on-tertiary": "#ffffff",
+                "secondary": "#565e74",
+                "on-secondary": "#ffffff",
+                "error-container": "#ffdad6",
+                "on-primary-container": "#5a0c00",
+                "on-secondary-fixed": "#131b2e",
+                "on-primary": "#ffffff",
+                "tertiary": "#006c49",
+                "tertiary-fixed-dim": "#4edea3",
+                "surface-container": "#ffe9e5",
+                "on-secondary-container": "#5a6278",
+                "surface-tint": "#b52603",
+                "on-surface": "#271814",
+                "background": "#fff8f6",
+                "surface-bright": "#fff8f6",
+                "on-secondary-fixed-variant": "#3f465b",
+                "on-tertiary-fixed-variant": "#005236",
+                "on-error": "#ffffff",
+                "on-error-container": "#93000a",
+                "on-background": "#271814",
+                "outline-variant": "#e3beb6",
+                "secondary-fixed": "#dae2fc",
+                "secondary-fixed-dim": "#bec6df",
+                "on-primary-fixed-variant": "#8c1900",
+                "inverse-on-surface": "#ffede9",
+                "on-tertiary-fixed": "#002113",
+                "surface-container-lowest": "#ffffff",
+                "inverse-surface": "#3e2c28",
+                "error": "#ba1a1a",
+                "surface": "#fff8f6"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "xs": "4px",
+                "lg": "24px",
+                "container-max": "1280px",
+                "base": "4px",
+                "3xl": "64px",
+                "gutter": "24px",
+                "xl": "32px",
+                "md": "16px",
+                "sm": "8px",
+                "2xl": "48px"
+            },
+            "fontFamily": {
+                "body-md": ["Be Vietnam Pro"],
+                "title-lg": ["Be Vietnam Pro"],
+                "headline-lg-mobile": ["Be Vietnam Pro"],
+                "headline-md": ["Be Vietnam Pro"],
+                "label-md": ["Be Vietnam Pro"],
+                "label-sm": ["Be Vietnam Pro"],
+                "headline-lg": ["Be Vietnam Pro"],
+                "display-lg": ["Be Vietnam Pro"],
+                "body-lg": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #fff8f6;
+            margin: 0;
+            padding: 0;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .auth-card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<!-- TopNavBar (Shell Suppression: Hidden on Task-Focused Auth Screen as per Protocol) -->
+<!-- However, we need a simple logo to go back home -->
+<header class="fixed top-0 left-0 w-full z-50 px-gutter h-16 flex items-center">
+<a class="flex items-center gap-2 group transition-transform active:scale-95" href="/">
+<span class="font-display-lg text-headline-md font-black tracking-tighter text-primary">HOANTIENVIP</span>
+</a>
+</header>
+<main class="flex-grow flex items-center justify-center pt-16 pb-8 px-4 sm:px-6">
+<div class="max-w-container-max w-full grid grid-cols-1 lg:grid-cols-2 gap-0 overflow-hidden bg-surface-container-lowest rounded-[24px] shadow-2xl min-h-[700px]">
+<!-- Left Side: Auth Form Section -->
+<div class="flex flex-col justify-center p-8 md:p-16 lg:p-20 bg-surface-container-lowest">
+<div class="mb-xl" id="auth-header">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-sm" id="form-title">Chào mừng trở lại</h1>
+<p class="font-body-md text-body-md text-on-surface-variant" id="form-subtitle">Nhập số điện thoại để bắt đầu hành trình tiết kiệm.</p>
+</div>
+<!-- Toggle Tabs -->
+<div class="flex p-1 bg-surface-container rounded-xl mb-xl w-full max-w-sm">
+<button class="flex-1 py-2 font-label-md text-label-md rounded-lg transition-all bg-surface-container-lowest text-primary font-bold shadow-sm" id="tab-login" onclick="switchTab('login')">Đăng nhập</button>
+<button class="flex-1 py-2 font-label-md text-label-md rounded-lg transition-all text-on-surface-variant" id="tab-register" onclick="switchTab('register')">Đăng ký</button>
+</div>
+<!-- Main Form -->
+<form class="space-y-lg w-full max-w-md" id="auth-form" onsubmit="return handleFormSubmit(event)">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block" for="phone">Số điện thoại</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">smartphone</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary transition-all font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="phone" placeholder="0xxx xxx xxx" required="" type="tel"/>
+</div>
+</div>
+<!-- OTP Section (Hidden by default, shown after phone submission) -->
+<div class="space-y-2 hidden animate-in fade-in slide-in-from-top-4" id="otp-section">
+<div class="flex justify-between items-end">
+<label class="font-label-md text-label-md text-on-surface-variant" for="otp">Mã xác thực (OTP)</label>
+<button class="text-primary font-label-sm text-label-sm hover:underline" type="button">Gửi lại mã</button>
+</div>
+<div class="grid grid-cols-6 gap-2">
+<input class="w-full h-14 text-center text-xl font-bold rounded-xl bg-surface-container-low border-none focus:ring-2 focus:ring-primary" maxlength="1" type="text"/>
+<input class="w-full h-14 text-center text-xl font-bold rounded-xl bg-surface-container-low border-none focus:ring-2 focus:ring-primary" maxlength="1" type="text"/>
+<input class="w-full h-14 text-center text-xl font-bold rounded-xl bg-surface-container-low border-none focus:ring-2 focus:ring-primary" maxlength="1" type="text"/>
+<input class="w-full h-14 text-center text-xl font-bold rounded-xl bg-surface-container-low border-none focus:ring-2 focus:ring-primary" maxlength="1" type="text"/>
+<input class="w-full h-14 text-center text-xl font-bold rounded-xl bg-surface-container-low border-none focus:ring-2 focus:ring-primary" maxlength="1" type="text"/>
+<input class="w-full h-14 text-center text-xl font-bold rounded-xl bg-surface-container-low border-none focus:ring-2 focus:ring-primary" maxlength="1" type="text"/>
+</div>
+</div>
+<div class="hidden p-4 bg-tertiary-container/10 border border-tertiary-container/20 rounded-xl flex items-center gap-3" id="register-bonus">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">redeem</span>
+<p class="font-label-md text-label-md text-on-tertiary-container">Đăng ký ngay nhận ngay <strong>50.000đ</strong> vào ví!</p>
+</div>
+<button class="w-full bg-primary-container text-white py-4 rounded-xl font-headline-md text-headline-md shadow-lg shadow-primary-container/20 hover:scale-[1.02] active:scale-95 transition-all" id="submit-btn" type="submit">Tiếp tục</button>
+<div class="relative py-4">
+<div class="absolute inset-0 flex items-center"><div class="w-full border-t border-outline-variant/30"></div></div>
+<div class="relative flex justify-center text-label-sm text-label-sm uppercase"><span class="bg-surface-container-lowest px-4 text-outline">Hoặc tiếp tục bằng</span></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-outline-variant/30 hover:bg-surface-container-low transition-all active:scale-95" type="button">
+<img alt="Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtWZJbwNzKrUqCh7qcgi3eh5Bs_dcAtYvjgJ3AorrKGCO-0_jkbMKLxXh8XemM75V4M82ljqgrdWrThMPY4EEwD3KXH0oNiNEpAc9umNzS4WxQYEpU6qFlUR4TXgh2bv04ImGSoZr1U2P0mppEy7qMwUCpBeri36jV_n9aYzrcnnX8oGYupO4-y3PRnzhmYi_RMIKvY-1QNYM5kSlaOkq7DxMBP3CrQjpY9QvoltjRU7FE2vfFg5gA9g"/>
+<span class="font-label-md text-label-md text-on-surface">Google</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-outline-variant/30 hover:bg-surface-container-low transition-all active:scale-95" type="button">
+<svg class="w-6 h-6 text-[#1877F2]" fill="currentColor" viewbox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+<span class="font-label-md text-label-md text-on-surface">Facebook</span>
+</button>
+</div>
+</form>
+<footer class="mt-xl text-center">
+<p class="font-label-sm text-label-sm text-outline-variant">Bằng cách tiếp tục, bạn đồng ý với <a class="text-primary hover:underline" href="#">Điều khoản &amp; Chính sách</a> của chúng tôi.</p>
+</footer>
+</div>
+<!-- Right Side: Marketing/Lifestyle Image Section -->
+<div class="hidden lg:block relative overflow-hidden bg-primary-container">
+<div class="absolute inset-0 z-10 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
+<div class="absolute inset-0 bg-cover bg-center scale-110 transform transition-transform duration-10000 hover:scale-100" data-alt="A modern lifestyle photograph of a joyful young woman in a bright, minimalist apartment using a smartphone while surrounded by premium shopping bags. The aesthetic is clean and high-key with soft natural lighting, reflecting a luxurious yet accessible savings experience. The color palette features warm coral and pristine white tones, matching the brand's energetic and rewarding personality." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC6TMLIQk7tTdbrqdvSHJJkl5f0e6FpFxIfnwqumSxma58RdChqQh1v1kftimeVqEyqd2nZTKDH-5HqWtLB7OQoUxMZGEZK0GUh6aeihJfJCjUaopXG0Nvyg6EQRNzmzIyOHp-LkYDjvn21DOQ87yNo2CdA4FD1voi_3tbzZA0gVPuruwqCdthJxM03ASaailK_bY5oDfyew5ALmNAPkjlEdP2aIZdzPLggIQ1RrABt9hsX5crk6EhhRg')"></div>
+<!-- Floating Benefit Cards -->
+<div class="absolute inset-0 z-20 flex flex-col justify-end p-xl gap-lg">
+<div class="glass-panel p-6 rounded-2xl border border-white/20 animate-bounce-slow">
+<div class="flex items-center gap-4 mb-2">
+<div class="w-12 h-12 rounded-full bg-primary-container text-white flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">savings</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Hoàn tiền 20%</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Trên mọi hóa đơn từ Shopee, Tiki, Lazada.</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-2xl border border-white/20 transform translate-x-12">
+<div class="flex items-center gap-4 mb-2">
+<div class="w-12 h-12 rounded-full bg-tertiary-container text-white flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Rút tiền siêu tốc</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Về tài khoản ngân hàng chỉ trong 30 giây.</p>
+</div>
+</div>
+</div>
+<div class="mt-8 text-white">
+<h2 class="font-display-lg text-headline-lg font-bold leading-tight">Mua sắm thông minh,<br/>Tích lũy vô hạn.</h2>
+<p class="font-body-lg text-body-lg mt-4 text-white/80">Tham gia cùng hơn 2 triệu người dùng thông thái tại Việt Nam ngay hôm nay.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Simple Footer for Auth (Non-Standard) -->
+<footer class="py-lg px-gutter text-center">
+<p class="font-label-sm text-label-sm text-outline-variant">© 2024 HOANTIENVIP - Hệ thống hoàn tiền uy tín số 1 Việt Nam</p>
+</footer>
+<script>
+        let currentMode = 'login';
+        let step = 1;
+
+        function switchTab(mode) {
+            currentMode = mode;
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+            const formTitle = document.getElementById('form-title');
+            const formSubtitle = document.getElementById('form-subtitle');
+            const submitBtn = document.getElementById('submit-btn');
+            const registerBonus = document.getElementById('register-bonus');
+
+            // Reset step if switching tabs
+            step = 1;
+            document.getElementById('otp-section').classList.add('hidden');
+            document.getElementById('phone').parentElement.classList.remove('hidden');
+
+            if (mode === 'login') {
+                tabLogin.className = 'flex-1 py-2 font-label-md text-label-md rounded-lg transition-all bg-surface-container-lowest text-primary font-bold shadow-sm';
+                tabRegister.className = 'flex-1 py-2 font-label-md text-label-md rounded-lg transition-all text-on-surface-variant';
+                formTitle.textContent = 'Chào mừng trở lại';
+                formSubtitle.textContent = 'Nhập số điện thoại để bắt đầu hành trình tiết kiệm.';
+                submitBtn.textContent = 'Tiếp tục';
+                registerBonus.classList.add('hidden');
+            } else {
+                tabRegister.className = 'flex-1 py-2 font-label-md text-label-md rounded-lg transition-all bg-surface-container-lowest text-primary font-bold shadow-sm';
+                tabLogin.className = 'flex-1 py-2 font-label-md text-label-md rounded-lg transition-all text-on-surface-variant';
+                formTitle.textContent = 'Đăng ký thành viên';
+                formSubtitle.textContent = 'Tham gia ngay để nhận ưu đãi hoàn tiền tới 20%';
+                submitBtn.textContent = 'Đăng ký ngay';
+                registerBonus.classList.remove('hidden');
+            }
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            if (step === 1) {
+                // Show OTP Step
+                step = 2;
+                document.getElementById('otp-section').classList.remove('hidden');
+                document.getElementById('submit-btn').textContent = currentMode === 'login' ? 'Xác nhận Đăng nhập' : 'Xác nhận Đăng ký';
+                // Optional: Focus first OTP input
+                setTimeout(() => {
+                    document.querySelector('#otp-section input').focus();
+                }, 100);
+            } else {
+                // Final Submission logic here
+                alert(currentMode === 'login' ? 'Đang xác thực đăng nhập...' : 'Chúc mừng! Đang tạo tài khoản...');
+            }
+            return false;
+        }
+
+        // OTP Input Auto-focus next
+        const otpInputs = document.querySelectorAll('#otp-section input');
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
+<style>
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 4s ease-in-out infinite;
+        }
+        .duration-10000 {
+            transition-duration: 10000ms;
+        }
+    </style>
+</body></html>

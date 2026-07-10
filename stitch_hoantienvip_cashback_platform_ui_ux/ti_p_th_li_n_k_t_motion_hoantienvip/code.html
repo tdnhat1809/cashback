@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kiếm tiền Affiliate | HOANTIENVIP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; overflow-x: hidden; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-stagger-fade-in > div {
+            opacity: 0;
+            animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .animate-stagger-fade-in > div:nth-child(1) { animation-delay: 0.1s; }
+        .animate-stagger-fade-in > div:nth-child(2) { animation-delay: 0.2s; }
+        .animate-stagger-fade-in > div:nth-child(3) { animation-delay: 0.3s; }
+        .animate-stagger-fade-in > div:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(255, 90, 54, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 90, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 90, 54, 0); }
+        }
+        .btn-pulse {
+            animation: pulse-glow 2s infinite;
+        }
+
+        .campaign-card {
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .campaign-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px -4px rgba(181, 38, 3, 0.12), 0 4px 12px -2px rgba(181, 38, 3, 0.08);
+        }
+
+        .copy-success-tooltip {
+            animation: tooltip-pop 1.5s ease-in-out forwards;
+        }
+        @keyframes tooltip-pop {
+            0% { opacity: 0; transform: translateY(0) scale(0.8); }
+            20% { opacity: 1; transform: translateY(-30px) scale(1); }
+            80% { opacity: 1; transform: translateY(-30px) scale(1); }
+            100% { opacity: 0; transform: translateY(-40px) scale(0.9); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#f9dcd6",
+                        "primary-fixed-dim": "#ffb4a3",
+                        "primary-fixed": "#ffdad2",
+                        "inverse-primary": "#ffb4a3",
+                        "surface-dim": "#f0d4ce",
+                        "outline": "#8f7069",
+                        "tertiary-container": "#00a773",
+                        "on-tertiary-container": "#003320",
+                        "surface-container-high": "#ffe2dc",
+                        "surface-container-low": "#fff0ed",
+                        "primary": "#b52603",
+                        "secondary-container": "#d7dff9",
+                        "surface-container-highest": "#f9dcd6",
+                        "on-surface-variant": "#5b403a",
+                        "on-primary-fixed": "#3d0600",
+                        "tertiary-fixed": "#6ffbbe",
+                        "primary-container": "#ff5a36",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#565e74",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#5a0c00",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#006c49",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "surface-container": "#ffe9e5",
+                        "on-secondary-container": "#5a6278",
+                        "surface-tint": "#b52603",
+                        "on-surface": "#271814",
+                        "background": "#fff8f6",
+                        "surface-bright": "#fff8f6",
+                        "on-secondary-fixed-variant": "#3f465b",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-background": "#271814",
+                        "outline-variant": "#e3beb6",
+                        "secondary-fixed": "#dae2fc",
+                        "secondary-fixed-dim": "#bec6df",
+                        "on-primary-fixed-variant": "#8c1900",
+                        "inverse-on-surface": "#ffede9",
+                        "on-tertiary-fixed": "#002113",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-surface": "#3e2c28",
+                        "error": "#ba1a1a",
+                        "surface": "#fff8f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "lg": "24px",
+                        "container-max": "1280px",
+                        "base": "4px",
+                        "3xl": "64px",
+                        "gutter": "24px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "2xl": "48px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Be Vietnam Pro"],
+                        "title-lg": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto">
+<div class="flex items-center gap-xl">
+<span class="font-display-lg text-[24px] lg:text-display-lg font-black tracking-tighter text-primary">HOANTIENVIP</span>
+<div class="hidden md:flex gap-lg items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Trang chủ</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Deal hot</a>
+<a class="text-primary border-b-2 border-primary font-bold pb-1 font-label-md text-label-md" href="#">Kiếm tiền</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Rút tiền</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden sm:flex bg-surface-container rounded-full px-4 py-2 items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-label-md w-40" placeholder="Tìm sản phẩm..." type="text"/>
+</div>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all">notifications</button>
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold">A</div>
+</div>
+</div>
+</nav>
+<!-- Sidebar & Content Wrapper -->
+<div class="pt-16 min-h-screen flex">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col h-[calc(100vh-64px)] w-64 fixed left-0 top-16 bg-surface border-r border-outline-variant py-md gap-sm">
+<div class="px-6 py-4">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img alt="User" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSS3hKmv3OINbmgsXmsiP7P34-P3zYh7iKuiTVs_XAC5nrRAO9rIqq5U9kbH7df02lSMOKReQilM6SeO4PkMY9BoauewM0L4AosOPQzB7aZgtQX0I1Nk1duIZhXn-FuYVS7Z9F2oz0o09jS9hGIMvEeKACraslJeAf2KiZ_gmddCcoj6ctjWiLLVNcFtFsnLfk7Es3X9vvXbv5tdltSuS-9EyRApREiVzIyLrgdsaMgfj4b7bX9FLVtQ"/>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">Nguyễn Văn A</p>
+<p class="text-xs text-on-surface-variant">Hạng Vàng (VIP)</p>
+</div>
+</div>
+</div>
+<a class="text-on-surface-variant hover:bg-surface-container-low px-4 py-3 mx-2 transition-colors flex items-center gap-3 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Tổng quan</span>
+</a>
+<a class="bg-primary-container text-on-primary-container font-semibold rounded-lg px-4 py-3 mx-2 flex items-center gap-3" href="#">
+<span class="material-symbols-outlined">monetization_on</span>
+<span class="font-label-md text-label-md">Kiếm tiền Affiliate</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low px-4 py-3 mx-2 transition-colors flex items-center gap-3 rounded-lg" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-label-md">Lịch sử hoàn tiền</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low px-4 py-3 mx-2 transition-colors flex items-center gap-3 rounded-lg" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Ví của tôi</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low px-4 py-3 mx-2 transition-colors flex items-center gap-3 rounded-lg" href="#">
+<span class="material-symbols-outlined">group_add</span>
+<span class="font-label-md text-label-md">Giới thiệu bạn bè</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-container-low px-4 py-3 mx-2 transition-colors flex items-center gap-3 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Cài đặt</span>
+</a>
+<div class="mt-auto p-4">
+<button class="w-full bg-primary text-on-primary py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all scale-100 active:scale-95">
+<span class="material-symbols-outlined">payments</span>
+                Rút tiền ngay
+            </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 lg:ml-64 p-gutter max-w-full overflow-x-hidden">
+<!-- Dashboard Header -->
+<header class="mb-xl">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Tiếp thị liên kết</h1>
+<p class="text-on-surface-variant font-body-md text-body-md">Chia sẻ link sản phẩm và nhận hoa hồng lên tới 25% từ các sàn thương mại điện tử.</p>
+</header>
+<!-- Revenue Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg mb-3xl animate-stagger-fade-in">
+<div class="bg-white p-lg rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30">
+<p class="text-on-surface-variant text-label-md font-label-md mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">ads_click</span> Số lượt Click
+                </p>
+<h2 class="text-headline-md font-headline-md text-on-surface">1,284</h2>
+<p class="text-xs text-tertiary font-bold mt-2 flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span> +12% so với tuần trước
+                </p>
+</div>
+<div class="bg-white p-lg rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30">
+<p class="text-on-surface-variant text-label-md font-label-md mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">shopping_cart</span> Tổng số đơn
+                </p>
+<h2 class="text-headline-md font-headline-md text-on-surface">56</h2>
+<p class="text-xs text-tertiary font-bold mt-2 flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span> +5% so với tuần trước
+                </p>
+</div>
+<div class="bg-white p-lg rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30">
+<p class="text-on-surface-variant text-label-md font-label-md mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">pending_actions</span> Hoa hồng tạm tính
+                </p>
+<h2 class="text-headline-md font-headline-md text-primary">2,450,000đ</h2>
+<p class="text-xs text-on-surface-variant mt-2 italic">Cập nhật lúc 10:30 hôm nay</p>
+</div>
+<div class="bg-white p-lg rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30">
+<p class="text-on-surface-variant text-label-md font-label-md mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">account_balance</span> Hoa hồng thực nhận
+                </p>
+<h2 class="text-headline-md font-headline-md text-on-surface">1,120,000đ</h2>
+<button class="text-primary text-xs font-bold mt-2 hover:underline">Chi tiết đối soát</button>
+</div>
+</div>
+<!-- Chart & Link Tool -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg mb-3xl">
+<!-- Revenue Chart -->
+<div class="lg:col-span-2 bg-white p-lg rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-title-lg text-title-lg">Biểu đồ doanh thu (7 ngày qua)</h3>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-primary-fixed text-primary text-xs font-bold rounded-full">Đơn hàng</span>
+<span class="px-3 py-1 bg-tertiary-fixed text-tertiary text-xs font-bold rounded-full">Hoa hồng</span>
+</div>
+</div>
+<div class="h-64 w-full">
+<canvas id="revenueChart"></canvas>
+</div>
+</div>
+<!-- Link Generator Tool -->
+<div class="bg-primary-container/10 p-lg rounded-2xl border-2 border-dashed border-primary-container relative overflow-hidden group">
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">link</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-primary">Tạo link rút gọn</h3>
+</div>
+<p class="text-on-surface-variant text-sm mb-4">Dán link từ Shopee, TikTok Shop hoặc Lazada để tạo link tracking nhận hoa hồng.</p>
+<div class="space-y-4">
+<input class="w-full px-4 py-3 rounded-xl border-outline-variant focus:ring-primary focus:border-primary" placeholder="https://shopee.vn/product/123..." type="text"/>
+<div class="flex gap-2">
+<input class="flex-1 px-4 py-3 rounded-xl border-outline-variant focus:ring-primary focus:border-primary" placeholder="Tên gợi nhớ (không bắt buộc)" type="text"/>
+</div>
+<button class="w-full bg-primary-container text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all transform active:scale-95 btn-pulse">TẠO LINK NGAY</button>
+</div>
+<div class="mt-6 pt-6 border-t border-primary-container/20">
+<p class="text-xs font-bold text-on-surface-variant uppercase mb-2">Link gần nhất</p>
+<div class="flex items-center justify-between p-2 bg-white rounded-lg border border-outline-variant/30 text-sm relative">
+<span class="truncate max-w-[150px] text-on-surface">htv.io/xyz789</span>
+<div class="relative inline-block">
+<button class="text-primary font-bold hover:opacity-70 transition-opacity" onclick="handleCopy(this)">Copy</button>
+<span class="hidden absolute top-0 right-0 text-[10px] bg-tertiary text-white px-1.5 py-0.5 rounded-full copy-success-tooltip" id="copyFeedback">Done!</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Hot Campaigns Section -->
+<section class="mb-3xl">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-headline-md text-headline-md">Chiến dịch hoa hồng cao</h3>
+<a class="text-primary font-bold text-sm flex items-center gap-1" href="#">Tất cả chiến dịch <span class="material-symbols-outlined">arrow_forward</span></a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+<!-- Campaign Card 1 -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 campaign-card">
+<div class="relative h-40">
+<img alt="Product" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7w57D5bfHFs1DRs8NwqTjnXUFDBbC897CJzvUm_jQcV5KEV9llC-1T2A3Jixlbc7R7jcD8jNhJ-pjoX6FoLRtVxYlBu3_JZAnjZMan7S_ZGiGACdSTn0nrr3ELjYX2fvOb4DG_J0EI-3Wpi4h9QLedGRClYBzR6W5PxbO0JIUFka9X72Zytx7TpRFLzES3PdHjAq7QCLcY6DxWTEsW6iqVn47HSQx4WeJwShkfTaYABOMfjAQyidhUw"/>
+<div class="absolute top-2 right-2 px-3 py-1 bg-primary text-white text-xs font-bold rounded-full">HOA HỒNG 15%</div>
+<div class="absolute top-2 left-2 px-3 py-1 bg-white/90 backdrop-blur-md text-on-surface text-xs font-bold rounded-full flex items-center gap-1">
+<img alt="Shopee" class="w-4 h-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyQR5J60mEK_npYrUlOhBxIR6T_g9gqI50RUGjHIyzdJ7mwKIt3NpGbXZEwtGI4i75hH9RKSGyT72Kmzk9p2ZdGJwoPIqSmIrTqFhYhEpxBAyjdLq02MAGlguGwXORop4IlF137GjtjBhOUY0q5yYBOhuk2bSjd4eqh13mD5_GJGcY5d-oEjCthb-3lVRwIxLSvF6jbwYkNFARHFIzsvKaqpEQa6Wq2l8SvdYJV1iQGn8xRVwx18YlTg"/> Shopee
+                        </div>
+</div>
+<div class="p-4">
+<h4 class="font-bold text-on-surface mb-2 line-clamp-2">Ghế công thái học Sihoo M57 - Phiên bản 2024</h4>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-on-surface-variant line-through">4,500,000đ</p>
+<p class="font-bold text-primary">3,250,000đ</p>
+</div>
+<button class="p-2 bg-primary-fixed text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">link</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Campaign Card 2 -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 campaign-card">
+<div class="relative h-40">
+<img alt="Product" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWUm9R3hW2LKWGyheW1Tm93CDr4LH18sckjyCN75jqP2kD3BnNhOSQVK5LMvVfN_jA0GcPSZ7z7ppybu7kYK_mJD9JXCLcFprAZCe7oGg96_slDsvB1h3Yl0DJaIU50XIZtNFM5B-nlmTiWu2c-FDiBFDZI60ehWVrDL_iq6FGJFuyV6klvOhWWg-1G7DBZr5wZ6myQfI1lzuIgMDZSU-7PGUftcUrx1UE2g2KR4oBbbrTT2prhXD1xQ"/>
+<div class="absolute top-2 right-2 px-3 py-1 bg-primary text-white text-xs font-bold rounded-full">HOA HỒNG 22%</div>
+<div class="absolute top-2 left-2 px-3 py-1 bg-white/90 backdrop-blur-md text-on-surface text-xs font-bold rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">brand_awareness</span> TikTok Shop
+                        </div>
+</div>
+<div class="p-4">
+<h4 class="font-bold text-on-surface mb-2 line-clamp-2">Combo dưỡng trắng da mờ thâm cao cấp Estée</h4>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-on-surface-variant line-through">1,200,000đ</p>
+<p class="font-bold text-primary">890,000đ</p>
+</div>
+<button class="p-2 bg-primary-fixed text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">link</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Campaign Card 3 -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 campaign-card">
+<div class="relative h-40">
+<img alt="Product" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBClFYdA8GDhNbCRWwydgewHwDkp1RVyiDHGbDiDDWYZuJJUV45G7-1k7KNafubUEyb2sew2HZr-qNm35gZL9iVrX-uccmAl8youEppbR5cfeQpy6NRJk4k-JInGEuvg1MUiSaiD_cTIq2Rf8WvCDCuEMLpW-w2Yd12s60w-oCSeCmAKwxR_TF2LaOcxT109zTf2kGq6IkRQBKk_F-oKAq1eecKtHU1VgLeqQOU2y9GZIFcw8OVVkFK0A"/>
+<div class="absolute top-2 right-2 px-3 py-1 bg-primary text-white text-xs font-bold rounded-full">HOA HỒNG 10%</div>
+<div class="absolute top-2 left-2 px-3 py-1 bg-white/90 backdrop-blur-md text-on-surface text-xs font-bold rounded-full flex items-center gap-1">
+<img alt="Shopee" class="w-4 h-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaF4cr_ZlppntiiNt9x1NYxvIioeKS-jrG9vqOvB2D3JJ4_ocri8NSDhQnJowMJYa2PBXNgBy8yz-dJj0NUKjQrsNNDj4dRwZ-_qi-3CiZx6lmoX9JhXxNum_PNNfA2tetSSx9lDQoU0tw6G7JFLmIOLy9mdEi6xgJqCnjy33371GjNRpD82Kbbi00a78KaZG58-QQ1xUHjnlq81jOAMIGD-E4uXBQeDtKTnZSIhI4KzTsYb6vY5Yapw"/> Shopee
+                        </div>
+</div>
+<div class="p-4">
+<h4 class="font-bold text-on-surface mb-2 line-clamp-2">Tai nghe Sony WH-1000XM5 Chính Hãng</h4>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-on-surface-variant line-through">8,500,000đ</p>
+<p class="font-bold text-primary">6,900,000đ</p>
+</div>
+<button class="p-2 bg-primary-fixed text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">link</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Campaign Card 4 -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/30 campaign-card">
+<div class="relative h-40">
+<img alt="Product" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvaE-I3VJb9QuROLCC9RP4z3m11MmiTtpztx5nJYUtFWY6HfLd77raqJpvF32eyXiOKROAFNN929j70v8U2M5H219OH_P6noZZAv1FFl_Lo2uf9ePfCP6FC3lkdh9FiHhwktPKgNPK2FQNvGoYg1sj4du9WwazriccEVoU8lk7OaGH2jamqlO7qm8l66oPbdjsyEc_ktzLRggDJQvRMhno8S223NaFjxVew3KPXTjt6EWiOgXjpWXeBQ"/>
+<div class="absolute top-2 right-2 px-3 py-1 bg-primary text-white text-xs font-bold rounded-full">HOA HỒNG 25%</div>
+<div class="absolute top-2 left-2 px-3 py-1 bg-white/90 backdrop-blur-md text-on-surface text-xs font-bold rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">brand_awareness</span> TikTok Shop
+                        </div>
+</div>
+<div class="p-4">
+<h4 class="font-bold text-on-surface mb-2 line-clamp-2">Thực phẩm bảo vệ sức khỏe - Vitamin C nội địa Nhật</h4>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-on-surface-variant line-through">450,000đ</p>
+<p class="font-bold text-primary">320,000đ</p>
+</div>
+<button class="p-2 bg-primary-fixed text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">link</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Extra Rewards Table -->
+<section class="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 overflow-hidden">
+<div class="p-lg border-b border-outline-variant/30 flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md">Sản phẩm thưởng thêm (Bonus)</h3>
+<div class="flex gap-2">
+<select class="text-xs font-bold rounded-lg border-outline-variant bg-surface px-2 py-1">
+<option>Tất cả sàn</option>
+<option>Shopee</option>
+<option>TikTok Shop</option>
+</select>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<tr>
+<th class="px-lg py-4">Sản phẩm</th>
+<th class="px-lg py-4">Sàn</th>
+<th class="px-lg py-4">Hoa hồng</th>
+<th class="px-lg py-4">Thưởng thêm</th>
+<th class="px-lg py-4">Trạng thái</th>
+<th class="px-lg py-4 text-right">Hành động</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr>
+<td class="px-lg py-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded bg-surface-container overflow-hidden">
+<img alt="Product" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwvalULbsZa5Li-Haen3vXSqfyLIxeyYoHbCgaAe5O6QP40MQHGYrNyAL4yMVKCjQ0X-uqhumQsiTeADw0WVyOCzrflnpqBwFDT0AIExifmptaItG177SoQXD5YvrxUkndwwQCv45zBakTE0fQYzaWQTTmppGTWkSEifgFReTzyXuAsub97RVFMCYkFa2NdSGJZCrllKPIRywhTjGZYOJwT58EkVcStEByI-8lTaA43keOr6zSveULIg"/>
+</div>
+<span class="font-medium">Nồi chiên không dầu Lock&amp;Lock</span>
+</div>
+</td>
+<td class="px-lg py-4"><span class="text-xs px-2 py-1 bg-surface-container-highest rounded">Shopee</span></td>
+<td class="px-lg py-4 text-tertiary font-bold">12%</td>
+<td class="px-lg py-4"><span class="text-primary font-black">+ 50.000đ/đơn</span></td>
+<td class="px-lg py-4">
+<span class="inline-flex items-center gap-1 text-xs font-bold text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> Còn 12 ngày
+                            </span>
+</td>
+<td class="px-lg py-4 text-right">
+<button class="text-primary-container font-bold hover:underline">Lấy link</button>
+</td>
+</tr>
+<tr>
+<td class="px-lg py-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded bg-surface-container overflow-hidden">
+<img alt="Product" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHBZ274zkbnCJiPZBpklkPqYL38RV6oaiTcj3nRTCncLMqja4O8njiMZf1KNYip4auw922XK26mhdTkCER8VMPYnnUu3JLr5yklFFkEnQKyngXQuegaW29xLcqv9ELsMR4lKXoVDKD4WZEb0k5Rhe7LflNedbsdvE3FVjB7ABVPH59GeZf9Hxlt0YOPHwZ11SiiyIwykGa6iGw16Zu2UbYEPFHp_nRnyqLF2yentXJbFKudMk6pwx5HQ"/>
+</div>
+<span class="font-medium">Giày Sneaker Unisex Limit</span>
+</div>
+</td>
+<td class="px-lg py-4"><span class="text-xs px-2 py-1 bg-surface-container-highest rounded">TikTok Shop</span></td>
+<td class="px-lg py-4 text-tertiary font-bold">15%</td>
+<td class="px-lg py-4"><span class="text-primary font-black">+ 20.000đ/đơn</span></td>
+<td class="px-lg py-4">
+<span class="inline-flex items-center gap-1 text-xs font-bold text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> Còn 5 ngày
+                            </span>
+</td>
+<td class="px-lg py-4 text-right">
+<button class="text-primary-container font-bold hover:underline">Lấy link</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+</div>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 pb-safe bg-surface/90 backdrop-blur-lg shadow-lg z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Trang chủ</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70" href="#">
+<span class="material-symbols-outlined">local_fire_department</span>
+<span class="font-label-sm text-label-sm">Deal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary scale-110 font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-label-sm text-label-sm">Kiếm tiền</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Cá nhân</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full pt-3xl pb-xl mt-3xl bg-surface-container-lowest border-t border-outline-variant/30">
+<div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-4 gap-xl">
+<div class="col-span-1 md:col-span-2">
+<span class="font-headline-md text-headline-md font-black text-primary mb-4 block">HOANTIENVIP</span>
+<p class="text-on-surface-variant font-body-md text-body-md mb-4 max-w-md">Nền tảng hoàn tiền và tiếp thị liên kết uy tín nhất Việt Nam, giúp người dùng tiết kiệm tối đa và kiếm thêm thu nhập mỗi ngày.</p>
+<p class="text-on-surface-variant font-label-sm text-label-sm">© 2024 HOANTIENVIP - Hệ thống hoàn tiền uy tín số 1 Việt Nam</p>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-bold text-on-surface">Chính sách</h4>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Chính sách bảo mật</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Điều khoản sử dụng</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-bold text-on-surface">Liên hệ</h4>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Hỗ trợ khách hàng</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Cơ chế hoa hồng</a>
+</div>
+</div>
+</footer>
+<script>
+    // Copy feedback handler
+    function handleCopy(btn) {
+        const feedback = document.getElementById('copyFeedback');
+        feedback.classList.remove('hidden');
+        
+        // Brief timeout then hide
+        setTimeout(() => {
+            feedback.classList.add('hidden');
+        }, 1500);
+    }
+
+    // Chart with path drawing animation
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'CN'],
+            datasets: [
+                {
+                    label: 'Số đơn hàng',
+                    data: [12, 19, 15, 25, 22, 30, 28],
+                    borderColor: '#ff5a36',
+                    backgroundColor: 'rgba(255, 90, 54, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Hoa hồng (k)',
+                    data: [150, 230, 180, 310, 290, 450, 400],
+                    borderColor: '#00a773',
+                    backgroundColor: 'rgba(0, 167, 115, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { display: true, color: 'rgba(0,0,0,0.05)' }
+                },
+                x: {
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    // Intersection observer for entrance animations on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = "1";
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate-stagger-fade-in > div').forEach(el => observer.observe(el));
+</script>
+</body></html>

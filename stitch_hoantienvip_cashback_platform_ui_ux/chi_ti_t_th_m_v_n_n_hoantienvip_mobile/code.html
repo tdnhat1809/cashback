@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Theo dõi vận đơn - Cashback Platform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#b52603",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#fff0ed",
+                    "secondary-fixed": "#dae2fc",
+                    "on-tertiary-fixed": "#002113",
+                    "surface-bright": "#fff8f6",
+                    "surface-container-high": "#ffe2dc",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#ffede9",
+                    "background": "#fff8f6",
+                    "primary-container": "#ff5a36",
+                    "secondary-fixed-dim": "#bec6df",
+                    "on-primary": "#ffffff",
+                    "on-background": "#271814",
+                    "surface-container-highest": "#f9dcd6",
+                    "on-surface-variant": "#5b403a",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "inverse-primary": "#ffb4a3",
+                    "tertiary-container": "#00a773",
+                    "tertiary": "#006c49",
+                    "secondary-container": "#d7dff9",
+                    "surface-variant": "#f9dcd6",
+                    "error": "#ba1a1a",
+                    "on-primary-container": "#5a0c00",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#6ffbbe",
+                    "surface-container": "#ffe9e5",
+                    "secondary": "#565e74",
+                    "on-tertiary-container": "#003320",
+                    "surface": "#fff8f6",
+                    "on-secondary-container": "#5a6278",
+                    "on-primary-fixed-variant": "#8c1900",
+                    "inverse-surface": "#3e2c28",
+                    "on-tertiary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#b52603",
+                    "on-secondary-fixed": "#131b2e",
+                    "surface-dim": "#f0d4ce",
+                    "primary-fixed": "#ffdad2",
+                    "outline": "#8f7069",
+                    "on-secondary-fixed-variant": "#3f465b",
+                    "on-primary-fixed": "#3d0600",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed-dim": "#ffb4a3",
+                    "outline-variant": "#e3beb6",
+                    "on-surface": "#271814"
+            },
+            "spacing": {
+                    "container-max": "1280px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "lg": "24px",
+                    "2xl": "48px",
+                    "md": "16px",
+                    "3xl": "64px",
+                    "gutter": "24px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "body-md": ["Be Vietnam Pro"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "display-lg": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "headline-md": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "title-lg": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bottom-sheet {
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .bottom-sheet.open {
+            transform: translateY(0);
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            bottom: 0;
+            width: 2px;
+            background: #e3beb6;
+        }
+        .timeline-item:last-child .timeline-line::before {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top AppBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md flex items-center justify-between px-md h-14">
+<div class="flex items-center gap-md">
+<button class="active:scale-95 duration-100 p-2 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-on-surface">Theo dõi vận đơn</h1>
+</div>
+<div class="flex items-center">
+<button class="active:scale-95 duration-100 p-2 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-on-surface">notifications</span>
+</button>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="pt-20 px-md space-y-lg">
+<!-- In-app Notification -->
+<div class="bg-primary/10 border border-primary/20 rounded-xl px-md py-sm flex items-center gap-sm animate-pulse">
+<span class="material-symbols-outlined text-primary text-[20px]">local_shipping</span>
+<p class="font-label-md text-label-md text-primary">Đơn hàng đang trên đường đến bạn!</p>
+</div>
+<!-- Order Summary Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-lg shadow-sm border border-surface-variant">
+<div class="flex justify-between items-start mb-md">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">GHN-20240506</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Vận chuyển bởi Giao Hàng Nhanh</p>
+</div>
+<div class="bg-tertiary/10 px-3 py-1 rounded-full">
+<p class="font-label-sm text-label-sm text-tertiary">ĐANG GIAO</p>
+</div>
+</div>
+<div class="flex items-center gap-md p-md bg-surface-container rounded-xl">
+<div class="w-12 h-12 rounded-lg bg-white overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A premium smartphone with a glossy screen and sleek titanium edges, lying on a white marble surface under soft morning studio lighting. The aesthetic is clean, minimalist, and high-end, focusing on professional electronics photography with natural reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKQrsUYinws4EskFf131msomQl2mDGxS-910ScwjrU8oflDNwDHsBkNBd3aqn3E5WHK3UWEyCQmD7864V4u4tFzS7E3okF4ybS1IixDhbHVM0RV1t5YRXuuyeZw6WCdfFpf5KIFqt2vyZu6MkwuCgzwlsRFOykyfQBWqXsnx7ZvO7QXiGRKOLqloLHU6pDonpjdcbgvNJEuqLff44c8fE_dtsToQOJ6MRsFvhIiHDzvYuaY55ge2zGKQ"/>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-on-surface line-clamp-1">iPhone 15 Pro Max - 256GB Natural Titanium</p>
+<p class="font-body-md text-body-md text-primary font-bold">Hoàn tiền: 450.000đ</p>
+</div>
+</div>
+</div>
+<!-- Vertical Timeline Section -->
+<div class="space-y-md">
+<h3 class="font-title-lg text-title-lg text-on-surface">Lịch trình chi tiết</h3>
+<div class="relative space-y-lg pl-2">
+<!-- Timeline Item 1 (Active) -->
+<div class="timeline-item flex gap-md relative">
+<div class="timeline-line relative z-10">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+<div class="flex-1 pb-4">
+<p class="font-label-md text-label-md text-primary">Đang giao hàng</p>
+<p class="font-body-md text-body-md text-on-surface">Shipper đang trên đường giao đến bạn.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Hôm nay, 09:45</p>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="timeline-item flex gap-md relative">
+<div class="timeline-line relative z-10">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">warehouse</span>
+</div>
+</div>
+<div class="flex-1 pb-4">
+<p class="font-label-md text-label-md text-on-surface">Đã đến kho phân loại</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Đơn hàng đã đến kho HN-CauGiay-02.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Hôm qua, 22:15</p>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="timeline-item flex gap-md relative">
+<div class="timeline-line relative z-10">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">package_2</span>
+</div>
+</div>
+<div class="flex-1 pb-4">
+<p class="font-label-md text-label-md text-on-surface">Người bán đang chuẩn bị hàng</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Đơn hàng đang được đóng gói tại kho Apple Flagship Store.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">05 Th05, 14:20</p>
+</div>
+</div>
+<!-- Timeline Item 4 -->
+<div class="timeline-item flex gap-md relative">
+<div class="timeline-line relative z-10">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">check_circle</span>
+</div>
+</div>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-on-surface">Đã đặt hàng thành công</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Hệ thống đã ghi nhận đơn hàng của bạn.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">05 Th05, 10:00</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Cashback Notice -->
+<div class="bg-surface-container-low rounded-2xl p-md border-l-4 border-tertiary-container">
+<div class="flex gap-md">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">info</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Lưu ý về Cashback</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">
+                        Tiền hoàn sẽ được chuyển sang trạng thái "Đã ghi nhận" sau khi đơn hàng giao thành công. Thời gian đối soát thông thường từ 7-14 ngày làm việc.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Add Button Placeholder (FAB) -->
+<button class="fixed right-6 bottom-24 w-14 h-14 bg-primary-container text-on-primary rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-all z-40" onclick="toggleBottomSheet()">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</button>
+</main>
+<!-- Bottom Navigation Bar -->
+<footer class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-6 bg-surface/90 backdrop-blur-md rounded-t-xl z-50 shadow-lg border-t border-surface-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Trang chủ</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">sell</span>
+<span class="font-label-sm text-label-sm">Ưu đãi</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary bg-primary-container/10 rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span class="font-label-sm text-label-sm">Vận đơn</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Ví</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Cá nhân</span>
+</a>
+</footer>
+<!-- Overlay -->
+<div class="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[60] hidden transition-opacity opacity-0" id="overlay" onclick="toggleBottomSheet()"></div>
+<!-- Bottom Sheet: Add Tracking -->
+<div class="bottom-sheet fixed bottom-0 left-0 right-0 bg-surface rounded-t-[24px] z-[70] max-h-[90vh] overflow-y-auto pb-safe" id="bottomSheet">
+<!-- Handle -->
+<div class="w-full flex justify-center py-4">
+<div class="w-10 h-1 rounded-full bg-surface-container-highest"></div>
+</div>
+<div class="px-lg pb-lg space-y-lg">
+<div class="text-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Thêm vận đơn mới</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Theo dõi hành trình và nhận cashback</p>
+</div>
+<!-- Form -->
+<div class="space-y-md">
+<!-- Tracking Input -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1">Mã vận đơn (Tracking ID)</label>
+<div class="relative">
+<input class="w-full h-14 bg-surface-container border-none rounded-xl px-md focus:ring-2 focus:ring-primary text-on-surface" placeholder="Ví dụ: GHN12345678" type="text"/>
+<button class="absolute right-3 top-3 p-2 text-primary hover:bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</button>
+</div>
+</div>
+<!-- Carrier Select -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1">Đơn vị vận chuyển</label>
+<div class="relative">
+<select class="w-full h-14 bg-surface-container border-none rounded-xl px-md focus:ring-2 focus:ring-primary appearance-none text-on-surface">
+<option>Tự động nhận diện (Khuyên dùng)</option>
+<option>Giao Hàng Nhanh (GHN)</option>
+<option>Giao Hàng Tiết Kiệm (GHTK)</option>
+<option>Viettel Post</option>
+<option>Ninja Van</option>
+<option>Shopee Express</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-4 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Cashback Link Selection -->
+<div class="space-y-md">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1">Liên kết với đơn hàng Cashback</label>
+<div class="space-y-sm">
+<!-- Item 1 -->
+<label class="flex items-center gap-md p-md bg-surface-container rounded-xl cursor-pointer border-2 border-transparent has-[:checked]:border-primary transition-all">
+<input checked="" class="w-5 h-5 text-primary border-outline-variant focus:ring-primary bg-white" name="order_link" type="radio"/>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-on-surface">Đơn Shopee #SPX9921</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Hoàn 15.000đ • Đặt lúc 10:20</p>
+</div>
+</label>
+<!-- Item 2 -->
+<label class="flex items-center gap-md p-md bg-surface-container rounded-xl cursor-pointer border-2 border-transparent has-[:checked]:border-primary transition-all">
+<input class="w-5 h-5 text-primary border-outline-variant focus:ring-primary bg-white" name="order_link" type="radio"/>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-on-surface">Đơn Lazada #LZD4412</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Hoàn 45.000đ • Đặt lúc 08:15</p>
+</div>
+</label>
+<button class="w-full py-2 text-primary font-label-md text-label-md hover:underline decoration-2 underline-offset-4">
+                            Xem thêm đơn hàng khác
+                        </button>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full h-14 bg-primary text-on-primary rounded-2xl font-headline-md text-headline-md shadow-lg active:scale-95 transition-all mt-4">
+                    Xác nhận thêm mã
+                </button>
+</div>
+</div>
+</div>
+<script>
+        function toggleBottomSheet() {
+            const sheet = document.getElementById('bottomSheet');
+            const overlay = document.getElementById('overlay');
+            
+            if (sheet.classList.contains('open')) {
+                sheet.classList.remove('open');
+                overlay.classList.add('hidden');
+                overlay.classList.remove('opacity-100');
+                document.body.style.overflow = 'auto';
+            } else {
+                sheet.classList.add('open');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.add('opacity-100'), 10);
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Close on overlay click
+        document.getElementById('overlay').addEventListener('click', toggleBottomSheet);
+    </script>
+</body></html>
