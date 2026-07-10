@@ -17,6 +17,7 @@ import { AuthError, AuthService, authErrorHandler, createAuthRouter, createOtpDe
 import { WalletError, WalletService } from './modules/wallet/WalletService.js';
 import { ShipmentError, ShipmentService } from './modules/shipments/ShipmentService.js';
 import { createFinanceAdminRouter } from './modules/finance/index.js';
+import { ProviderSyncService } from './modules/provider-sync/index.js';
 import { createUserFeaturesRouter, UserFeaturesService } from './modules/user-features/index.js';
 import { ProviderError } from './providers/errors.js';
 import { rioHubTikTokMockProvider } from './providers/mock/index.js';
@@ -62,6 +63,7 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
   const tikTok = dependencies.tikTokProvider ?? rioHubTikTokMockProvider;
   const affiliateLinks = new AffiliateLinkService(database, shopee, tikTok);
   const wallet = new WalletService(database, config.DATA_ENCRYPTION_KEY);
+  const providerSync = new ProviderSyncService(database);
   const shipments = new ShipmentService(database);
   const userFeatures = new UserFeaturesService({ database, encryptionKey: config.DATA_ENCRYPTION_KEY });
   const app = express();
@@ -274,7 +276,7 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
     response.status(500).json({ error: { code: 'internal_error', message: 'Hệ thống gặp lỗi. Vui lòng thử lại.' } });
   });
 
-  return { app, database, services: { auth, wallet, affiliateLinks, shipments, userFeatures, shopee, tikTok } };
+  return { app, database, services: { auth, wallet, providerSync, affiliateLinks, shipments, userFeatures, shopee, tikTok } };
 };
 
 export const createHttpAppServer = (config: AppConfig, dependencies?: AppDependencies) => {

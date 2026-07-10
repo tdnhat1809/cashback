@@ -58,9 +58,52 @@ export interface ProviderHealth {
   checkedAt: string;
 }
 
+/**
+ * The legacy base contract intentionally stays minimal. Providers can opt into
+ * additional capabilities without forcing existing tracking-only providers to
+ * implement unrelated operations.
+ */
 export interface AffiliateProvider {
   readonly code: ProviderCode;
   readonly mode: ProviderMode;
   createTrackingLink(input: TrackingLinkInput): Promise<TrackingLinkResult>;
   healthCheck(): Promise<ProviderHealth>;
 }
+
+export type ProviderCapability = 'cursor-sync' | 'webhooks' | 'product-offers' | 'settlements';
+
+export interface ProviderCapabilities {
+  /** Omit this property for legacy providers; capability checks then return false. */
+  readonly capabilities?: readonly ProviderCapability[];
+}
+
+export interface CursorSyncRequest {
+  cursor?: string | null;
+  limit?: number;
+}
+
+export interface CursorSyncPage<TRecord = unknown> {
+  records: readonly TRecord[];
+  nextCursor: string | null;
+}
+
+/**
+ * Optional polling extension for providers that expose a cursor-based feed.
+ * It deliberately does not imply that records are payable or that a live
+ * integration exists.
+ */
+export interface CursorSyncProvider<TRecord = unknown> extends ProviderCapabilities {
+  readonly code: string;
+  readonly mode: ProviderMode;
+  listSyncPage(stream: string, input: CursorSyncRequest): Promise<CursorSyncPage<TRecord>>;
+}
+
+export const hasProviderCapability = (
+  provider: ProviderCapabilities,
+  capability: ProviderCapability,
+): boolean => provider.capabilities?.includes(capability) ?? false;
+
+export const isCursorSyncProvider = (provider: ProviderCapabilities): provider is CursorSyncProvider =>
+  hasProviderCapability(provider, 'cursor-sync')
+  && 'listSyncPage' in provider
+  && typeof provider.listSyncPage === 'function';

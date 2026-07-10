@@ -6,6 +6,7 @@ export {
   tikiMockProvider,
 } from './provider.js';
 export { reconcileOrderEvents } from './reconcile.js';
+export { createMockOrderEventSyncProvider } from './sync-adapter.js';
 export type {
   CreateAffiliateLinkInput,
   IgnoredEventReason,
