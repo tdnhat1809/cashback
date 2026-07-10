@@ -43,8 +43,18 @@ export type AppConfig = ReturnType<typeof loadConfig>;
 export const loadConfig = (environment: NodeJS.ProcessEnv = process.env) => {
   const parsed = schema.parse(environment);
   if (parsed.NODE_ENV === 'production') {
-    if (parsed.IP_HASH_PEPPER.length < 32) throw new Error('IP_HASH_PEPPER must contain at least 32 characters in production.');
-    if (parsed.DATA_ENCRYPTION_KEY.length < 32) throw new Error('DATA_ENCRYPTION_KEY must contain at least 32 characters in production.');
+    if (new URL(parsed.APP_URL).protocol !== 'https:' || new URL(parsed.API_PUBLIC_URL).protocol !== 'https:') {
+      throw new Error('APP_URL and API_PUBLIC_URL must use HTTPS in production.');
+    }
+    if (parsed.IP_HASH_PEPPER.length < 32 || parsed.IP_HASH_PEPPER.includes('development-only')) {
+      throw new Error('IP_HASH_PEPPER must be a non-development secret of at least 32 characters in production.');
+    }
+    if (parsed.DATA_ENCRYPTION_KEY.length < 32 || parsed.DATA_ENCRYPTION_KEY.includes('development-only')) {
+      throw new Error('DATA_ENCRYPTION_KEY must be a non-development secret of at least 32 characters in production.');
+    }
+    if (parsed.SHOPEE_AFFILIATE_MODE === 'graphql' && (!parsed.SHOPEE_AFFILIATE_APP_ID || !parsed.SHOPEE_AFFILIATE_SECRET)) {
+      throw new Error('Shopee GraphQL mode requires SHOPEE_AFFILIATE_APP_ID and SHOPEE_AFFILIATE_SECRET in production.');
+    }
   }
   const devOtp = parsed.NODE_ENV === 'production' ? undefined : (parsed.DEV_OTP ?? '123456');
   return {
