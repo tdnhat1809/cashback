@@ -106,6 +106,24 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
     return user;
   };
 
+  app.get('/api/v1/health/live', (_request, response) => {
+    response.json({ data: { status: 'ok', timestamp: nowIso() } });
+  });
+  app.get('/api/v1/health/ready', asyncHandler(async (_request, response) => {
+    database.prepare('SELECT 1 AS ready').get();
+    const [failedSyncRuns, unmatchedConversions] = [
+      database.prepare("SELECT COUNT(*) AS count FROM provider_sync_runs WHERE status = 'failed'").get() as { count: number },
+      database.prepare('SELECT COUNT(*) AS count FROM conversions WHERE user_id IS NULL').get() as { count: number },
+    ];
+    const provider = await shopee.healthCheck();
+    response.json({ data: {
+      status: 'ready',
+      database: 'ok',
+      providers: [provider],
+      sync: { failedRuns: failedSyncRuns.count, unmatchedConversions: unmatchedConversions.count },
+      timestamp: nowIso(),
+    } });
+  }));
   app.get('/api/v1/health', asyncHandler(async (_request, response) => {
     const provider = await shopee.healthCheck();
     response.json({ data: { status: 'ok', database: 'ok', providers: [provider], timestamp: nowIso() } });
