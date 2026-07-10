@@ -7,6 +7,8 @@ const Deals = lazy(async () => ({ default: (await import('./pages/Deals')).Deals
 const ProductDetail = lazy(async () => ({ default: (await import('./pages/ProductDetail')).ProductDetail }));
 const LinkGenerator = lazy(async () => ({ default: (await import('./pages/LinkGenerator')).LinkGenerator }));
 const Login = lazy(async () => ({ default: (await import('./pages/Login')).Login }));
+const ForgotPassword = lazy(async () => ({ default: (await import('./pages/ForgotPassword')).ForgotPassword }));
+const ResetPassword = lazy(async () => ({ default: (await import('./pages/ResetPassword')).ResetPassword }));
 const FAQ = lazy(async () => ({ default: (await import('./pages/FAQ')).FAQ }));
 const NotFound = lazy(async () => ({ default: (await import('./pages/NotFound')).NotFound }));
 
@@ -19,6 +21,7 @@ const Rewards = lazy(async () => ({ default: (await import('./pages/dashboard/Re
 const Settings = lazy(async () => ({ default: (await import('./pages/dashboard/Settings')).Settings }));
 const ShipmentTracking = lazy(async () => ({ default: (await import('./pages/dashboard/ShipmentTracking')).ShipmentTracking }));
 const ShipmentDetail = lazy(async () => ({ default: (await import('./pages/dashboard/ShipmentDetail')).ShipmentDetail }));
+const SupportTicketDetail = lazy(async () => ({ default: (await import('./pages/dashboard/SupportTicketDetail')).SupportTicketDetail }));
 const BalanceHistory = lazy(async () => ({ default: (await import('./pages/dashboard/OtherDashboardPages')).BalanceHistory }));
 const ActivityLog = lazy(async () => ({ default: (await import('./pages/dashboard/OtherDashboardPages')).ActivityLog }));
 const Notifications = lazy(async () => ({ default: (await import('./pages/dashboard/OtherDashboardPages')).Notifications }));
@@ -26,6 +29,10 @@ const Giftcode = lazy(async () => ({ default: (await import('./pages/dashboard/O
 
 const AdminOverview = lazy(async () => ({ default: (await import('./pages/admin/AdminOverview')).AdminOverview }));
 const AdminManagement = lazy(async () => ({ default: (await import('./pages/admin/AdminManagement')).AdminManagement }));
+const AdminCashbackRules = lazy(async () => ({ default: (await import('./pages/admin/AdminCashbackRules')).AdminCashbackRules }));
+const AdminPromotions = lazy(async () => ({ default: (await import('./pages/admin/AdminPromotions')).AdminPromotions }));
+const AdminStaffSecurity = lazy(async () => ({ default: (await import('./pages/admin/AdminStaffSecurity')).AdminStaffSecurity }));
+const AdminContentNotifications = lazy(async () => ({ default: (await import('./pages/admin/AdminContentNotifications')).AdminContentNotifications }));
 
 const RouteLoader = () => (
   <div className="min-h-[65vh] max-w-[1280px] mx-auto px-5 py-10" aria-label="Đang tải nội dung">
@@ -48,6 +55,8 @@ function App() {
           <Route path="/product/:id" element={<PublicLayout><ProductDetail /></PublicLayout>} />
           <Route path="/link-generator" element={<PublicLayout><LinkGenerator /></PublicLayout>} />
           <Route path="/login" element={<PublicLayout><Login /></PublicLayout>} />
+          <Route path="/forgot-password" element={<PublicLayout><ForgotPassword /></PublicLayout>} />
+          <Route path="/reset-password" element={<PublicLayout><ResetPassword /></PublicLayout>} />
           <Route path="/faq" element={<PublicLayout><FAQ /></PublicLayout>} />
 
           <Route path="/dashboard" element={<DashboardLayout><Overview /></DashboardLayout>} />
@@ -55,6 +64,7 @@ function App() {
           <Route path="/dashboard/withdrawal" element={<DashboardLayout><Withdrawal /></DashboardLayout>} />
           <Route path="/dashboard/shipment" element={<DashboardLayout><ShipmentTracking /></DashboardLayout>} />
           <Route path="/dashboard/shipment/:id" element={<DashboardLayout><ShipmentDetail /></DashboardLayout>} />
+          <Route path="/dashboard/support/:ticketId" element={<DashboardLayout><SupportTicketDetail /></DashboardLayout>} />
           <Route path="/dashboard/saved" element={<DashboardLayout><SavedProducts /></DashboardLayout>} />
           <Route path="/dashboard/referral" element={<DashboardLayout><Referral /></DashboardLayout>} />
           <Route path="/dashboard/rewards" element={<DashboardLayout><Rewards /></DashboardLayout>} />
@@ -66,6 +76,10 @@ function App() {
 
           <Route path="/admin" element={<AdminLayout><AdminOverview /></AdminLayout>} />
           <Route path="/admin/management" element={<AdminLayout><AdminManagement /></AdminLayout>} />
+          <Route path="/admin/cashback-rules" element={<AdminLayout><AdminCashbackRules /></AdminLayout>} />
+          <Route path="/admin/promotions" element={<AdminLayout><AdminPromotions /></AdminLayout>} />
+          <Route path="/admin/staff-security" element={<AdminLayout><AdminStaffSecurity /></AdminLayout>} />
+          <Route path="/admin/content-notifications" element={<AdminLayout><AdminContentNotifications /></AdminLayout>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Home, LayoutDashboard, History, Heart, Share2, 
   CreditCard, Award, Truck, Settings, LogOut, ShieldAlert, 
-  X, Bell, User, Menu, Flame, Link2, Gift, FileText, WalletCards
+  X, Bell, User, Menu, Flame, Link2, Gift, FileText, WalletCards, HelpCircle
 } from 'lucide-react';
 import { mockUserProfile } from '../mockData';
 
@@ -222,6 +222,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
     { label: 'Thông báo', path: '/dashboard/notifications', icon: <Bell size={20} /> },
     { label: 'Biến động số dư', path: '/dashboard/ledger', icon: <WalletCards size={20} /> },
     { label: 'Nhật ký hoạt động', path: '/dashboard/logs', icon: <FileText size={20} /> },
+    { label: 'Yêu cầu hỗ trợ', path: '/dashboard/support/TK123', icon: <HelpCircle size={20} /> },
     { label: 'Cài đặt tài khoản', path: '/dashboard/settings', icon: <Settings size={20} /> },
   ];
 
@@ -364,6 +365,10 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
   const menuItems = [
     { label: 'Thống kê chỉ số', path: '/admin', icon: <LayoutDashboard size={20} /> },
     { label: 'Đơn hàng & Đối soát', path: '/admin/management', icon: <History size={20} /> },
+    { label: 'Cấu hình hoa hồng', path: '/admin/cashback-rules', icon: <CreditCard size={20} /> },
+    { label: 'Khuyến mãi & Rewards', path: '/admin/promotions', icon: <Award size={20} /> },
+    { label: 'Quản trị nhân sự', path: '/admin/staff-security', icon: <ShieldAlert size={20} /> },
+    { label: 'Thông báo & Banner', path: '/admin/content-notifications', icon: <Bell size={20} /> },
     { label: 'Quay lại User Dashboard', path: '/dashboard', icon: <User size={20} /> },
     { label: 'Trang chủ công khai', path: '/', icon: <Home size={20} /> },
   ];

@@ -94,6 +94,105 @@ export interface UserProfile {
   registrationDate: string;
 }
 
+export interface SupportMessage {
+  id: string;
+  sender: 'user' | 'agent' | 'system';
+  senderName: string;
+  text: string;
+  time: string;
+  imageUrl?: string;
+}
+
+export interface SupportTicket {
+  id: string;
+  subject: string;
+  status: 'Open' | 'Resolved' | 'Closed';
+  priority: 'Low' | 'Medium' | 'High';
+  category: string;
+  linkedOrder?: string;
+  createdAt: string;
+  updatedAt: string;
+  messages: SupportMessage[];
+}
+
+export interface CashbackRule {
+  id: string;
+  category: string;
+  platform: 'Shopee' | 'TikTok Shop';
+  type: 'Mall' | 'Marketplace' | 'International' | 'Supermarket';
+  sourceCommission: number;
+  pitTax: number;
+  userCashback: number;
+  approvalDays: number;
+  effectiveDate: string;
+  status: 'Active' | 'Expired';
+  notes?: string;
+}
+
+export interface AdminPromoCode {
+  id: string;
+  code: string;
+  description: string;
+  type: 'cashback' | 'points' | 'flat';
+  value: number;
+  usedCount: number;
+  limitCount: number;
+  startDate: string;
+  endDate: string;
+  status: 'Active' | 'Expired' | 'Scheduled';
+}
+
+export interface AdminReferralCampaign {
+  id: string;
+  name: string;
+  rewardPerUser: number;
+  totalJoined: number;
+  status: 'Active' | 'Completed' | 'Draft';
+  startDate: string;
+  endDate: string;
+}
+
+export interface AdminStaffMember {
+  id: string;
+  name: string;
+  role: 'Admin' | 'CSKH' | 'Operation' | 'Finance';
+  avatar: string;
+  status: 'Active' | 'Offline' | 'Suspended';
+  lastActive: string;
+  twoFaEnabled: boolean;
+}
+
+export interface AdminSecurityLog {
+  id: string;
+  actorName: string;
+  actorRole: string;
+  action: string;
+  target: string;
+  ip: string;
+  timestamp: string;
+}
+
+export interface AdminPromoBanner {
+  id: string;
+  title: string;
+  imageUrl: string;
+  link: string;
+  startDate: string;
+  endDate: string;
+  status: 'Active' | 'Expired';
+}
+
+export interface AdminPushNotification {
+  id: string;
+  title: string;
+  body: string;
+  target: string;
+  sentCount: number;
+  status: 'Delivered' | 'Scheduled' | 'Draft';
+  scheduleTime?: string;
+  sentDate?: string;
+}
+
 // 1. Products and Deals
 export const mockProducts: Product[] = [
   {
@@ -475,3 +574,70 @@ export const mockUserProfile: UserProfile = {
   referralCode: 'HOANTIENVIP123',
   registrationDate: '2026-06-01'
 };
+
+// 10. Support Tickets Mocks
+export const mockSupportTickets: SupportTicket[] = [
+  {
+    id: 'TK123',
+    subject: 'Hoàn tiền chưa cập nhật cho đơn hàng #SPX123',
+    status: 'Open',
+    priority: 'High',
+    category: 'Hoàn tiền chưa cập nhật',
+    linkedOrder: '#SPX123',
+    createdAt: '2026-05-24 10:30',
+    updatedAt: '2026-05-24 10:40',
+    messages: [
+      { id: 'm1', sender: 'system', senderName: 'Hệ thống', text: 'Ticket đã được tạo vào 10:30, 24/05/2026', time: '10:30' },
+      { id: 'm2', sender: 'user', senderName: 'Khanh Nguyen', text: 'Chào bạn, mình vừa thực hiện giao dịch tại Shopee qua link HOANTIENVIP nhưng chưa thấy cập nhật tiền hoàn lại. Mã đơn hàng là #SPX123.', time: '10:32' },
+      { id: 'm3', sender: 'agent', senderName: 'Minh Anh (Support)', text: 'Chào Anh/Chị, em là Minh từ bộ phận hỗ trợ HOANTIENVIP. Em đã nhận được thông tin về đơn hàng #SPX123. Để kiểm tra kỹ hơn, Anh/Chị vui lòng chụp lại màn hình lịch sử mua hàng giúp em nhé.', time: '10:35' },
+      { id: 'm4', sender: 'user', senderName: 'Khanh Nguyen', text: 'Đây là ảnh chụp màn hình đơn hàng của mình ạ.', time: '10:40', imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600' }
+    ]
+  }
+];
+
+// 11. Cashback Rules Mocks
+export const mockCashbackRules: CashbackRule[] = [
+  { id: 'r1', category: 'Electronics', platform: 'Shopee', type: 'Mall', sourceCommission: 5.2, pitTax: 10, userCashback: 4.68, approvalDays: 45, effectiveDate: '2023-12-01', status: 'Active', notes: 'Áp dụng cho gian hàng chính hãng Shopee Mall' },
+  { id: 'r2', category: 'Fashion & Beauty', platform: 'Shopee', type: 'Marketplace', sourceCommission: 12.5, pitTax: 10, userCashback: 11.25, approvalDays: 30, effectiveDate: '2024-01-15', status: 'Active', notes: 'Áp dụng cho các nhà bán thường trên sàn' },
+  { id: 'r3', category: 'Home & Living', platform: 'Shopee', type: 'International', sourceCommission: 8.0, pitTax: 10, userCashback: 7.20, approvalDays: 60, effectiveDate: '2023-10-10', status: 'Expired', notes: 'Chương trình ưu đãi quốc tế cuối năm' },
+  { id: 'r4', category: 'Groceries', platform: 'Shopee', type: 'Supermarket', sourceCommission: 3.5, pitTax: 10, userCashback: 3.15, approvalDays: 21, effectiveDate: '2024-02-01', status: 'Active', notes: 'Áp dụng cho Shopee Supermarket' },
+  { id: 'r5', category: 'Electronics & Gadgets', platform: 'TikTok Shop', type: 'Mall', sourceCommission: 6.0, pitTax: 10, userCashback: 5.40, approvalDays: 30, effectiveDate: '2024-03-01', status: 'Active', notes: 'TikTok Shop Mall Electronics' },
+  { id: 'r6', category: 'Fashion & Apparel', platform: 'TikTok Shop', type: 'Marketplace', sourceCommission: 15.0, pitTax: 10, userCashback: 13.5, approvalDays: 14, effectiveDate: '2024-02-10', status: 'Active', notes: 'Ngành thời trang hot trend' }
+];
+
+// 12. Admin Promotions & Giftcodes Mocks
+export const mockAdminPromoCodes: AdminPromoCode[] = [
+  { id: 'pc1', code: 'WELCOME2024', description: 'New user 10% cashback', type: 'cashback', value: 10, usedCount: 842, limitCount: 1000, startDate: '2026-01-01', endDate: '2026-12-31', status: 'Active' },
+  { id: 'pc2', code: 'TETHOANVUI', description: 'Holiday Special Bonus', type: 'flat', value: 20000, usedCount: 500, limitCount: 500, startDate: '2026-02-01', endDate: '2026-02-28', status: 'Expired' },
+  { id: 'pc3', code: 'LAUNCH50K', description: 'Flat 50k Xu for top merchants', type: 'points', value: 50000, usedCount: 12, limitCount: 50, startDate: '2026-04-15', endDate: '2026-05-15', status: 'Scheduled' }
+];
+
+export const mockAdminReferralCampaigns: AdminReferralCampaign[] = [
+  { id: 'rc1', name: 'Đồng hành giới thiệu bạn mới', rewardPerUser: 50000, totalJoined: 1420, status: 'Active', startDate: '2026-06-01', endDate: '2026-08-31' },
+  { id: 'rc2', name: 'Đại sứ hoàn tiền Xuân 2026', rewardPerUser: 100000, totalJoined: 850, status: 'Completed', startDate: '2026-01-01', endDate: '2026-02-15' }
+];
+
+// 13. Admin Staff Members Mocks
+export const mockAdminStaffMembers: AdminStaffMember[] = [
+  { id: 'st1', name: 'Khanh Nguyen', role: 'Admin', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', status: 'Active', lastActive: '2m ago', twoFaEnabled: true },
+  { id: 'st2', name: 'Minh Anh', role: 'CSKH', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150', status: 'Active', lastActive: 'now', twoFaEnabled: true },
+  { id: 'st3', name: 'Quoc Bao', role: 'Operation', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', status: 'Offline', lastActive: '2h ago', twoFaEnabled: false },
+  { id: 'st4', name: 'Thu Trang', role: 'Finance', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', status: 'Active', lastActive: '1h ago', twoFaEnabled: true }
+];
+
+export const mockAdminSecurityLogs: AdminSecurityLog[] = [
+  { id: 'asl1', actorName: 'Khanh Nguyen', actorRole: 'Admin', action: 'UPDATE_ROLE', target: 'Staff: Minh Anh', ip: '192.168.1.1', timestamp: '2026-07-10 18:45' },
+  { id: 'asl2', actorName: 'System Core', actorRole: 'System', action: 'BACKUP_DB', target: 'Postgres Production DB', ip: '10.0.0.4', timestamp: '2026-07-10 00:00' },
+  { id: 'asl3', actorName: 'Thu Trang', actorRole: 'Finance', action: 'APPROVE_PAYOUT', target: 'Withdrawal Request #w1', ip: '192.168.1.42', timestamp: '2026-07-09 10:15' }
+];
+
+// 14. Admin Banners and Push Notifications Mocks
+export const mockAdminPromoBanners: AdminPromoBanner[] = [
+  { id: 'b1', title: 'Tet Savings 2026 - 15% Cashback', imageUrl: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800', link: 'hoantienvip.com/deals/tet2026', startDate: '2026-02-01', endDate: '2026-02-28', status: 'Active' },
+  { id: 'b2', title: 'Tech Week Extravaganza', imageUrl: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800', link: 'hoantienvip.com/promo/tech', startDate: '2026-07-01', endDate: '2026-07-31', status: 'Active' }
+];
+
+export const mockAdminPushNotifications: AdminPushNotification[] = [
+  { id: 'pn1', title: 'Tet Bonus 50k Sent!', body: 'Chúc mừng bạn! Nhận ngay 50.000đ hoàn tiền khi mua sắm tại...', target: '45,200 users', sentCount: 45200, status: 'Delivered', sentDate: 'Feb 10, 2026' },
+  { id: 'pn2', title: 'Weekly Cashback Summary', body: 'Check out your savings for this week. You earned 245.000đ total...', target: 'All Registered', sentCount: 0, status: 'Scheduled', scheduleTime: 'Monday 09:00' }
+];

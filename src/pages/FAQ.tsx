@@ -1,5 +1,6 @@
 import React from 'react';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, MessageSquare } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const FAQ: React.FC = () => {
   const faqs = [
@@ -22,13 +23,13 @@ export const FAQ: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-[800px] mx-auto px-6 py-12 text-left">
+    <div className="max-w-[800px] mx-auto px-6 py-12 text-left animate-fade-in">
       <h1 className="font-headline-lg text-on-surface mb-2">Hỏi đáp hỗ trợ FAQ</h1>
       <p className="text-on-surface-variant text-sm mb-8">
         Tìm câu trả lời nhanh chóng cho các thắc mắc về quy trình mua sắm, tích lũy tiền hoàn, rút tiền hoặc giải quyết khiếu nại.
       </p>
 
-      <div className="space-y-6">
+      <div className="space-y-6 mb-10">
         {faqs.map((faq, idx) => (
           <div key={idx} className="bg-white p-6 rounded-3xl border border-outline-variant/30 shadow-soft">
             <h4 className="font-title-lg text-sm font-bold text-on-surface mb-2 flex items-start gap-2">
@@ -40,6 +41,24 @@ export const FAQ: React.FC = () => {
             </p>
           </div>
         ))}
+      </div>
+
+      {/* Support center link banner */}
+      <div className="bg-primary/5 border border-primary/20 rounded-3xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h3 className="font-title-lg text-sm font-bold text-on-surface mb-1 flex items-center gap-1.5">
+            <MessageSquare size={18} className="text-primary" /> Bạn vẫn cần trợ giúp?
+          </h3>
+          <p className="text-xs text-on-surface-variant">
+            Hãy gửi yêu cầu hoặc trò chuyện trực tiếp với kiểm soát viên để xử lý nhanh nhất.
+          </p>
+        </div>
+        <Link 
+          to="/dashboard/support/TK123" 
+          className="bg-primary text-white font-bold text-xs py-3 px-5 rounded-xl hover:brightness-105 active:scale-95 transition-all shadow-soft shrink-0"
+        >
+          Xem Ticket Hỗ Trợ #TK123
+        </Link>
       </div>
     </div>
   );
