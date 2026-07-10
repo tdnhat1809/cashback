@@ -9,6 +9,7 @@ export interface Product {
   category: 'electronics' | 'home' | 'beauty' | 'fashion' | 'under10k' | 'high_cashback';
   imageUrl: string;
   shopName: string;
+  sourceUrl?: string;
   coupons?: string[];
   terms?: string;
   saved?: boolean;

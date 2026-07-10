@@ -1,7 +1,4 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { mockCarriersList } from '../../mockData';
-import type { Shipment } from '../../mockData';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Dropdown } from '../../components/Dropdown';
@@ -14,23 +11,58 @@ import { defaultToastState, triggerToast } from '../../components/toast-state';
 import type { ToastState } from '../../components/toast-state';
 import { Truck, Search, Plus, Calendar, MapPin, Clock } from 'lucide-react';
 import { EmptyState } from '../../components/EmptyState';
-import { useAppData } from '../../state/AppDataContext';
+import { shipmentApi, type CarrierRecord, type ShipmentRecord } from '../../services/apiClient';
+
+type Shipment = {
+  id: string;
+  trackingNumber: string;
+  carrier: string;
+  latestStatus: string;
+  lastSynced: string;
+  estimateDelivery?: string;
+  events: Array<{ date: string; time: string; location: string; description: string; status: string }>;
+};
+
+const toShipment = (record: ShipmentRecord, carriers: CarrierRecord[]): Shipment => ({
+  id: record.id,
+  trackingNumber: record.tracking_number,
+  carrier: carriers.find((carrier) => carrier.code === record.carrier_code)?.name ?? record.carrier_code,
+  latestStatus: record.latest_status,
+  lastSynced: record.last_synced_at ?? record.updated_at,
+  estimateDelivery: record.eta ?? undefined,
+  events: (record.events ?? []).map((event) => {
+    const occurredAt = new Date(event.occurred_at);
+    return {
+      date: occurredAt.toLocaleDateString('vi-VN'),
+      time: occurredAt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+      location: event.location ?? '', description: event.description, status: event.status,
+    };
+  }),
+});
 
 export const ShipmentTracking: React.FC = () => {
-  const navigate = useNavigate();
-  const { shipments, addShipment } = useAppData();
+  const [shipments, setShipments] = useState<Shipment[]>([]);
+  const [carriers, setCarriers] = useState<CarrierRecord[]>([]);
   const [trackingNum, setTrackingNum] = useState('');
   const [selectedCarrier, setSelectedCarrier] = useState('auto');
   const [activeShipment, setActiveShipment] = useState<Shipment | null>(null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<ToastState>(defaultToastState);
 
+  const reload = useCallback(async () => {
+    const [carrierRows, shipmentRows] = await Promise.all([shipmentApi.carriers(), shipmentApi.list()]);
+    setCarriers(carrierRows);
+    setShipments(shipmentRows.map((shipment) => toShipment(shipment, carrierRows)));
+  }, []);
+
+  useEffect(() => { void reload().catch((error: unknown) => triggerToast(setToast, error instanceof Error ? error.message : 'Không thể tải vận đơn.', 'error')); }, [reload]);
+
   const carrierOptions = [
     { value: 'auto', label: 'Tự động nhận diện hãng' },
-    ...mockCarriersList.map(c => ({ value: c, label: c }))
+    ...carriers.filter((carrier) => carrier.enabled).map((carrier) => ({ value: carrier.code, label: carrier.name }))
   ];
 
-  const handleAddShipment = (e: React.FormEvent) => {
+  const handleAddShipment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!trackingNum.trim()) {
       triggerToast(setToast, 'Vui lòng nhập mã vận đơn.', 'error');
@@ -39,10 +71,10 @@ export const ShipmentTracking: React.FC = () => {
 
     const normalizedTrackingNumber = trackingNum.trim().toUpperCase();
     const carrierByPrefix: Array<[string, string]> = [
-      ['SPX', 'SPX'], ['LEX', 'LEX'], ['EMS', 'EMS'], ['J&T', 'J&T'], ['JNT', 'J&T'],
-      ['GHN', 'GHN'], ['247', '247Express'], ['VN', 'VNPost'], ['VTP', 'Viettel Post'],
-      ['GHTK', 'GHTK'], ['BEST', 'Best'], ['FUTA', 'Futa'], ['NHT', 'Nhất Tín'],
-      ['NETCO', 'Netco'], ['NETPOST', 'NetPost'],
+      ['SPX', 'spx'], ['LEX', 'lex'], ['EMS', 'ems'], ['J&T', 'j_t'], ['JNT', 'j_t'],
+      ['GHN', 'ghn'], ['247', '247express'], ['VN', 'vnpost'], ['VTP', 'viettel_post'],
+      ['GHTK', 'ghtk'], ['BEST', 'best'], ['FUTA', 'futa'], ['NHT', 'nh_t_t_n'],
+      ['NETCO', 'netco'], ['NETPOST', 'netpost'],
     ];
     const detectedCarrier = carrierByPrefix.find(([prefix]) => normalizedTrackingNumber.startsWith(prefix))?.[1];
     const carrier = selectedCarrier === 'auto' ? detectedCarrier : selectedCarrier;
@@ -51,34 +83,18 @@ export const ShipmentTracking: React.FC = () => {
       triggerToast(setToast, 'Không nhận diện được hãng vận chuyển. Vui lòng chọn hãng trước khi thêm.', 'error');
       return;
     }
-    if (shipments.some((shipment) => shipment.trackingNumber === normalizedTrackingNumber && shipment.carrier === carrier)) {
+    if (shipments.some((shipment) => shipment.trackingNumber === normalizedTrackingNumber && carriers.find((item) => item.name === shipment.carrier)?.code === carrier)) {
       triggerToast(setToast, 'Vận đơn này đã có trong danh sách theo dõi.', 'warning');
       return;
     }
 
     setLoading(true);
     try {
-      const newShipment: Shipment = {
-        id: `s_${globalThis.crypto?.randomUUID?.().slice(0, 8) ?? Math.random().toString(36).slice(2, 10)}`,
-        trackingNumber: normalizedTrackingNumber,
-        carrier: carrier,
-        latestStatus: 'Đang vận chuyển',
-        lastSynced: new Date().toISOString().replace('T', ' ').substring(0, 16),
-        events: [
-          {
-            date: new Date().toISOString().substring(0, 10),
-            time: '12:00',
-            location: 'Bưu cục nguồn',
-            description: `Hãng vận chuyển ${carrier} đã tiếp nhận thông tin yêu cầu giao nhận của người gửi.`,
-            status: 'CREATED'
-          }
-        ]
-      };
-
-      addShipment(newShipment);
+      const newShipment = await shipmentApi.create({ trackingNumber: normalizedTrackingNumber, carrierCode: carrier });
       setTrackingNum('');
       setSelectedCarrier('auto');
-      triggerToast(setToast, `Thêm vận đơn ${newShipment.trackingNumber} của hãng ${carrier} thành công!`, 'success');
+      await reload();
+      triggerToast(setToast, `Thêm vận đơn ${newShipment.tracking_number} thành công!`, 'success');
     } catch (error) {
       triggerToast(setToast, error instanceof Error ? error.message : 'Không thể thêm vận đơn.', 'error');
     } finally {
@@ -130,7 +146,7 @@ export const ShipmentTracking: React.FC = () => {
         <Button 
           variant="ghost" 
           size="sm" 
-          onClick={() => navigate(`/dashboard/shipment/${row.trackingNumber}`)}
+          onClick={() => void shipmentApi.get(row.id).then((detail) => setActiveShipment(toShipment(detail, carriers))).catch((error: unknown) => triggerToast(setToast, error instanceof Error ? error.message : 'Không thể tải chi tiết vận đơn.', 'error'))}
           className="!p-1.5 font-bold"
         >
           Chi tiết

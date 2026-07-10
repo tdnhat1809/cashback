@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { CashbackOrder } from '../../mockData';
 import { Badge } from '../../components/Badge';
 import { Tabs } from '../../components/Tabs';
@@ -8,13 +8,34 @@ import type { Column } from '../../components/Table';
 import { Modal } from '../../components/Modal';
 import { Button } from '../../components/Button';
 import { HelpCircle, Calendar } from 'lucide-react';
-import { useAppData } from '../../state/AppDataContext';
+import { dashboardApi } from '../../services/apiClient';
+
+const toCashbackOrder = (order: Awaited<ReturnType<typeof dashboardApi.cashbackOrders>>[number]): CashbackOrder => ({
+  id: order.id,
+  orderId: order.external_order_id,
+  platform: order.platform === 'shopee' ? 'Shopee' : 'TikTok Shop',
+  shopName: order.platform === 'shopee' ? 'Shopee' : 'TikTok Shop',
+  productName: `Đơn hàng ${order.external_order_id}`,
+  productImg: '',
+  orderValue: order.order_value_vnd,
+  cashbackEstimate: order.cashback_estimate_vnd,
+  cashbackActual: order.cashback_actual_vnd,
+  status: ({ pending: 'Pending', confirmed: 'Confirmed', rejected: 'Rejected', paid: 'Paid' } as const)[order.cashback_status],
+  date: order.completed_at ?? order.created_at,
+});
 
 export const CashbackHistory: React.FC = () => {
-  const { cashbackOrders: orders } = useAppData();
+  const [orders, setOrders] = useState<CashbackOrder[]>([]);
+  const [loadError, setLoadError] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [platformFilter, setPlatformFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<CashbackOrder | null>(null);
+
+  useEffect(() => {
+    void dashboardApi.cashbackOrders()
+      .then((result) => setOrders(result.map(toCashbackOrder)))
+      .catch((error: unknown) => setLoadError(error instanceof Error ? error.message : 'Không thể tải lịch sử hoàn tiền.'));
+  }, []);
 
   const tabs = [
     { id: 'all', label: 'Tất cả đơn' },
@@ -52,7 +73,7 @@ export const CashbackHistory: React.FC = () => {
       header: 'Đơn hàng',
       accessor: (row: CashbackOrder) => (
         <div className="flex items-center gap-3">
-          <img src={row.productImg} alt={row.productName} className="w-10 h-10 object-cover rounded-lg bg-surface-container-low shrink-0" />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface-container-low text-[10px] font-black text-primary">{row.platform === 'Shopee' ? 'S' : 'TT'}</span>
           <div className="text-left min-w-0">
             <span className="text-xs font-bold text-on-surface truncate block max-w-[200px]">{row.productName}</span>
             <span className="text-[10px] text-on-surface-variant/80 block mt-0.5">{row.orderId}</span>
@@ -127,6 +148,8 @@ export const CashbackHistory: React.FC = () => {
         <p className="text-xs text-on-surface-variant">Kiểm tra chi tiết trạng thái đối soát các đơn hàng từ sàn thương mại điện tử.</p>
       </div>
 
+      {loadError && <p className="rounded-xl border border-error/20 bg-error-container/20 p-3 text-sm text-error" role="alert">{loadError}</p>}
+
       {/* Filters bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-3xl border border-outline-variant/30 shadow-soft">
         <Tabs
@@ -165,11 +188,7 @@ export const CashbackHistory: React.FC = () => {
         >
           <div className="space-y-6">
             <div className="flex items-start gap-4">
-              <img 
-                src={selectedOrder.productImg} 
-                alt={selectedOrder.productName} 
-                className="w-16 h-16 object-cover rounded-xl bg-surface-container-low" 
-              />
+              <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-surface-container-low text-xs font-black text-primary">{selectedOrder.platform === 'Shopee' ? 'S' : 'TT'}</span>
               <div className="text-left">
                 <Badge variant={selectedOrder.platform === 'Shopee' ? 'shopee' : 'tiktok'} className="mb-2">
                   {selectedOrder.platform}

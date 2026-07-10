@@ -31,8 +31,8 @@ export const Maintenance: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-background text-on-surface">
       {/* Top Header */}
       <header className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 h-20 bg-surface/80 backdrop-blur-md border-b border-outline-variant/10">
-        <Link to="/" className="font-display-lg text-2xl font-black text-primary tracking-tight">
-          HOANTIENVIP
+        <Link to="/">
+          <img src="/logo.png" alt="HOANTIENVIP" className="h-10 w-auto object-contain" />
         </Link>
         <Link to="/faq" className="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
           <HelpCircle size={22} />

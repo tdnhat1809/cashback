@@ -12,7 +12,7 @@ import {
 import { Pagination } from '../components/Pagination';
 import { EmptyState } from '../components/EmptyState';
 import type { Product } from '../mockData';
-import { useAppData } from '../state/AppDataContext';
+import { catalogApi, userFeaturesApi, type DealProduct } from '../services/apiClient';
 
 type DealFilter =
   | 'all'
@@ -59,6 +59,27 @@ const normalizeDealFilter = (value: string | null): DealFilter | null => {
 
 const formatPrice = (value: number) => `${value.toLocaleString('vi-VN')}đ`;
 
+const toProduct = (deal: DealProduct): Product => {
+  const cashbackValue = deal.commission_rate_bps
+    ? Math.floor((deal.price_vnd * deal.commission_rate_bps * 0.9) / 10_000)
+    : 0;
+  return {
+    id: deal.id,
+    name: deal.name,
+    price: deal.price_vnd,
+    originalPrice: deal.original_price_vnd,
+    cashbackText: cashbackValue > 0 ? `Hoàn ${cashbackValue.toLocaleString('vi-VN')}đ` : 'Đang cập nhật',
+    cashbackValue,
+    platform: deal.platform === 'shopee' ? 'Shopee' : 'TikTok Shop',
+    category: deal.price_vnd <= 10_000 ? 'under10k' : cashbackValue >= 20_000 ? 'high_cashback' : 'home',
+    imageUrl: deal.image_url ?? '',
+    shopName: deal.shop_name ?? (deal.platform === 'shopee' ? 'Shopee' : 'TikTok Shop'),
+    sourceUrl: deal.source_url,
+    coupons: [],
+    terms: deal.platform === 'tiktok' ? 'TikTok Shop hiện ở chế độ mô phỏng, chưa ghi nhận cashback.' : undefined,
+  };
+};
+
 interface DealCardProps {
   product: Product;
   onBuy: (product: Product) => void;
@@ -68,12 +89,7 @@ interface DealCardProps {
 const DesktopDealCard: React.FC<DealCardProps> = ({ product, onBuy, onSave }) => (
   <article className="group relative hidden h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-outline-variant/30 bg-white shadow-sm transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-md md:flex">
     <div className="relative aspect-square overflow-hidden bg-surface-container-low">
-      <img
-        src={product.imageUrl}
-        alt={product.name}
-        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        loading="lazy"
-      />
+      {product.imageUrl ? <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" /> : <span className="flex h-full items-center justify-center text-sm font-black text-primary">{product.platform === 'Shopee' ? 'S' : 'TT'}</span>}
       <span className="absolute right-2 top-2 rounded-lg bg-primary px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
         {product.cashbackText}
       </span>
@@ -140,12 +156,7 @@ const MobileDealCard: React.FC<DealCardProps> = ({ product, onBuy, onSave }) => 
       className="grid min-h-32 w-full cursor-pointer grid-cols-[7rem_minmax(0,1fr)] text-left transition-colors active:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary sm:grid-cols-[8rem_minmax(0,1fr)]"
     >
       <span className="relative block h-full min-h-32 overflow-hidden bg-surface-container-low">
-        <img
-          src={product.imageUrl}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-          loading="lazy"
-        />
+        {product.imageUrl ? <img src={product.imageUrl} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" /> : <span className="flex h-full items-center justify-center text-sm font-black text-primary">{product.platform === 'Shopee' ? 'S' : 'TT'}</span>}
         <span className="absolute right-2 top-2 rounded-full bg-primary-container px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-sm">
           Hot
         </span>
@@ -203,7 +214,8 @@ export const Deals: React.FC = () => {
     normalizePlatform(searchParams.get('platform')) ??
     normalizeDealFilter(searchParams.get('filter')) ??
     'all';
-  const { products, toggleSavedProduct } = useAppData();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [dataError, setDataError] = useState('');
   const [search, setSearch] = useState(searchParams.get('q') ?? '');
   const [activeFilter, setActiveFilter] = useState<DealFilter>(requestedFilter);
   const [sortOrder, setSortOrder] = useState('default');
@@ -214,11 +226,36 @@ export const Deals: React.FC = () => {
     setCurrentPage(1);
   }, [requestedFilter]);
 
-  const handleSaveProduct = (id: string) => {
-    toggleSavedProduct(id);
+  useEffect(() => {
+    const platform = activeFilter === 'Shopee' ? 'shopee' : activeFilter === 'TikTok Shop' ? 'tiktok' : undefined;
+    void (async () => {
+      setDataError('');
+      try {
+        const results = platform
+          ? [await catalogApi.listDeals({ platform })]
+          : await Promise.all([catalogApi.listDeals({ platform: 'shopee' }), catalogApi.listDeals({ platform: 'tiktok' })]);
+        setProducts(results.flat().map(toProduct));
+      } catch (error) {
+        setProducts([]);
+        setDataError(error instanceof Error ? error.message : 'Không thể tải danh sách deal.');
+      }
+    })();
+  }, [activeFilter]);
+
+  const handleSaveProduct = async (id: string) => {
+    try {
+      const result = await userFeaturesApi.toggleSavedProduct(id);
+      setProducts((current) => current.map((product) => product.id === id ? { ...product, saved: result.saved } : product));
+    } catch (error) {
+      setDataError(error instanceof Error ? error.message : 'Bạn cần đăng nhập để lưu sản phẩm.');
+    }
   };
 
   const handleBuyProduct = (product: Product) => {
+    if (product.sourceUrl) {
+      navigate(`/link-generator?url=${encodeURIComponent(product.sourceUrl)}`);
+      return;
+    }
     navigate(`/product/${product.id}`);
   };
 
@@ -303,6 +340,8 @@ export const Deals: React.FC = () => {
           Tìm thấy <strong className="font-bold text-on-surface">{filteredProducts.length}</strong> ưu đãi hấp dẫn từ Shopee và TikTok Shop.
         </p>
       </header>
+
+      {dataError && <p className="mb-5 rounded-xl border border-error/20 bg-error-container/20 p-3 text-sm text-error" role="alert">{dataError}</p>}
 
       <section aria-label="Tìm kiếm và lọc deal" className="mb-7 space-y-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">

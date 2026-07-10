@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
@@ -23,15 +23,9 @@ import {
   YAxis,
 } from 'recharts';
 import { Button } from '../../components/Button';
-import { useAppData } from '../../state/AppDataContext';
-
-const chartData = [
-  { name: '01/06', cashback: 80000 },
-  { name: '08/06', cashback: 148000 },
-  { name: '15/06', cashback: 112000 },
-  { name: '22/06', cashback: 254000 },
-  { name: '30/06', cashback: 425000 },
-];
+import type { CashbackOrder } from '../../mockData';
+import { dashboardApi, type WalletBalances } from '../../services/apiClient';
+import { useAuth } from '../../state/auth-context';
 
 const formatCurrency = (value: number) => `${value.toLocaleString('vi-VN')}đ`;
 
@@ -62,7 +56,47 @@ const statusStyles = {
 
 export const Overview: React.FC = () => {
   const navigate = useNavigate();
-  const { cashbackOrders, wallet } = useAppData();
+  const { user } = useAuth();
+  const [wallet, setWallet] = useState<WalletBalances>({ pending: 0, available: 0, reserved: 0, withdrawn: 0 });
+  const [cashbackOrders, setCashbackOrders] = useState<CashbackOrder[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+
+  const reload = useCallback(async () => {
+    setIsLoading(true);
+    setLoadError('');
+    try {
+      const result = await dashboardApi.get();
+      setWallet(result.wallet);
+      setCashbackOrders(result.recentOrders.map((order) => ({
+        id: order.id,
+        orderId: order.external_order_id,
+        platform: order.platform === 'shopee' ? 'Shopee' : 'TikTok Shop',
+        shopName: order.platform === 'shopee' ? 'Shopee' : 'TikTok Shop',
+        productName: `Đơn hàng ${order.external_order_id}`,
+        productImg: '',
+        orderValue: order.order_value_vnd,
+        cashbackEstimate: order.cashback_estimate_vnd,
+        cashbackActual: order.cashback_actual_vnd,
+        status: ({ pending: 'Pending', confirmed: 'Confirmed', rejected: 'Rejected', paid: 'Paid' } as const)[order.cashback_status],
+        date: order.completed_at ?? order.created_at,
+      })));
+    } catch (error) {
+      setLoadError(error instanceof Error ? error.message : 'Không thể tải số liệu ví.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { void reload(); }, [reload]);
+
+  const chartData = useMemo(() => {
+    let running = 0;
+    return [...cashbackOrders].reverse().map((order) => {
+      running += order.cashbackActual;
+      return { name: new Date(order.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }), cashback: running };
+    });
+  }, [cashbackOrders]);
   const successfulOrders = cashbackOrders.filter(
     (order) => order.status === 'Paid' || order.status === 'Confirmed',
   ).length;
@@ -89,8 +123,8 @@ export const Overview: React.FC = () => {
     },
     {
       label: 'Tổng đã nhận',
-      value: formatCurrency(wallet.totalReceived),
-      helper: '+12% so với tháng trước',
+      value: formatCurrency(wallet.available + wallet.reserved + wallet.withdrawn),
+      helper: 'Số dư đã được xác nhận',
       icon: TrendingUp,
       iconClass: 'bg-emerald-100 text-emerald-700',
       helperClass: 'text-emerald-700 font-semibold',
@@ -139,10 +173,10 @@ export const Overview: React.FC = () => {
             Tổng quan tài khoản
           </p>
           <h1 className="text-2xl font-extrabold leading-tight tracking-[-0.02em] sm:text-[30px]">
-            Chào mừng trở lại, Nguyễn Văn A!
+            Chào mừng trở lại, {user?.name ?? 'bạn'}!
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-6 text-white/90 sm:text-base">
-            Bạn có <strong className="font-bold underline underline-offset-4">2 đơn hàng mới</strong> đang chờ duyệt.
+            Bạn có <strong className="font-bold underline underline-offset-4">{cashbackOrders.filter((order) => order.status === 'Pending').length} đơn hàng</strong> đang chờ duyệt.
             Đừng bỏ lỡ cashback của mình nhé!
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -178,11 +212,14 @@ export const Overview: React.FC = () => {
           type="button"
           className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-outline-variant/40 bg-white text-on-surface-variant transition hover:border-primary/30 hover:text-primary"
           aria-label="Làm mới dữ liệu"
-          onClick={() => window.location.reload()}
+          onClick={() => void reload()}
+          disabled={isLoading}
         >
-          <RefreshCw size={16} />
+          <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
         </button>
       </div>
+
+      {loadError && <p className="rounded-xl border border-error/20 bg-error-container/20 p-3 text-sm text-error" role="alert">{loadError}</p>}
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {summaryCards.map((card) => {
@@ -343,11 +380,7 @@ export const Overview: React.FC = () => {
                   <tr key={order.id} className="transition hover:bg-surface-container-low/45">
                     <td className="px-5 py-4 sm:px-6">
                       <div className="flex items-center gap-3">
-                        <img
-                          src={order.productImg}
-                          alt=""
-                          className="h-10 w-10 shrink-0 rounded-lg border border-outline-variant/25 object-cover"
-                        />
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-outline-variant/25 bg-surface-container-low text-[10px] font-black text-primary">{order.platform === 'Shopee' ? 'S' : 'TT'}</span>
                         <div className="min-w-0">
                           <p className="max-w-[250px] truncate text-xs font-semibold text-on-surface">
                             {order.productName}
@@ -396,11 +429,7 @@ export const Overview: React.FC = () => {
             return (
               <article key={order.id} className="p-4">
                 <div className="flex items-start gap-3">
-                  <img
-                    src={order.productImg}
-                    alt=""
-                    className="h-14 w-14 shrink-0 rounded-xl border border-outline-variant/25 object-cover"
-                  />
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-outline-variant/25 bg-surface-container-low text-xs font-black text-primary">{order.platform === 'Shopee' ? 'S' : 'TT'}</span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2">
                       <p className="line-clamp-2 text-xs font-semibold leading-5 text-on-surface">

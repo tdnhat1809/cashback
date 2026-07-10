@@ -19,8 +19,8 @@ export const Forbidden: React.FC = () => {
       {/* Top Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm w-full border-b border-outline-variant/10">
         <div className="flex justify-between items-center px-6 h-20 w-full max-w-[1280px] mx-auto">
-          <Link to="/" className="font-display-lg text-2xl font-black text-primary tracking-tight">
-            HOANTIENVIP
+          <Link to="/">
+            <img src="/logo.png" alt="HOANTIENVIP" className="h-10 w-auto object-contain" />
           </Link>
           <div className="flex items-center gap-4">
             <Link to="/faq" className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-xs font-bold">

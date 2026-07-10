@@ -65,11 +65,11 @@ export const normalizeAffiliateUrl = (value: string): NormalizedAffiliateUrl => 
 };
 
 export const createTrackingTag = (publicUserId: string, linkId: string) => {
-  const normalizeId = (value: string) => value.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 48);
+  const normalizeId = (value: string) => value.replace(/[^a-zA-Z0-9_]/g, '').slice(0, 48);
   const user = normalizeId(publicUserId);
   const link = normalizeId(linkId);
   if (!user || !link) throw new Error('Không thể tạo mã theo dõi cho liên kết này.');
-  return `u${user}-l${link}`;
+  return `u${user}_l${link}`;
 };
 
 const createOpaqueToken = () => {

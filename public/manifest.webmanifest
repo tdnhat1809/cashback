@@ -3,8 +3,12 @@
   "short_name": "HOANTIENVIP",
   "description": "Mua sắm thông minh, nhận tiền hoàn mỗi ngày.",
   "lang": "vi",
+  "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "any",
+  "categories": ["shopping", "finance", "utilities"],
   "background_color": "#fff8f6",
   "theme_color": "#ff5a36",
   "icons": [

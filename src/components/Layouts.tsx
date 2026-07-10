@@ -5,13 +5,21 @@ import {
   CreditCard, Award, Truck, Settings, LogOut, ShieldAlert, 
   X, Bell, User, Menu, Flame, Link2, Gift, FileText, WalletCards, HelpCircle, RefreshCw
 } from 'lucide-react';
-import { mockUserProfile } from '../mockData';
+import { useAuth } from '../state/auth-context';
 
 // Public Layout
 export const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, status, logout } = useAuth();
+  const isAuthenticated = status === 'authenticated' && user !== null;
+
+  const openAccount = () => navigate(user?.role === 'admin' ? '/admin' : '/dashboard');
+  const handleLogout = async () => {
+    await logout().catch(() => undefined);
+    navigate('/', { replace: true });
+  };
 
   const navLinks = [
     { label: 'Trang chủ', path: '/' },
@@ -46,9 +54,7 @@ export const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children
         <div className="flex justify-between items-center h-[68px] px-5 md:px-6 max-w-[1280px] mx-auto w-full">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl md:text-[28px] font-black tracking-[-0.05em] text-primary">
-              HOANTIENVIP
-            </span>
+            <img src="/logo.png" alt="HOANTIENVIP" className="h-10 md:h-12 w-auto object-contain" />
           </Link>
 
           {/* Desktop Nav Links */}
@@ -74,18 +80,41 @@ export const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children
 
           {/* Right Action buttons */}
           <div className="hidden lg:flex items-center gap-3">
-            <button 
-              onClick={() => navigate('/login')}
-              className="px-4 py-2 text-sm font-label-md font-semibold text-primary border border-primary/30 hover:bg-surface-container-low rounded-xl transition-all cursor-pointer"
-            >
-              Đăng nhập
-            </button>
-            <button 
-              onClick={() => navigate('/login')}
-              className="px-5 py-2 text-sm font-label-md font-bold bg-primary-container text-white rounded-xl shadow-soft hover:brightness-105 active:scale-95 transition-all cursor-pointer"
-            >
-              Đăng ký
-            </button>
+            {isAuthenticated ? (
+              <>
+                <button
+                  type="button"
+                  onClick={openAccount}
+                  className="max-w-48 truncate px-4 py-2 text-sm font-label-md font-semibold text-primary border border-primary/30 hover:bg-surface-container-low rounded-xl transition-all cursor-pointer"
+                >
+                  {user.name}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleLogout()}
+                  className="px-5 py-2 text-sm font-label-md font-bold bg-primary-container text-white rounded-xl shadow-soft hover:brightness-105 active:scale-95 transition-all cursor-pointer"
+                >
+                  Đăng xuất
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => navigate('/login')}
+                  className="px-4 py-2 text-sm font-label-md font-semibold text-primary border border-primary/30 hover:bg-surface-container-low rounded-xl transition-all cursor-pointer"
+                >
+                  Đăng nhập
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate('/login')}
+                  className="px-5 py-2 text-sm font-label-md font-bold bg-primary-container text-white rounded-xl shadow-soft hover:brightness-105 active:scale-95 transition-all cursor-pointer"
+                >
+                  Đăng ký
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu trigger */}
@@ -122,18 +151,41 @@ export const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children
           </nav>
           
           <div className="flex flex-col gap-3 mt-auto mb-16">
-            <button 
-              onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
-              className="w-full py-4 text-center font-bold text-primary bg-surface-container rounded-xl cursor-pointer"
-            >
-              Đăng nhập
-            </button>
-            <button 
-              onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
-              className="w-full py-4 text-center font-bold text-white bg-primary rounded-xl cursor-pointer shadow-soft"
-            >
-              Đăng ký
-            </button>
+            {isAuthenticated ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => { setMobileMenuOpen(false); openAccount(); }}
+                  className="w-full py-4 text-center font-bold text-primary bg-surface-container rounded-xl cursor-pointer"
+                >
+                  Tài khoản của tôi
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setMobileMenuOpen(false); void handleLogout(); }}
+                  className="w-full py-4 text-center font-bold text-white bg-primary rounded-xl cursor-pointer shadow-soft"
+                >
+                  Đăng xuất
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
+                  className="w-full py-4 text-center font-bold text-primary bg-surface-container rounded-xl cursor-pointer"
+                >
+                  Đăng nhập
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
+                  className="w-full py-4 text-center font-bold text-white bg-primary rounded-xl cursor-pointer shadow-soft"
+                >
+                  Đăng ký
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -147,7 +199,7 @@ export const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children
       <footer className="hidden lg:block w-full pt-16 pb-8 bg-white border-t border-outline-variant/30">
         <div className="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4 text-left">
-            <span className="font-headline-md text-xl font-black text-primary">HOANTIENVIP</span>
+            <img src="/logo.png" alt="HOANTIENVIP" className="h-10 w-auto object-contain" />
             <p className="font-body-md text-sm text-on-surface-variant leading-relaxed">
               Nền tảng hoàn tiền mua sắm trực tuyến uy tín hàng đầu Việt Nam, giúp người tiêu dùng tiết kiệm hàng tỷ đồng mỗi tháng trên Shopee & TikTok Shop.
             </p>
@@ -209,6 +261,19 @@ export const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
+  const initials = user?.name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(-2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase() || 'HV';
+
+  const handleLogout = async () => {
+    await logout().catch(() => undefined);
+    navigate('/login', { replace: true });
+  };
 
   const menuItems = [
     { label: 'Tổng quan ví', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
@@ -231,19 +296,19 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex flex-col sidebar-desktop-layout bg-white border-r border-outline-variant/30 fixed top-0 bottom-0 z-20">
         <div className="h-16 flex items-center px-6 border-b border-outline-variant/30">
-          <Link to="/" className="font-display-lg text-xl font-black tracking-tighter text-primary">
-            HOANTIENVIP
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="HOANTIENVIP" className="h-9 w-auto object-contain" />
           </Link>
         </div>
         
         {/* User Card */}
         <div className="p-4 border-b border-outline-variant/20 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-primary-container text-white flex items-center justify-center font-bold">
-            HV
+            {initials}
           </div>
           <div className="text-left min-w-0">
-            <p className="text-sm font-bold text-on-surface truncate">{mockUserProfile.name}</p>
-            <p className="text-xs text-on-surface-variant truncate">{mockUserProfile.phone}</p>
+            <p className="text-sm font-bold text-on-surface truncate">{user?.name ?? 'Thành viên'}</p>
+            <p className="text-xs text-on-surface-variant truncate">{user?.phone ?? ''}</p>
           </div>
         </div>
 
@@ -269,19 +334,22 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
             );
           })}
 
-          <Link
-            to="/admin"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl font-label-md text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors mt-4"
-          >
-            <ShieldAlert size={20} />
-            <span>Trang quản trị (Admin)</span>
-          </Link>
+          {user?.role === 'admin' && (
+            <Link
+              to="/admin"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl font-label-md text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors mt-4"
+            >
+              <ShieldAlert size={20} />
+              <span>Trang quản trị (Admin)</span>
+            </Link>
+          )}
         </nav>
 
         {/* Logout */}
         <div className="p-4 border-t border-outline-variant/20">
           <button 
-            onClick={() => navigate('/')}
+            type="button"
+            onClick={() => void handleLogout()}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-label-md text-sm font-semibold text-on-surface-variant hover:bg-error-container/20 hover:text-error transition-colors cursor-pointer"
           >
             <LogOut size={20} />
@@ -295,13 +363,13 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         {/* Top Header Navbar */}
         <header className="h-16 bg-white border-b border-outline-variant/30 flex items-center justify-between px-4 md:px-6 sticky top-0 z-10 shadow-sm md:shadow-none">
           <div className="flex items-center gap-3 lg:hidden">
-            <Link to="/" className="font-display-lg text-lg font-black tracking-tighter text-primary">
-              HOANTIENVIP
+            <Link to="/" className="flex items-center gap-2">
+              <img src="/logo.png" alt="HOANTIENVIP" className="h-8 w-auto object-contain" />
             </Link>
           </div>
           <div className="hidden lg:flex items-center gap-2 text-sm font-semibold text-on-surface-variant">
             <span>Chào mừng trở lại,</span>
-            <span className="text-on-surface font-bold">{mockUserProfile.name}</span>
+            <span className="text-on-surface font-bold">{user?.name ?? 'Thành viên'}</span>
           </div>
 
           <div className="flex items-center gap-4 ml-auto">
@@ -361,6 +429,12 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
 export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout().catch(() => undefined);
+    navigate('/login', { replace: true });
+  };
 
   const menuItems = [
     { label: 'Thống kê chỉ số', path: '/admin', icon: <LayoutDashboard size={20} /> },
@@ -379,11 +453,9 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
     <div className="min-h-screen flex flex-col lg:flex-row bg-background">
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex flex-col sidebar-desktop-layout bg-white text-on-surface fixed top-0 bottom-0 z-20 border-r border-outline-variant/40">
-        <div className="h-16 flex flex-col justify-center px-5 border-b border-outline-variant/30">
-          <span className="text-lg font-black tracking-tighter text-primary leading-none">
-            HOANTIENVIP
-          </span>
-          <span className="text-[10px] text-on-surface-variant mt-1">Quản trị hệ thống</span>
+        <div className="h-16 flex items-center justify-between px-5 border-b border-outline-variant/30">
+          <img src="/logo.png" alt="HOANTIENVIP" className="h-8 w-auto object-contain" />
+          <span className="text-[10px] bg-primary/10 text-primary font-bold px-2 py-0.5 rounded-full">Admin</span>
         </div>
         
         {/* User Card */}
@@ -392,8 +464,8 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
             AD
           </div>
           <div className="text-left min-w-0">
-            <p className="text-sm font-bold text-on-surface truncate">Nguyễn Văn Admin</p>
-            <p className="text-xs text-on-surface-variant truncate">Hệ thống tối cao</p>
+            <p className="text-sm font-bold text-on-surface truncate">{user?.name ?? 'Quản trị viên'}</p>
+            <p className="text-xs text-on-surface-variant truncate">{user?.publicId ?? 'ADMIN'}</p>
           </div>
         </div>
 
@@ -423,7 +495,8 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
         {/* Logout */}
         <div className="p-4 border-t border-outline-variant/20">
           <button 
-            onClick={() => navigate('/')}
+            type="button"
+            onClick={() => void handleLogout()}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-label-md text-sm font-semibold text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors cursor-pointer"
           >
             <LogOut size={20} />
@@ -436,10 +509,9 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
       <div className="flex-1 content-desktop-layout pb-16 lg:pb-0 flex flex-col min-w-0">
         {/* Top Header Navbar */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-6 sticky top-0 z-10">
-          <div className="flex items-center gap-3 lg:hidden">
-            <span className="text-lg font-black tracking-tighter text-primary">
-              HOANTIENVIP ADMIN
-            </span>
+          <div className="flex items-center gap-2 lg:hidden">
+            <img src="/logo.png" alt="HOANTIENVIP" className="h-8 w-auto object-contain" />
+            <span className="text-xs bg-primary/10 text-primary font-bold px-2 py-0.5 rounded-full">Admin</span>
           </div>
           <div className="hidden lg:flex items-center gap-2 text-sm font-semibold text-on-surface-variant">
             <span>Bảng điều khiển quản trị viên</span>

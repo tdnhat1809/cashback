@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { ToastContainer } from '../components/Toast';
 import { defaultToastState, triggerToast } from '../components/toast-state';
 import type { ToastState } from '../components/toast-state';
-import { createDemoAffiliateLink } from '../services/demoAffiliateLinks';
+import { affiliateApi, type AffiliateLink } from '../services/apiClient';
 import { Link, Copy, ShoppingBag, Loader, AlertTriangle } from 'lucide-react';
 
 export const LinkGenerator: React.FC = () => {
@@ -14,10 +14,40 @@ export const LinkGenerator: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [generatedLink, setGeneratedLink] = useState('');
+  const [linkInfo, setLinkInfo] = useState<AffiliateLink | null>(null);
   const [errorText, setErrorText] = useState('');
   const [toast, setToast] = useState<ToastState>(defaultToastState);
   const [showRedirectModal, setShowRedirectModal] = useState(false);
   const [countdown, setCountdown] = useState(4);
+
+  const triggerGeneration = useCallback(async (url: string) => {
+    setErrorText('');
+    setSuccess(false);
+    setLinkInfo(null);
+    setLoading(true);
+    try {
+      const parsedUrl = new URL(url.trim());
+      const hostname = parsedUrl.hostname.toLowerCase();
+      const platform = hostname === 'tiktok.com' || hostname.endsWith('.tiktok.com')
+        ? 'tiktok'
+        : hostname === 'shopee.vn' || hostname.endsWith('.shopee.vn') || hostname === 'shp.ee'
+          ? 'shopee'
+          : null;
+      if (!platform || parsedUrl.protocol !== 'https:') {
+        throw new Error('Chỉ hỗ trợ đường dẫn HTTPS từ Shopee hoặc TikTok Shop.');
+      }
+      const link = await affiliateApi.createLink({ platform, destinationUrl: parsedUrl.toString() });
+      if (!link.redirectUrl) throw new Error('Máy chủ không trả về liên kết chuyển hướng.');
+      setSuccess(true);
+      setGeneratedLink(link.redirectUrl);
+      setLinkInfo(link);
+      triggerToast(setToast, 'Tạo link mua hàng hoàn tiền thành công!', 'success');
+    } catch (error) {
+      setErrorText(error instanceof Error ? error.message : 'Không thể tạo link hoàn tiền. Vui lòng thử lại.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // Auto-generate if query param 'url' exists
   useEffect(() => {
@@ -26,39 +56,21 @@ export const LinkGenerator: React.FC = () => {
       setInputUrl(urlParam);
       void triggerGeneration(urlParam);
     }
-  }, [searchParams]);
+  }, [searchParams, triggerGeneration]);
 
   // Simulate redirect countdown
   useEffect(() => {
-    let timer: any;
+    let timer: ReturnType<typeof window.setTimeout> | undefined;
     if (showRedirectModal && countdown > 0) {
       timer = setTimeout(() => {
         setCountdown(countdown - 1);
       }, 1000);
     } else if (showRedirectModal && countdown === 0) {
       setShowRedirectModal(false);
-      triggerToast(setToast, 'Mô phỏng chuyển hướng đến ứng dụng sàn mua hàng thành công!', 'success');
+      if (generatedLink) window.location.assign(generatedLink);
     }
     return () => clearTimeout(timer);
-  }, [showRedirectModal, countdown]);
-
-  const triggerGeneration = async (url: string) => {
-    setErrorText('');
-    setSuccess(false);
-    setLoading(true);
-    try {
-      // Service local này là contract thay thế tạm thời cho POST /api/v1/links.
-      await new Promise((resolve) => window.setTimeout(resolve, 450));
-      const link = await createDemoAffiliateLink(url);
-      setSuccess(true);
-      setGeneratedLink(link.shortUrl);
-      triggerToast(setToast, 'Tạo link mua hàng hoàn tiền thành công!', 'success');
-    } catch (error) {
-      setErrorText(error instanceof Error ? error.message : 'Không thể tạo link hoàn tiền. Vui lòng thử lại.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [countdown, generatedLink, showRedirectModal]);
 
   const handleCopy = async () => {
     try {
@@ -70,6 +82,7 @@ export const LinkGenerator: React.FC = () => {
   };
 
   const handleGoToApp = () => {
+    if (!generatedLink) return;
     setCountdown(4);
     setShowRedirectModal(true);
   };
@@ -139,7 +152,7 @@ export const LinkGenerator: React.FC = () => {
                   className="flex-1 sm:flex-none py-4"
                   icon={<ShoppingBag size={16} />}
                 >
-                  Mở ứng dụng mua ngay
+                  {linkInfo?.payable === false ? 'Mở trang sản phẩm (demo)' : 'Mở ứng dụng mua ngay'}
                 </Button>
               </div>
             </div>
@@ -156,6 +169,11 @@ export const LinkGenerator: React.FC = () => {
                 </ol>
               </div>
             </div>
+            {linkInfo?.payable === false && (
+              <div className="mt-4 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-xs leading-relaxed text-amber-900">
+                TikTok Shop đang ở chế độ mô phỏng RioHub: link vẫn mở được trang sản phẩm, nhưng không được ghi nhận hoặc chi trả cashback cho đến khi cấu hình API affiliate chính thức.
+              </div>
+            )}
           </div>
         )}
       </div>

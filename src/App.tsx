@@ -1,8 +1,10 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom';
 import { AdminLayout, DashboardLayout, PublicLayout } from './components/Layouts';
 import { RequireRole } from './components/RequireRole';
+import type { UserRole } from './services/apiClient';
 import { AppDataProvider } from './state/AppDataContext';
+import { AuthProvider } from './state/AuthContext';
 
 const Home = lazy(async () => ({ default: (await import('./pages/Home')).Home }));
 const Deals = lazy(async () => ({ default: (await import('./pages/Deals')).Deals }));
@@ -41,8 +43,10 @@ const AdminContentNotifications = lazy(async () => ({ default: (await import('./
 const AdminProviderSync = lazy(async () => ({ default: (await import('./pages/admin/AdminProviderSync')).AdminProviderSync }));
 const AdminPaymentSettings = lazy(async () => ({ default: (await import('./pages/admin/AdminPaymentSettings')).AdminPaymentSettings }));
 
+const authenticatedRoles: readonly UserRole[] = ['user', 'support', 'operation', 'finance', 'admin'];
+
 const RouteLoader = () => (
-  <div className="min-h-[65vh] max-w-[1280px] mx-auto px-5 py-10" aria-label="Đang tải nội dung">
+  <div className="min-h-[65vh] max-w-[1280px] mx-auto px-5 py-10" role="status" aria-label="Đang tải nội dung">
     <div className="h-7 w-48 rounded-lg bg-surface-container animate-pulse" />
     <div className="mt-7 grid grid-cols-2 lg:grid-cols-4 gap-4">
       {[0, 1, 2, 3].map((item) => (
@@ -55,13 +59,14 @@ const RouteLoader = () => (
 function App() {
   return (
     <AppDataProvider>
-      <Router>
+      <AuthProvider>
+        <Router>
         <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
           <Route path="/deals" element={<PublicLayout><Deals /></PublicLayout>} />
           <Route path="/product/:id" element={<PublicLayout><ProductDetail /></PublicLayout>} />
-          <Route path="/link-generator" element={<PublicLayout><LinkGenerator /></PublicLayout>} />
+          <Route path="/link-generator" element={<RequireRole allowedRoles={authenticatedRoles}><PublicLayout><LinkGenerator /></PublicLayout></RequireRole>} />
           <Route path="/login" element={<PublicLayout><Login /></PublicLayout>} />
           <Route path="/forgot-password" element={<PublicLayout><ForgotPassword /></PublicLayout>} />
           <Route path="/reset-password" element={<PublicLayout><ResetPassword /></PublicLayout>} />
@@ -70,34 +75,39 @@ function App() {
           <Route path="/403" element={<Forbidden />} />
           <Route path="/maintenance" element={<Maintenance />} />
 
-          <Route path="/dashboard" element={<DashboardLayout><Overview /></DashboardLayout>} />
-          <Route path="/dashboard/cashback" element={<DashboardLayout><CashbackHistory /></DashboardLayout>} />
-          <Route path="/dashboard/withdrawal" element={<DashboardLayout><Withdrawal /></DashboardLayout>} />
-          <Route path="/dashboard/shipment" element={<DashboardLayout><ShipmentTracking /></DashboardLayout>} />
-          <Route path="/dashboard/shipment/:id" element={<DashboardLayout><ShipmentDetail /></DashboardLayout>} />
-          <Route path="/dashboard/support/:ticketId" element={<DashboardLayout><SupportTicketDetail /></DashboardLayout>} />
-          <Route path="/dashboard/saved" element={<DashboardLayout><SavedProducts /></DashboardLayout>} />
-          <Route path="/dashboard/referral" element={<DashboardLayout><Referral /></DashboardLayout>} />
-          <Route path="/dashboard/rewards" element={<DashboardLayout><Rewards /></DashboardLayout>} />
-          <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
-          <Route path="/dashboard/ledger" element={<DashboardLayout><BalanceHistory /></DashboardLayout>} />
-          <Route path="/dashboard/logs" element={<DashboardLayout><ActivityLog /></DashboardLayout>} />
-          <Route path="/dashboard/notifications" element={<DashboardLayout><Notifications /></DashboardLayout>} />
-          <Route path="/dashboard/giftcode" element={<DashboardLayout><Giftcode /></DashboardLayout>} />
+          <Route element={<RequireRole allowedRoles={authenticatedRoles}><Outlet /></RequireRole>}>
+            <Route path="/dashboard" element={<DashboardLayout><Overview /></DashboardLayout>} />
+            <Route path="/dashboard/cashback" element={<DashboardLayout><CashbackHistory /></DashboardLayout>} />
+            <Route path="/dashboard/withdrawal" element={<DashboardLayout><Withdrawal /></DashboardLayout>} />
+            <Route path="/dashboard/shipment" element={<DashboardLayout><ShipmentTracking /></DashboardLayout>} />
+            <Route path="/dashboard/shipment/:id" element={<DashboardLayout><ShipmentDetail /></DashboardLayout>} />
+            <Route path="/dashboard/support/:ticketId" element={<DashboardLayout><SupportTicketDetail /></DashboardLayout>} />
+            <Route path="/dashboard/saved" element={<DashboardLayout><SavedProducts /></DashboardLayout>} />
+            <Route path="/dashboard/referral" element={<DashboardLayout><Referral /></DashboardLayout>} />
+            <Route path="/dashboard/rewards" element={<DashboardLayout><Rewards /></DashboardLayout>} />
+            <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
+            <Route path="/dashboard/ledger" element={<DashboardLayout><BalanceHistory /></DashboardLayout>} />
+            <Route path="/dashboard/logs" element={<DashboardLayout><ActivityLog /></DashboardLayout>} />
+            <Route path="/dashboard/notifications" element={<DashboardLayout><Notifications /></DashboardLayout>} />
+            <Route path="/dashboard/giftcode" element={<DashboardLayout><Giftcode /></DashboardLayout>} />
+          </Route>
 
-          <Route path="/admin" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminOverview /></AdminLayout></RequireRole>} />
-          <Route path="/admin/management" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminManagement /></AdminLayout></RequireRole>} />
-          <Route path="/admin/cashback-rules" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminCashbackRules /></AdminLayout></RequireRole>} />
-          <Route path="/admin/promotions" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminPromotions /></AdminLayout></RequireRole>} />
-          <Route path="/admin/staff-security" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminStaffSecurity /></AdminLayout></RequireRole>} />
-          <Route path="/admin/content-notifications" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminContentNotifications /></AdminLayout></RequireRole>} />
-          <Route path="/admin/provider-sync" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminProviderSync /></AdminLayout></RequireRole>} />
-          <Route path="/admin/payment-settings" element={<RequireRole allowedRoles={['admin']}><AdminLayout><AdminPaymentSettings /></AdminLayout></RequireRole>} />
+          <Route element={<RequireRole allowedRoles={['admin']}><Outlet /></RequireRole>}>
+            <Route path="/admin" element={<AdminLayout><AdminOverview /></AdminLayout>} />
+            <Route path="/admin/management" element={<AdminLayout><AdminManagement /></AdminLayout>} />
+            <Route path="/admin/cashback-rules" element={<AdminLayout><AdminCashbackRules /></AdminLayout>} />
+            <Route path="/admin/promotions" element={<AdminLayout><AdminPromotions /></AdminLayout>} />
+            <Route path="/admin/staff-security" element={<AdminLayout><AdminStaffSecurity /></AdminLayout>} />
+            <Route path="/admin/content-notifications" element={<AdminLayout><AdminContentNotifications /></AdminLayout>} />
+            <Route path="/admin/provider-sync" element={<AdminLayout><AdminProviderSync /></AdminLayout>} />
+            <Route path="/admin/payment-settings" element={<AdminLayout><AdminPaymentSettings /></AdminLayout>} />
+          </Route>
 
           <Route path="*" element={<NotFound />} />
         </Routes>
         </Suspense>
-      </Router>
+        </Router>
+      </AuthProvider>
     </AppDataProvider>
   );
 }

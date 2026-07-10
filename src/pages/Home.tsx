@@ -5,7 +5,7 @@ import { Button } from '../components/Button';
 import { Badge } from '../components/Badge';
 import type { Product } from '../mockData';
 import { Link, ShoppingCart, Percent, HelpCircle, X, ChevronRight, Share2 } from 'lucide-react';
-import { useAppData } from '../state/AppDataContext';
+import { catalogApi, userFeaturesApi, type DealProduct } from '../services/apiClient';
 
 const mobileHeroArtwork = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBZ1EuaaHRQlBrXHo-m7Yzj76hNb847_ig6pXRApl24sQvEL7zkPaA_splhcgydz6FqYcO1tsEjby7GKkvTVt2-BlrZlMj8KpReZOSgtF_qj3ELhrnil_SC7OUWcHg1e2e26oBTzo4i7G0cusvdAeU2TtTHgS1FQJ-rWKKiF3jtrNkApWEKfU1cvVBxCf-zjwRyame8QL2mSXt7po8KTI7D7cWe4lgoMU6H88WO1h9KPuaPYJD6BiZv7Q';
 
@@ -14,11 +14,22 @@ type InstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 };
 
+const toProduct = (deal: DealProduct): Product => {
+  const cashbackValue = deal.commission_rate_bps ? Math.floor((deal.price_vnd * deal.commission_rate_bps * 0.9) / 10_000) : 0;
+  return {
+    id: deal.id, name: deal.name, price: deal.price_vnd, originalPrice: deal.original_price_vnd,
+    cashbackText: cashbackValue ? `Hoàn ${cashbackValue.toLocaleString('vi-VN')}đ` : 'Đang cập nhật', cashbackValue,
+    platform: deal.platform === 'shopee' ? 'Shopee' : 'TikTok Shop',
+    category: deal.price_vnd <= 10_000 ? 'under10k' : cashbackValue >= 20_000 ? 'high_cashback' : 'home',
+    imageUrl: deal.image_url ?? '', shopName: deal.shop_name ?? deal.platform, sourceUrl: deal.source_url,
+  };
+};
+
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const [linkInput, setLinkInput] = useState('');
   const [activeCategory, setActiveCategory] = useState<'all' | 'Shopee' | 'TikTok Shop' | 'under10k' | 'high_cashback'>('all');
-  const { products, toggleSavedProduct } = useAppData();
+  const [products, setProducts] = useState<Product[]>([]);
   const [showPwa, setShowPwa] = useState(false);
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
 
@@ -40,6 +51,12 @@ export const Home: React.FC = () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleInstalled);
     };
+  }, []);
+
+  useEffect(() => {
+    void Promise.all([catalogApi.listDeals({ platform: 'shopee' }), catalogApi.listDeals({ platform: 'tiktok' })])
+      .then((results) => setProducts(results.flat().map(toProduct)))
+      .catch(() => setProducts([]));
   }, []);
 
   const requestPwaInstall = async () => {
@@ -65,12 +82,17 @@ export const Home: React.FC = () => {
     return true;
   });
 
-  const handleSaveProduct = (id: string) => {
-    toggleSavedProduct(id);
+  const handleSaveProduct = async (id: string) => {
+    try {
+      const result = await userFeaturesApi.toggleSavedProduct(id);
+      setProducts((current) => current.map((product) => product.id === id ? { ...product, saved: result.saved } : product));
+    } catch {
+      navigate('/login?redirect=/');
+    }
   };
 
   const handleBuyProduct = (product: Product) => {
-    navigate(`/product/${product.id}`);
+    navigate(product.sourceUrl ? `/link-generator?url=${encodeURIComponent(product.sourceUrl)}` : `/product/${product.id}`);
   };
 
   const handleGenerateLink = () => {

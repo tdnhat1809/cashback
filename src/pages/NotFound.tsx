@@ -23,9 +23,7 @@ export const NotFound: React.FC = () => {
       <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-soft border-b border-outline-variant/30">
         <div className="flex justify-between items-center h-16 px-6 max-w-[1280px] mx-auto w-full">
           <Link to="/" className="flex items-center gap-2">
-            <span className="font-display-lg text-2xl font-black tracking-tighter text-primary">
-              HOANTIENVIP
-            </span>
+            <img src="/logo.png" alt="HOANTIENVIP" className="h-10 w-auto object-contain" />
           </Link>
           
           <nav className="hidden md:flex items-center gap-8">
@@ -155,7 +153,7 @@ export const NotFound: React.FC = () => {
       <footer className="w-full pt-12 pb-8 bg-white border-t border-outline-variant/30">
         <div className="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
           <div>
-            <span className="font-headline-md text-lg font-black text-primary">HOANTIENVIP</span>
+            <img src="/logo.png" alt="HOANTIENVIP" className="h-10 w-auto object-contain" />
             <p className="text-xs text-on-surface-variant leading-relaxed mt-2">
               © 2026 HOANTIENVIP. Hoàn tiền tối đa, mua sắm thả ga. Nền tảng tiết kiệm hàng đầu cho người tiêu dùng thông thái.
             </p>
