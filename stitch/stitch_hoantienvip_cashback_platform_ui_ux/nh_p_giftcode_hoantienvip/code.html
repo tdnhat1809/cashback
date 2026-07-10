@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nhập Giftcode - HOANTIENVIP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "on-primary-fixed": "#3d0600",
+                "on-secondary-fixed-variant": "#3f465b",
+                "tertiary-fixed-dim": "#4edea3",
+                "primary-fixed-dim": "#ffb4a3",
+                "surface-tint": "#b52603",
+                "on-surface": "#271814",
+                "secondary-fixed": "#dae2fc",
+                "primary-fixed": "#ffdad2",
+                "tertiary-fixed": "#6ffbbe",
+                "error-container": "#ffdad6",
+                "surface-container-low": "#fff0ed",
+                "secondary": "#565e74",
+                "primary": "#b52603",
+                "surface-container-lowest": "#ffffff",
+                "outline-variant": "#e3beb6",
+                "on-tertiary-fixed-variant": "#005236",
+                "surface-container-high": "#ffe2dc",
+                "on-primary": "#ffffff",
+                "on-primary-fixed-variant": "#8c1900",
+                "background": "#fff8f6",
+                "on-secondary-fixed": "#131b2e",
+                "tertiary-container": "#00a773",
+                "surface-variant": "#f9dcd6",
+                "inverse-primary": "#ffb4a3",
+                "error": "#ba1a1a",
+                "secondary-container": "#d7dff9",
+                "on-secondary-container": "#5a6278",
+                "on-error": "#ffffff",
+                "tertiary": "#006c49",
+                "surface-container-highest": "#f9dcd6",
+                "on-surface-variant": "#5b403a",
+                "surface-dim": "#f0d4ce",
+                "primary-container": "#ff5a36",
+                "on-error-container": "#93000a",
+                "outline": "#8f7069",
+                "on-primary-container": "#5a0c00",
+                "on-tertiary-fixed": "#002113",
+                "on-background": "#271814",
+                "secondary-fixed-dim": "#bec6df",
+                "inverse-on-surface": "#ffede9",
+                "surface": "#fff8f6",
+                "surface-container": "#ffe9e5",
+                "on-tertiary-container": "#003320",
+                "inverse-surface": "#3e2c28",
+                "surface-bright": "#fff8f6"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "2xl": "1rem",
+                "3xl": "1.5rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "sm": "8px",
+                "gutter": "24px",
+                "2xl": "48px",
+                "xs": "4px",
+                "md": "16px",
+                "lg": "24px",
+                "3xl": "64px",
+                "xl": "32px",
+                "base": "4px",
+                "container-max": "1280px"
+            },
+            "fontFamily": {
+                "headline-md": ["Be Vietnam Pro"],
+                "label-sm": ["Be Vietnam Pro"],
+                "label-md": ["Be Vietnam Pro"],
+                "body-lg": ["Be Vietnam Pro"],
+                "title-lg": ["Be Vietnam Pro"],
+                "display-lg": ["Be Vietnam Pro"],
+                "headline-lg": ["Be Vietnam Pro"],
+                "body-md": ["Be Vietnam Pro"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+      body { font-family: 'Be Vietnam Pro', sans-serif; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-effect {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      .shimmer {
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+      }
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto w-full">
+<div class="flex items-center gap-xl">
+<span class="font-display-lg text-headline-md font-black text-primary tracking-tighter">HOANTIENVIP</span>
+<nav class="hidden md:flex gap-lg">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Home</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Offers</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Rewards</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">help_outline</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young adult with a friendly smile, clean lighting in a modern bright office environment. The image is crisp, with high-key lighting that emphasizes clarity and trust, matching the brand's reliable and optimistic persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjnz-nzcRR7Anjr306HlN-M7c21rS1XKo2tTzxhdQdFHka9aFbx7iBEeDsTjfNrzEevqs5dR4PgrYFFIPQ2XK_-bucBI1PtHhstrHX9VqR8ODc4u7BDJ2sA-rHw8xlG4cTdZXerji_VUdvUsnam0MEjpybsowsfBwReKbHJ1wwb0vD9RffSJiV4g8cvvyb49JqcPiFd8SklZW3puDXy_TzqBkt6e1PsZNyWw-y62quDG2B3kgUdU1leA"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Sidebar Navigation Shell -->
+<aside class="hidden lg:flex flex-col p-md fixed left-0 top-16 bottom-0 z-40 bg-surface-container-low w-64 rounded-r-xl shadow-md">
+<div class="flex items-center gap-md p-md mb-lg">
+<div class="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-primary">My Account</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Gold Member</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-md">Stores</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md">Earnings</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 bg-primary-container text-on-primary-container rounded-lg font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
+<span class="font-label-md">Giftcode</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md">History</span>
+</a>
+</nav>
+<div class="mt-auto space-y-2">
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-bold active:scale-95 transition-transform">Redeem Rewards</button>
+<a class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas Content -->
+<main class="flex-1 mt-16 lg:ml-64 p-gutter max-w-6xl mx-auto w-full pb-32">
+<!-- Hero Section & Code Input -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
+<div class="lg:col-span-12 mb-md">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Kích hoạt Ưu đãi</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Nhập mã Giftcode của bạn để nhận tiền thưởng hoàn trả và các phần quà đặc biệt.</p>
+</div>
+<!-- Main Input Card -->
+<div class="lg:col-span-7 bg-surface-container-lowest p-xl rounded-3xl shadow-md border border-surface-container-high relative overflow-hidden">
+<!-- Background Decorative Shape -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="relative z-10">
+<label class="block font-label-md text-on-surface-variant mb-md" for="giftcode">Mã Giftcode (12-16 ký tự)</label>
+<div class="flex flex-col md:flex-row gap-md">
+<div class="relative flex-1">
+<input class="w-full h-16 px-lg rounded-2xl border-2 border-outline-variant focus:border-primary focus:ring-0 font-headline-md text-headline-md uppercase tracking-widest placeholder:normal-case placeholder:text-outline transition-all bg-surface" id="giftcode" placeholder="VD: HOANTIEN2024" type="text"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">qr_code_scanner</span>
+</div>
+<button class="h-16 px-xl bg-primary-container text-white font-bold text-lg rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary-container/20 flex items-center justify-center gap-md" onclick="handleApply()">
+<span>Áp dụng</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- Feedback States Container (Client-side logic simulation) -->
+<div class="mt-lg hidden" id="feedback-container">
+<!-- Success Example -->
+<div class="hidden p-lg rounded-2xl bg-tertiary-container/10 border border-tertiary-container/30 flex items-center gap-lg" id="status-success">
+<div class="w-14 h-14 rounded-full bg-tertiary-container flex items-center justify-center text-white shrink-0">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<h4 class="font-title-lg text-title-lg text-tertiary">Mã áp dụng thành công!</h4>
+<p class="font-body-md text-body-md text-on-tertiary-container">Bạn nhận được <span class="font-bold text-primary">+500,000đ</span> vào ví hoàn tiền.</p>
+</div>
+</div>
+<!-- Error Example (Invalid) -->
+<div class="hidden p-lg rounded-2xl bg-error-container/10 border border-error-container/30 flex items-center gap-lg" id="status-invalid">
+<div class="w-14 h-14 rounded-full bg-error-container flex items-center justify-center text-error shrink-0">
+<span class="material-symbols-outlined text-3xl">error</span>
+</div>
+<div>
+<h4 class="font-title-lg text-title-lg text-error">Mã không hợp lệ</h4>
+<p class="font-body-md text-body-md text-on-error-container">Vui lòng kiểm tra lại ký tự hoặc định dạng mã.</p>
+</div>
+</div>
+<!-- Error Example (Expired) -->
+<div class="hidden p-lg rounded-2xl bg-secondary-container/10 border border-secondary-container/30 flex items-center gap-lg" id="status-expired">
+<div class="w-14 h-14 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container shrink-0">
+<span class="material-symbols-outlined text-3xl">timer_off</span>
+</div>
+<div>
+<h4 class="font-title-lg text-title-lg text-secondary">Mã đã hết hạn</h4>
+<p class="font-body-md text-body-md text-on-secondary-container">Chương trình ưu đãi này đã kết thúc vào 31/12/2023.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Promotion Bento/Asymmetric Feature -->
+<div class="lg:col-span-5 flex flex-col gap-lg">
+<div class="bg-primary text-white p-lg rounded-3xl shadow-xl relative overflow-hidden flex-1 group">
+
+<div class="relative z-10 h-full flex flex-col justify-between">
+<span class="inline-block px-3 py-1 bg-white/20 rounded-full text-label-sm backdrop-blur-sm mb-md">SPECIAL EVENT</span>
+<div>
+<h3 class="font-headline-md text-headline-md mb-xs">Tết Cashback 2024</h3>
+<p class="font-body-md text-on-primary-fixed opacity-90">Sử dụng mã 'LIXI2024' để nhận ngay 10% hoàn tiền thêm cho mọi đơn hàng Shopee.</p>
+</div>
+<button class="mt-lg w-fit py-2 px-6 bg-white text-primary font-bold rounded-xl active:scale-95 transition-all">Sử dụng ngay</button>
+</div>
+</div>
+</div>
+<!-- History Section -->
+<div class="lg:col-span-12 mt-xl">
+<div class="flex items-center justify-between mb-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface">Lịch sử nhận thưởng</h2>
+<button class="flex items-center gap-xs text-primary font-bold hover:underline">
+<span>Tải xuống (CSV)</span>
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+<div class="bg-surface-container-lowest rounded-3xl shadow-sm border border-surface-container-high overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant border-b border-outline-variant">
+<th class="px-lg py-md font-label-md uppercase tracking-wider">Mã Giftcode</th>
+<th class="px-lg py-md font-label-md uppercase tracking-wider">Phần thưởng</th>
+<th class="px-lg py-md font-label-md uppercase tracking-wider">Ngày nhận</th>
+<th class="px-lg py-md font-label-md uppercase tracking-wider">Trạng thái</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-lg py-lg font-bold text-on-surface">WELCOME50K</td>
+<td class="px-lg py-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-body-md">+50.000đ Tiền mặt</span>
+</div>
+</td>
+<td class="px-lg py-lg font-body-md text-on-surface-variant">12/05/2024 14:30</td>
+<td class="px-lg py-lg">
+<span class="px-3 py-1 bg-tertiary-container/10 text-tertiary text-label-sm rounded-full border border-tertiary-container/20">Thành công</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-lg py-lg font-bold text-on-surface">SHOPEEXHTV</td>
+<td class="px-lg py-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">percent</span>
+<span class="font-body-md">+5% Hoàn tiền (Shopee)</span>
+</div>
+</td>
+<td class="px-lg py-lg font-body-md text-on-surface-variant">08/05/2024 09:15</td>
+<td class="px-lg py-lg">
+<span class="px-3 py-1 bg-tertiary-container/10 text-tertiary text-label-sm rounded-full border border-tertiary-container/20">Thành công</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-lg py-lg font-bold text-on-surface">GOLDMEMBER24</td>
+<td class="px-lg py-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">card_membership</span>
+<span class="font-body-md">Gói Hội viên Vàng (1 tháng)</span>
+</div>
+</td>
+<td class="px-lg py-lg font-body-md text-on-surface-variant">01/05/2024 20:45</td>
+<td class="px-lg py-lg">
+<span class="px-3 py-1 bg-tertiary-container/10 text-tertiary text-label-sm rounded-full border border-tertiary-container/20">Thành công</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Terms & Conditions Section -->
+<div class="lg:col-span-12 mt-2xl border-t border-outline-variant pt-2xl">
+<div class="bg-surface-container-high/30 p-xl rounded-3xl border border-surface-container-high">
+<div class="flex items-center gap-md mb-lg">
+<span class="material-symbols-outlined text-primary-container">gavel</span>
+<h3 class="font-title-lg text-title-lg text-on-surface">Điều kiện &amp; Điều khoản chương trình</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+<ul class="space-y-md">
+<li class="flex items-start gap-md">
+<span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">1</span>
+<p class="font-body-md text-on-surface-variant">Mỗi mã Giftcode chỉ có giá trị sử dụng một (01) lần duy nhất cho mỗi tài khoản khách hàng, trừ khi có quy định khác.</p>
+</li>
+<li class="flex items-start gap-md">
+<span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">2</span>
+<p class="font-body-md text-on-surface-variant">Mã không có giá trị quy đổi thành tiền mặt trực tiếp mà sẽ được cộng vào số dư ví hoàn tiền hoặc kích hoạt tính năng tương ứng.</p>
+</li>
+</ul>
+<ul class="space-y-md">
+<li class="flex items-start gap-md">
+<span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">3</span>
+<p class="font-body-md text-on-surface-variant">Thời hạn sử dụng mã được quy định cụ thể trong từng chiến dịch truyền thông của HOANTIENVIP.</p>
+</li>
+<li class="flex items-start gap-md">
+<span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">4</span>
+<p class="font-body-md text-on-surface-variant">HOANTIENVIP có quyền từ chối áp dụng mã nếu phát hiện hành vi gian lận, trục lợi hoặc vi phạm quy định sử dụng dịch vụ.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Shell -->
+<footer class="mt-auto bg-surface-container-highest border-t border-surface-variant">
+<div class="w-full py-2xl px-gutter flex flex-col md:flex-row justify-between items-center gap-md max-w-container-max mx-auto">
+<div class="flex flex-col gap-sm">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">HOANTIENVIP</span>
+<p class="font-body-md text-on-surface-variant">Nền tảng hoàn tiền hàng đầu cho tín đồ mua sắm.</p>
+</div>
+<div class="flex gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Affiliate Program</a>
+</div>
+<p class="font-label-md text-on-surface-variant opacity-70">© 2024 HOANTIENVIP. All rights reserved.</p>
+</div>
+</footer>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-md flex justify-around items-center px-2 py-3 pb-safe z-50 shadow-lg">
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-[10px]">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">local_offer</span>
+<span class="font-label-sm text-[10px]">Offers</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
+<span class="font-label-sm text-[10px]">Rewards</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-[10px]">Account</span>
+</div>
+</nav>
+<script>
+        function handleApply() {
+            const codeInput = document.getElementById('giftcode').value.toUpperCase();
+            const container = document.getElementById('feedback-container');
+            const success = document.getElementById('status-success');
+            const invalid = document.getElementById('status-invalid');
+            const expired = document.getElementById('status-expired');
+            
+            // Hide all first
+            container.classList.remove('hidden');
+            success.classList.add('hidden');
+            invalid.classList.add('hidden');
+            expired.classList.add('hidden');
+
+            if (!codeInput || codeInput.length < 5) {
+                invalid.classList.remove('hidden');
+                return;
+            }
+
+            // Simple mock logic
+            if (codeInput === 'HOANTIEN2024') {
+                success.classList.remove('hidden');
+            } else if (codeInput === 'EXPIRED') {
+                expired.classList.remove('hidden');
+            } else {
+                // Randomly show invalid for demo
+                invalid.classList.remove('hidden');
+            }
+            
+            // Trigger bouncy animation
+            container.classList.add('animate-bounce-in');
+            setTimeout(() => container.classList.remove('animate-bounce-in'), 500);
+        }
+
+        // Add CSS for bounce in
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes bounceIn {
+                0% { transform: scale(0.95); opacity: 0; }
+                50% { transform: scale(1.02); opacity: 1; }
+                100% { transform: scale(1); opacity: 1; }
+            }
+            .animate-bounce-in {
+                animation: bounceIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body></html>

@@ -9,8 +9,9 @@ import { Tabs } from '../../components/Tabs';
 import { Table } from '../../components/Table';
 import type { Column } from '../../components/Table';
 import { Button } from '../../components/Button';
-import { ToastContainer, defaultToastState, triggerToast } from '../../components/Toast';
-import type { ToastState } from '../../components/Toast';
+import { ToastContainer } from '../../components/Toast';
+import { defaultToastState, triggerToast } from '../../components/toast-state';
+import type { ToastState } from '../../components/toast-state';
 import { UserMinus, UserCheck, RefreshCw, CheckCircle2 } from 'lucide-react';
 
 export const AdminManagement: React.FC = () => {
@@ -80,7 +81,7 @@ export const AdminManagement: React.FC = () => {
         return w;
       })
     );
-    triggerToast(setToast, `Đã duyệt duyệt chi thành công cho ${selectedWithdrawalIds.length} yêu cầu rút tiền chọn lọc!`, 'success');
+    triggerToast(setToast, `Đã duyệt chi thành công cho ${selectedWithdrawalIds.length} yêu cầu rút tiền đã chọn.`, 'success');
     setSelectedWithdrawalIds([]);
   };
 
@@ -186,7 +187,7 @@ export const AdminManagement: React.FC = () => {
       header: 'Trạng thái',
       accessor: (row: WithdrawalRequest) => (
         <Badge variant={row.status === 'Approved' ? 'success' : row.status === 'Pending' ? 'warning' : 'danger'}>
-          {row.status === 'Approved' ? 'Đã thanh toán' : 'Chờ duyệt'}
+          {row.status === 'Approved' ? 'Đã thanh toán' : row.status === 'Rejected' ? 'Đã từ chối' : 'Chờ duyệt'}
         </Badge>
       )
     },

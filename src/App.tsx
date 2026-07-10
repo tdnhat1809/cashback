@@ -18,6 +18,7 @@ const Referral = lazy(async () => ({ default: (await import('./pages/dashboard/R
 const Rewards = lazy(async () => ({ default: (await import('./pages/dashboard/Rewards')).Rewards }));
 const Settings = lazy(async () => ({ default: (await import('./pages/dashboard/Settings')).Settings }));
 const ShipmentTracking = lazy(async () => ({ default: (await import('./pages/dashboard/ShipmentTracking')).ShipmentTracking }));
+const ShipmentDetail = lazy(async () => ({ default: (await import('./pages/dashboard/ShipmentDetail')).ShipmentDetail }));
 const BalanceHistory = lazy(async () => ({ default: (await import('./pages/dashboard/OtherDashboardPages')).BalanceHistory }));
 const ActivityLog = lazy(async () => ({ default: (await import('./pages/dashboard/OtherDashboardPages')).ActivityLog }));
 const Notifications = lazy(async () => ({ default: (await import('./pages/dashboard/OtherDashboardPages')).Notifications }));
@@ -53,6 +54,7 @@ function App() {
           <Route path="/dashboard/cashback" element={<DashboardLayout><CashbackHistory /></DashboardLayout>} />
           <Route path="/dashboard/withdrawal" element={<DashboardLayout><Withdrawal /></DashboardLayout>} />
           <Route path="/dashboard/shipment" element={<DashboardLayout><ShipmentTracking /></DashboardLayout>} />
+          <Route path="/dashboard/shipment/:id" element={<DashboardLayout><ShipmentDetail /></DashboardLayout>} />
           <Route path="/dashboard/saved" element={<DashboardLayout><SavedProducts /></DashboardLayout>} />
           <Route path="/dashboard/referral" element={<DashboardLayout><Referral /></DashboardLayout>} />
           <Route path="/dashboard/rewards" element={<DashboardLayout><Rewards /></DashboardLayout>} />

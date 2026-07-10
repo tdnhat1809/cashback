@@ -6,8 +6,9 @@ import { Input } from '../../components/Input';
 import { Badge } from '../../components/Badge';
 import { Table } from '../../components/Table';
 import type { Column } from '../../components/Table';
-import { ToastContainer, defaultToastState, triggerToast } from '../../components/Toast';
-import type { ToastState } from '../../components/Toast';
+import { ToastContainer } from '../../components/Toast';
+import { defaultToastState, triggerToast } from '../../components/toast-state';
+import type { ToastState } from '../../components/toast-state';
 import { CreditCard, Landmark, AlertCircle, ArrowUpRight } from 'lucide-react';
 
 export const Withdrawal: React.FC = () => {

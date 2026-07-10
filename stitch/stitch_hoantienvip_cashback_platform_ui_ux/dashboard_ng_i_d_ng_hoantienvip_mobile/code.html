@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>HOANTIENVIP - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "on-primary-fixed": "#3d0600",
+                "on-secondary-fixed-variant": "#3f465b",
+                "tertiary-fixed-dim": "#4edea3",
+                "primary-fixed-dim": "#ffb4a3",
+                "surface-tint": "#b52603",
+                "on-surface": "#271814",
+                "secondary-fixed": "#dae2fc",
+                "primary-fixed": "#ffdad2",
+                "tertiary-fixed": "#6ffbbe",
+                "error-container": "#ffdad6",
+                "surface-container-low": "#fff0ed",
+                "secondary": "#565e74",
+                "primary": "#b52603",
+                "surface-container-lowest": "#ffffff",
+                "outline-variant": "#e3beb6",
+                "on-tertiary-fixed-variant": "#005236",
+                "surface-container-high": "#ffe2dc",
+                "on-primary": "#ffffff",
+                "on-primary-fixed-variant": "#8c1900",
+                "background": "#fff8f6",
+                "on-secondary-fixed": "#131b2e",
+                "tertiary-container": "#00a773",
+                "surface-variant": "#f9dcd6",
+                "inverse-primary": "#ffb4a3",
+                "error": "#ba1a1a",
+                "secondary-container": "#d7dff9",
+                "on-secondary-container": "#5a6278",
+                "on-error": "#ffffff",
+                "tertiary": "#006c49",
+                "surface-container-highest": "#f9dcd6",
+                "on-surface-variant": "#5b403a",
+                "surface-dim": "#f0d4ce",
+                "primary-container": "#ff5a36",
+                "on-error-container": "#93000a",
+                "outline": "#8f7069",
+                "on-primary-container": "#5a0c00",
+                "on-tertiary-fixed": "#002113",
+                "on-background": "#271814",
+                "secondary-fixed-dim": "#bec6df",
+                "inverse-on-surface": "#ffede9",
+                "surface": "#fff8f6",
+                "surface-container": "#ffe9e5",
+                "on-tertiary-container": "#003320",
+                "inverse-surface": "#3e2c28",
+                "surface-bright": "#fff8f6"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "2xl": "20px",
+                "full": "9999px"
+            },
+            "spacing": {
+                "sm": "8px",
+                "gutter": "24px",
+                "2xl": "48px",
+                "xs": "4px",
+                "md": "16px",
+                "lg": "24px",
+                "3xl": "64px",
+                "xl": "32px",
+                "base": "4px",
+                "container-max": "1280px"
+            },
+            "fontFamily": {
+                "headline-md": ["Be Vietnam Pro"],
+                "label-sm": ["Be Vietnam Pro"],
+                "label-md": ["Be Vietnam Pro"],
+                "headline-lg-mobile": ["Be Vietnam Pro"],
+                "body-lg": ["Be Vietnam Pro"],
+                "title-lg": ["Be Vietnam Pro"],
+                "display-lg": ["Be Vietnam Pro"],
+                "headline-lg": ["Be Vietnam Pro"],
+                "body-md": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .bento-card {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .bento-card:active {
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface pb-32">
+<!-- Top Navigation Shell (Injected Style: bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md) -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A close-up portrait of a cheerful Vietnamese user in their late 20s, smiling warmly at the camera. The background is a soft-focus office with modern lighting. The aesthetic is bright, professional, and follows the warm HOANTIENVIP color palette with subtle red and orange undertones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjww0SBanrrZayfKoOUA3xUekdHm8XjLv8bVyi4ICyLp3uvbuCn8qJg3uaqlUD-u1Prtmrn02Q37ocOIjnhWgt8y7SonijrKnJ2j881Z93FjfoZTBWdZ2lqXIg2_abtJJSNYgO750l0gXg3iqI7g9mx4WAMIXAch-xi_eCF-bH6FZsjPxscQZB8p66o9lkyIq2NP6CnyD2d8dk1E7Bbd2oVDxq4CvnQClykhkO3SwhhDQj0ALoLhjufA"/>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Chào buổi sáng,</p>
+<h1 class="font-title-lg text-title-lg text-on-surface">Minh Tuấn</h1>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-variant active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-variant active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-20 px-md space-y-md">
+<!-- Balance Bento Grid -->
+<section class="grid grid-cols-2 gap-sm">
+<!-- Available Balance -->
+<div class="col-span-2 p-md bg-primary-container text-on-primary-container rounded-2xl shadow-md bento-card relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<div class="relative z-10">
+<p class="font-label-sm text-label-sm opacity-90">Ví khả dụng</p>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-display-lg text-display-lg font-black tracking-tighter">1.250.000</span>
+<span class="font-title-lg text-title-lg">đ</span>
+</div>
+<div class="mt-4 flex gap-2">
+<button class="px-4 py-2 bg-on-primary text-primary rounded-full font-label-md text-label-md flex items-center gap-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+                            Rút tiền
+                        </button>
+</div>
+</div>
+</div>
+<!-- Pending Rewards -->
+<div class="p-md bg-surface-container-high rounded-2xl bento-card">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Chờ duyệt</p>
+<div class="mt-1">
+<span class="font-title-lg text-title-lg text-on-surface">450.000</span>
+<span class="font-label-md text-label-md text-on-surface-variant">đ</span>
+</div>
+<div class="mt-3 flex items-center text-tertiary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] mr-1">update</span>
+                    Dự kiến 15/05
+                </div>
+</div>
+<!-- In Withdrawal -->
+<div class="p-md bg-surface-container-high rounded-2xl bento-card">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Đang rút</p>
+<div class="mt-1">
+<span class="font-title-lg text-title-lg text-on-surface">200.000</span>
+<span class="font-label-md text-label-md text-on-surface-variant">đ</span>
+</div>
+<div class="mt-3 flex items-center text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] mr-1">history</span>
+                    Xem tiến độ
+                </div>
+</div>
+</section>
+<!-- Mini Cashback Chart -->
+<section class="p-md bg-surface-container-lowest border border-outline-variant rounded-2xl">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-title-lg text-title-lg text-on-surface">Cashback 30 ngày</h2>
+<span class="font-label-md text-label-md text-tertiary">+12% so với tháng trước</span>
+</div>
+<div class="h-24 w-full flex items-end justify-between gap-1">
+<!-- Mock Chart Bars -->
+<div class="w-full bg-surface-variant rounded-t-sm h-[40%]"></div>
+<div class="w-full bg-surface-variant rounded-t-sm h-[60%]"></div>
+<div class="w-full bg-surface-variant rounded-t-sm h-[30%]"></div>
+<div class="w-full bg-primary-container rounded-t-sm h-[85%]"></div>
+<div class="w-full bg-surface-variant rounded-t-sm h-[50%]"></div>
+<div class="w-full bg-surface-variant rounded-t-sm h-[70%]"></div>
+<div class="w-full bg-tertiary-container rounded-t-sm h-[95%]"></div>
+<div class="w-full bg-surface-variant rounded-t-sm h-[45%]"></div>
+<div class="w-full bg-surface-variant rounded-t-sm h-[65%]"></div>
+<div class="w-full bg-primary-container rounded-t-sm h-[80%]"></div>
+<div class="w-full bg-surface-variant rounded-t-sm h-[35%]"></div>
+<div class="w-full bg-surface-variant rounded-t-sm h-[55%]"></div>
+</div>
+</section>
+<!-- Quick Shortcuts -->
+<section>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-3">Truy cập nhanh</h2>
+<div class="grid grid-cols-3 gap-sm">
+<button class="flex flex-col items-center gap-2 p-md bg-surface-container rounded-2xl bento-card">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary-container text-on-primary">
+<span class="material-symbols-outlined">link</span>
+</div>
+<span class="font-label-sm text-label-sm text-center">Lấy link</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-md bg-surface-container rounded-2xl bento-card">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-secondary-container text-secondary">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<span class="font-label-sm text-label-sm text-center">Rút tiền</span>
+</button>
+<button class="flex flex-col items-center gap-2 p-md bg-surface-container rounded-2xl bento-card">
+<div class="w-12 h-12 flex items-center justify-center rounded-full bg-tertiary-container text-on-tertiary">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<span class="font-label-sm text-label-sm text-center">Vận đơn</span>
+</button>
+</div>
+</section>
+<!-- Recent Orders -->
+<section>
+<div class="flex justify-between items-center mb-3">
+<h2 class="font-title-lg text-title-lg text-on-surface">Đơn hàng gần đây</h2>
+<button class="text-primary font-label-md text-label-md">Xem tất cả</button>
+</div>
+<div class="space-y-sm">
+<!-- Order Item 1 -->
+<div class="p-md bg-surface-container-lowest border border-outline-variant rounded-2xl flex items-center gap-md">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center flex-shrink-0">
+<img class="w-8 h-8 object-contain" data-alt="Shopee logo, iconic orange color with a minimalist shopping bag icon. High-resolution vector style, clean white background, representative of major e-commerce platforms in Vietnam." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQgrplgZTCZuYnTgZIRwn10Dx9m6M9jHzn9R1Om7-XyIkNDu6J2MqOF3jpG2yh62JUzCpR5iS3Anp7ZwFhrPSTx4wyOSU_KQl5QNjcPcmfqX1qj52L7ZoIdegSuPgn2BhkgQjmfHTwAdWZAEV3F8SoQQ38bLuJaaVOe_T7xIz11_4qFp1jjMIv87Qkm4KCcP_NDEtsqOeAB_5H8z8zYBi6nCD1aC6-CmBhTD_L24xWvj8_0uBfb8_PMw"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface">Shopee - Đơn #8231</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Hôm nay, 10:45</p>
+</div>
+<div class="text-right">
+<p class="font-title-lg text-title-lg text-tertiary">+12.500đ</p>
+<span class="px-2 py-0.5 bg-[#10B9811A] text-[#10B981] rounded-full text-[10px] font-bold">Chờ duyệt</span>
+</div>
+</div>
+<!-- Order Item 2 -->
+<div class="p-md bg-surface-container-lowest border border-outline-variant rounded-2xl flex items-center gap-md">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center flex-shrink-0">
+<img class="w-8 h-8 object-contain" data-alt="Lazada logo, heart-shaped stylized 'L' with gradient blue and pink colors. Clean minimalist design, high contrast on white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlcg7UoxgqFuKgwPfer0k7BxVgaA0JfrduFPCZYJumJnOXxMQmMEY5CqPIKNJsDuMm-zyzKgRRZxJ9arxbhMKo_5EGOEalJQPcB29zvzd64U6FEU6HoIdAUPy60sKy0FHI-Y2wTaqh0UsmqhrqgrXDOBNkQKDhXtcdKNaKMHzDxtBwYUfzm82IxUQtOtUnzkpiHaOaFemd5I0VCGaO-7I1uo4OlKS34BAh8CJ4P9lIsmG4E4jVAHw8MQ"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface">Lazada - Đơn #7721</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Hôm qua, 18:20</p>
+</div>
+<div class="text-right">
+<p class="font-title-lg text-title-lg text-tertiary">+45.000đ</p>
+<span class="px-2 py-0.5 bg-[#10B9811A] text-[#10B981] rounded-full text-[10px] font-bold">Thành công</span>
+</div>
+</div>
+<!-- Order Item 3 -->
+<div class="p-md bg-surface-container-lowest border border-outline-variant rounded-2xl flex items-center gap-md">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center flex-shrink-0">
+<img class="w-8 h-8 object-contain" data-alt="Tiki logo, stylized wordmark with a bright blue smiley face icon. Minimalist and modern tech aesthetic on a clean background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwYoWEPdXrLHAGeUxBZ-TkeJ7DqKZYinmPGc15h9kxED6tZYe9z8PwA1F3LHDCEHOlwcKcmUtZZmVgv41Z_jLk3oMbztmiZOescTpYOxkhqWRPugsjclUOvWenyE9MPWDEiU54DJGw5kqEP2mjiw5JKgU71ht-bhYMtrg7y5QD0HqYmhFaPTcc5cv3e9mQxT810Wdq0x2dFtRhCq_1GkFkWZU0xtTN6maNq4Mnvbkf33U_5ZPxRRQ3vQ"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface">Tiki - Đơn #1293</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">05/05/2024</p>
+</div>
+<div class="text-right">
+<p class="font-title-lg text-title-lg text-on-surface-variant">+8.200đ</p>
+<span class="px-2 py-0.5 bg-[#F59E0B1A] text-[#F59E0B] rounded-full text-[10px] font-bold">Đang soát</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Shell (Labels: Trang chủ, Deal, Ví, Cá nhân) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-2 py-3 pb-safe bg-surface/90 backdrop-blur-md shadow-lg rounded-t-2xl z-50">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-all duration-150 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm text-[10px]">Trang chủ</span>
+</a>
+<!-- Deals -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all duration-150 active:scale-90" href="#">
+<span class="material-symbols-outlined">local_offer</span>
+<span class="font-label-sm text-label-sm text-[10px]">Deal</span>
+</a>
+<!-- Wallet -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all duration-150 active:scale-90" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm text-[10px]">Ví</span>
+</a>
+<!-- Account -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all duration-150 active:scale-90" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm text-[10px]">Cá nhân</span>
+</a>
+</nav>
+<!-- FAB for quick action (Optional contextual element) -->
+<button class="fixed right-6 bottom-24 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined text-[32px]">qr_code_scanner</span>
+</button>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.bento-card').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.96)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+
+        // Pull-to-refresh simulation background subtle glow
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body></html>

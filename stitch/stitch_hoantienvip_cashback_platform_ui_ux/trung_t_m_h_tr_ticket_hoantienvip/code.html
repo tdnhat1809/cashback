@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trung tâm hỗ trợ | HOANTIENVIP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 248, 246, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(227, 190, 182, 0.3);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e3beb6;
+            border-radius: 10px;
+        }
+        .chat-bubble-user {
+            border-radius: 16px 16px 4px 16px;
+        }
+        .chat-bubble-agent {
+            border-radius: 16px 16px 16px 4px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed": "#3d0600",
+                      "on-secondary-fixed-variant": "#3f465b",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "primary-fixed-dim": "#ffb4a3",
+                      "surface-tint": "#b52603",
+                      "on-surface": "#271814",
+                      "secondary-fixed": "#dae2fc",
+                      "primary-fixed": "#ffdad2",
+                      "tertiary-fixed": "#6ffbbe",
+                      "error-container": "#ffdad6",
+                      "surface-container-low": "#fff0ed",
+                      "secondary": "#565e74",
+                      "primary": "#b52603",
+                      "surface-container-lowest": "#ffffff",
+                      "outline-variant": "#e3beb6",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "surface-container-high": "#ffe2dc",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed-variant": "#8c1900",
+                      "background": "#fff8f6",
+                      "on-secondary-fixed": "#131b2e",
+                      "tertiary-container": "#00a773",
+                      "surface-variant": "#f9dcd6",
+                      "inverse-primary": "#ffb4a3",
+                      "error": "#ba1a1a",
+                      "secondary-container": "#d7dff9",
+                      "on-secondary-container": "#5a6278",
+                      "on-error": "#ffffff",
+                      "tertiary": "#006c49",
+                      "surface-container-highest": "#f9dcd6",
+                      "on-surface-variant": "#5b403a",
+                      "surface-dim": "#f0d4ce",
+                      "primary-container": "#ff5a36",
+                      "on-error-container": "#93000a",
+                      "outline": "#8f7069",
+                      "on-primary-container": "#5a0c00",
+                      "on-tertiary-fixed": "#002113",
+                      "on-background": "#271814",
+                      "secondary-fixed-dim": "#bec6df",
+                      "inverse-on-surface": "#ffede9",
+                      "surface": "#fff8f6",
+                      "surface-container": "#ffe9e5",
+                      "on-tertiary-container": "#003320",
+                      "inverse-surface": "#3e2c28",
+                      "surface-bright": "#fff8f6"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "gutter": "24px",
+                      "2xl": "48px",
+                      "xs": "4px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "3xl": "64px",
+                      "xl": "32px",
+                      "base": "4px",
+                      "container-max": "1280px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Be Vietnam Pro"],
+                      "label-sm": ["Be Vietnam Pro"],
+                      "label-md": ["Be Vietnam Pro"],
+                      "headline-lg-mobile": ["Be Vietnam Pro"],
+                      "body-lg": ["Be Vietnam Pro"],
+                      "title-lg": ["Be Vietnam Pro"],
+                      "display-lg": ["Be Vietnam Pro"],
+                      "headline-lg": ["Be Vietnam Pro"],
+                      "body-md": ["Be Vietnam Pro"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-20 lg:pb-0">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto w-full">
+<div class="flex items-center gap-2">
+<span class="font-display-lg text-headline-md font-black text-primary tracking-tighter">HOANTIENVIP</span>
+</div>
+<nav class="hidden md:flex gap-8">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Home</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Offers</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Wallet</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Support</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs">HT</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<aside class="hidden lg:flex flex-col p-md fixed left-0 top-16 bottom-0 z-40 h-full w-64 rounded-r-xl bg-surface-container-low dark:bg-surface-container shadow-md">
+<div class="mb-8 p-4">
+<p class="font-title-lg text-title-lg text-primary font-bold">My Account</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Gold Member</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-md">Stores</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md">Earnings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md">History</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold transition-all" href="#">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="font-label-md">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-4 space-y-1">
+<button class="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md">Sign Out</span>
+</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-64 mt-16 p-4 md:p-8 max-w-container-max">
+<!-- Hero Section Support -->
+<section class="mb-12">
+<h1 class="font-headline-lg text-headline-lg text-primary mb-2">Xin chào, chúng tôi có thể giúp gì cho bạn?</h1>
+<p class="text-on-surface-variant font-body-md">Tìm kiếm câu trả lời hoặc gửi yêu cầu hỗ trợ trực tiếp đến đội ngũ của HOANTIENVIP.</p>
+<div class="mt-8 relative max-w-2xl">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-12 pr-4 py-4 rounded-xl border-none ring-1 ring-outline-variant focus:ring-2 focus:ring-primary bg-surface-container-lowest shadow-sm transition-all font-body-md" placeholder="Tìm kiếm vấn đề bạn đang gặp phải..." type="text"/>
+</div>
+</section>
+<!-- Bento Layout: FAQ & Create Ticket -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-8 mb-12">
+<!-- FAQ Section (Left - 7 cols) -->
+<div class="xl:col-span-7 space-y-6">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">quiz</span>
+                        Câu hỏi thường gặp (FAQ)
+                    </h2>
+</div>
+<div class="space-y-3">
+<!-- FAQ Item 1 -->
+<div class="group bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<button class="w-full flex items-center justify-between p-5 text-left hover:bg-surface-container transition-colors" onclick="toggleAccordion('faq-1')">
+<span class="font-body-md font-semibold text-on-surface">Làm thế nào để nhận hoàn tiền sau khi mua sắm?</span>
+<span class="material-symbols-outlined transition-transform duration-300" id="icon-faq-1">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out" id="faq-1">
+<div class="p-5 pt-0 text-on-surface-variant font-body-md leading-relaxed border-t border-outline-variant/30 mt-2">
+                                Bạn cần đăng nhập vào HOANTIENVIP, chọn cửa hàng yêu thích và nhấn "Mua ngay". Hệ thống sẽ ghi nhận phiên làm việc của bạn và hoàn tiền sẽ tự động cập nhật vào ví sau khi đơn hàng thành công.
+                            </div>
+</div>
+</div>
+<!-- FAQ Item 2 -->
+<div class="group bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<button class="w-full flex items-center justify-between p-5 text-left hover:bg-surface-container transition-colors" onclick="toggleAccordion('faq-2')">
+<span class="font-body-md font-semibold text-on-surface">Thời gian phê duyệt hoàn tiền là bao lâu?</span>
+<span class="material-symbols-outlined transition-transform duration-300" id="icon-faq-2">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out" id="faq-2">
+<div class="p-5 pt-0 text-on-surface-variant font-body-md leading-relaxed border-t border-outline-variant/30 mt-2">
+                                Tùy vào chính sách của từng đối tác (Shopee, Lazada, Tiki...), thời gian đối soát thường từ 30 đến 90 ngày kể từ ngày đơn hàng hoàn tất.
+                            </div>
+</div>
+</div>
+<!-- FAQ Item 3 -->
+<div class="group bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<button class="w-full flex items-center justify-between p-5 text-left hover:bg-surface-container transition-colors" onclick="toggleAccordion('faq-3')">
+<span class="font-body-md font-semibold text-on-surface">Làm sao để rút tiền từ Ví HOANTIENVIP?</span>
+<span class="material-symbols-outlined transition-transform duration-300" id="icon-faq-3">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out" id="faq-3">
+<div class="p-5 pt-0 text-on-surface-variant font-body-md leading-relaxed border-t border-outline-variant/30 mt-2">
+                                Khi số dư khả dụng đạt tối thiểu 50.000 VNĐ, bạn có thể thực hiện lệnh rút về tài khoản ngân hàng đã liên kết trong mục "Ví của tôi".
+                            </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Create Ticket Form (Right - 5 cols) -->
+<div class="xl:col-span-5">
+<div class="bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant shadow-sm sticky top-24">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">add_task</span>
+                        Tạo yêu cầu hỗ trợ
+                    </h2>
+<form class="space-y-5">
+<div>
+<label class="block font-label-md text-on-surface-variant mb-2">Chủ đề hỗ trợ</label>
+<select class="w-full rounded-xl border-outline-variant focus:ring-primary focus:border-primary bg-surface-container-low p-3 font-body-md">
+<option>Vấn đề về Hoàn tiền</option>
+<option>Vấn đề về Tài khoản &amp; Bảo mật</option>
+<option>Vấn đề về Rút tiền</option>
+<option>Góp ý &amp; Khiếu nại</option>
+</select>
+</div>
+<div>
+<label class="block font-label-md text-on-surface-variant mb-2">Nội dung chi tiết</label>
+<textarea class="w-full rounded-xl border-outline-variant focus:ring-primary focus:border-primary bg-surface-container-low p-3 font-body-md" placeholder="Mô tả chi tiết vấn đề bạn đang gặp phải..." rows="4"></textarea>
+</div>
+<div>
+<label class="block font-label-md text-on-surface-variant mb-2">Đính kèm hình ảnh (nếu có)</label>
+<div class="flex items-center justify-center w-full">
+<label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-outline-variant rounded-xl cursor-pointer bg-surface-container-low hover:bg-surface-variant/30 transition-all">
+<div class="flex flex-col items-center justify-center pt-5 pb-6">
+<span class="material-symbols-outlined text-on-surface-variant mb-2">cloud_upload</span>
+<p class="text-sm text-on-surface-variant"><span class="font-semibold">Nhấn để tải lên</span> hoặc kéo thả</p>
+<p class="text-xs text-on-surface-variant/70">PNG, JPG (Max. 5MB)</p>
+</div>
+<input class="hidden" type="file"/>
+</label>
+</div>
+</div>
+<button class="w-full bg-primary-container text-on-primary font-bold py-4 rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all" type="button">
+                            Gửi yêu cầu ngay
+                        </button>
+</form>
+</div>
+</div>
+</div>
+<!-- Ticket History & Chat Interface -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+<!-- Ticket List (Left - 4 cols) -->
+<div class="xl:col-span-4 space-y-4">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">history</span>
+                    Yêu cầu đã gửi
+                </h2>
+<div class="space-y-3">
+<!-- Ticket Item Active -->
+<div class="p-4 bg-primary-container/10 border-2 border-primary rounded-2xl cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-2">
+<span class="px-2 py-1 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase tracking-wider">Đang chờ (Pending)</span>
+<span class="text-[12px] text-on-surface-variant">Hôm nay, 10:30</span>
+</div>
+<p class="font-body-md font-bold text-on-surface truncate">Lỗi không ghi nhận hoàn tiền đơn Shopee</p>
+<p class="text-sm text-on-surface-variant line-clamp-1 mt-1">Chào Admin, tôi có mua đơn hàng số #12345...</p>
+</div>
+<!-- Ticket Item -->
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-2xl hover:bg-surface-container/50 cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-2">
+<span class="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wider">Đã xử lý (Resolved)</span>
+<span class="text-[12px] text-on-surface-variant">15 Thg 10</span>
+</div>
+<p class="font-body-md font-bold text-on-surface truncate">Cần thay đổi số điện thoại liên kết</p>
+<p class="text-sm text-on-surface-variant line-clamp-1 mt-1">Tôi muốn cập nhật số điện thoại mới...</p>
+</div>
+<!-- Ticket Item -->
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-2xl hover:bg-surface-container/50 cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-2">
+<span class="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold rounded-full uppercase tracking-wider">Mở (Open)</span>
+<span class="text-[12px] text-on-surface-variant">12 Thg 10</span>
+</div>
+<p class="font-body-md font-bold text-on-surface truncate">Hỏi về điều kiện rút tiền tối thiểu</p>
+<p class="text-sm text-on-surface-variant line-clamp-1 mt-1">Số dư của tôi hiện có 45k...</p>
+</div>
+</div>
+</div>
+<!-- Chat Details (Right - 8 cols) -->
+<div class="xl:col-span-8 flex flex-col h-[600px] bg-surface-container-lowest border border-outline-variant rounded-3xl overflow-hidden shadow-sm">
+<!-- Chat Header -->
+<div class="px-6 py-4 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<div>
+<h3 class="font-title-lg text-on-surface">Hỗ trợ khách hàng</h3>
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs text-on-surface-variant">Nhân viên đang trực tuyến</span>
+</div>
+</div>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">more_vert</button>
+</div>
+<!-- Chat Body -->
+<div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-fixed opacity-90">
+<!-- Message Date Divider -->
+<div class="flex justify-center">
+<span class="px-3 py-1 bg-outline-variant/30 text-on-surface-variant text-[10px] font-bold rounded-full uppercase">Hôm nay</span>
+</div>
+<!-- User Message -->
+<div class="flex flex-col items-end space-y-1">
+<div class="max-w-[80%] chat-bubble-user bg-primary-container text-white p-4 shadow-md">
+<p class="font-body-md">Chào Admin, đơn hàng Shopee số #SP12345678 của tôi đã nhận hàng được 3 ngày nhưng vẫn chưa thấy hiển thị hoàn tiền trong mục "Chờ duyệt".</p>
+</div>
+<span class="text-[10px] text-on-surface-variant">10:30 • Đã xem</span>
+</div>
+<!-- Agent Message -->
+<div class="flex flex-col items-start space-y-1">
+<div class="max-w-[80%] chat-bubble-agent bg-surface-container-high text-on-surface p-4 shadow-sm">
+<p class="font-body-md">Chào bạn, mình là Minh từ bộ phận CSKH. Rất xin lỗi vì sự bất tiện này. Bạn vui lòng chụp màn hình chi tiết đơn hàng trên Shopee (bao gồm mã đơn và trạng thái Giao hàng thành công) gửi qua đây để mình kiểm tra nhé.</p>
+</div>
+<span class="text-[10px] text-on-surface-variant">10:32</span>
+</div>
+<!-- User Message with Image -->
+<div class="flex flex-col items-end space-y-1">
+<div class="max-w-[80%] chat-bubble-user bg-primary-container text-white p-4 shadow-md">
+<p class="font-body-md mb-2">Vâng, đây là ảnh chụp đơn hàng ạ.</p>
+<img class="rounded-lg border border-white/20 w-48 h-auto object-cover" data-alt="A clean, minimalist screenshot of a modern e-commerce mobile app order confirmation page. The UI features soft rounded corners, a vibrant primary orange action button, and clear typography. The screenshot displays 'Order Delivered' status and an order ID #SP12345678. The lighting is bright and professionally rendered in a fintech-ready style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAF-Oa73BttM7dsZLGz_FFqSdGc0fNOqEyH7fdY8sqR4cBex35oZlMSLTunC3F3tlm52Oa1CqmsA0wlCXWnsAE8oiU3uaj2aClzmUn-l2b6eSRsDAL9S1A-tJgc4sRBxf8VcEcgyYdA2ad1DrDcbQOW6faTEBzjHqERvi9fpBB-h-Itz_kpdwawgn2FmNaVPsFCJi2TUjGeXG7wE01yV9IazOOF8wqfN-Cns-FzvLnujFF8BuYPoGOKnw"/>
+</div>
+<span class="text-[10px] text-on-surface-variant">10:35</span>
+</div>
+<!-- Agent Typing (Mockup) -->
+<div class="flex items-center gap-2 text-on-surface-variant italic text-xs">
+<span class="material-symbols-outlined text-[16px] animate-bounce">edit</span>
+                        Nhân viên đang nhập...
+                    </div>
+</div>
+<!-- Chat Footer -->
+<div class="p-4 bg-surface-container-low border-t border-outline-variant">
+<div class="flex items-center gap-3 bg-surface-container-lowest rounded-2xl p-2 ring-1 ring-outline-variant focus-within:ring-2 focus-within:ring-primary transition-all shadow-inner">
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:text-primary transition-colors">attach_file</button>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:text-primary transition-colors">image</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 font-body-md py-2" placeholder="Nhập tin nhắn..." type="text"/>
+<button class="bg-primary text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-primary/90 transition-transform active:scale-90">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-2xl px-gutter flex flex-col md:flex-row justify-between items-center gap-md max-w-container-max mx-auto bg-surface-container-highest dark:bg-surface-container-lowest mt-20 rounded-t-3xl">
+<div>
+<span class="font-headline-md text-headline-md font-bold text-on-surface">HOANTIENVIP</span>
+<p class="text-on-surface-variant mt-2 font-body-md">© 2024 HOANTIENVIP. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Affiliate Program</a>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-2 py-3 pb-safe bg-surface/90 dark:bg-inverse-surface/90 backdrop-blur-md rounded-t-xl z-50 shadow-lg">
+<button class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-[10px]">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined">local_offer</span>
+<span class="font-label-sm text-[10px]">Offers</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-[10px]">Wallet</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 transition-all duration-150">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="font-label-sm text-[10px]">Support</span>
+</button>
+</nav>
+<script>
+        function toggleAccordion(id) {
+            const element = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            if (element.style.maxHeight === '0px' || element.style.maxHeight === '') {
+                // Close all others first (optional)
+                document.querySelectorAll('[id^="faq-"]').forEach(el => {
+                    el.style.maxHeight = '0px';
+                });
+                document.querySelectorAll('[id^="icon-faq-"]').forEach(i => {
+                    i.style.transform = 'rotate(0deg)';
+                });
+
+                element.style.maxHeight = '300px';
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                element.style.maxHeight = '0px';
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Initialize accordion state
+        window.onload = () => {
+             document.querySelectorAll('[id^="faq-"]').forEach(el => {
+                el.style.maxHeight = '0px';
+            });
+        };
+    </script>
+</body></html>

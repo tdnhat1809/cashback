@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
-import { defaultToastState, triggerToast, ToastContainer } from '../components/Toast';
-import type { ToastState } from '../components/Toast';
+import { ToastContainer } from '../components/Toast';
+import { defaultToastState, triggerToast } from '../components/toast-state';
+import type { ToastState } from '../components/toast-state';
 import { Link, Copy, ShoppingBag, Loader, AlertTriangle } from 'lucide-react';
 
 export const LinkGenerator: React.FC = () => {
@@ -44,17 +45,23 @@ export const LinkGenerator: React.FC = () => {
     setErrorText('');
     setSuccess(false);
 
-    // Basic URL validation
-    const shopeeRegex = /shopee\.vn|shp\.ee/i;
-    const tiktokRegex = /tiktok\.com|vt\.tiktok/i;
-    const isLinkVal = url.startsWith('http://') || url.startsWith('https://');
-
-    if (!isLinkVal) {
+    let parsedUrl: URL;
+    try {
+      parsedUrl = new URL(url);
+    } catch {
+      setErrorText('Đường dẫn phải là URL hợp lệ bắt đầu bằng http:// hoặc https://');
+      return;
+    }
+    if (parsedUrl.protocol !== 'https:' && parsedUrl.protocol !== 'http:') {
       setErrorText('Đường dẫn phải bắt đầu bằng http:// hoặc https://');
       return;
     }
-
-    if (!shopeeRegex.test(url) && !tiktokRegex.test(url) && !url.includes('simulated')) {
+    const host = parsedUrl.hostname.toLowerCase();
+    const isAllowedHost = [
+      'shopee.vn', 'shp.ee', 'tiktok.com', 'shop.tiktok.com', 'vt.tiktok.com',
+    ].some((allowedHost) => host === allowedHost || host.endsWith(`.${allowedHost}`));
+    const isSimulatedLink = host === 'shopee.vn' && parsedUrl.pathname.includes('product-detail-simulated');
+    if (!isAllowedHost && !isSimulatedLink) {
       setErrorText('HOANTIENVIP hiện tại chỉ hỗ trợ hoàn tiền cho sàn Shopee và TikTok Shop.');
       return;
     }
@@ -71,9 +78,13 @@ export const LinkGenerator: React.FC = () => {
     }, 2000);
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(generatedLink);
-    triggerToast(setToast, 'Đã sao chép đường dẫn hoàn tiền vào clipboard!', 'success');
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedLink);
+      triggerToast(setToast, 'Đã sao chép đường dẫn hoàn tiền vào clipboard!', 'success');
+    } catch {
+      triggerToast(setToast, 'Trình duyệt không cho phép sao chép. Hãy sao chép thủ công liên kết này.', 'error');
+    }
   };
 
   const handleGoToApp = () => {

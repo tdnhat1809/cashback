@@ -6,8 +6,9 @@ import type { Column } from '../../components/Table';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Badge } from '../../components/Badge';
-import { ToastContainer, defaultToastState, triggerToast } from '../../components/Toast';
-import type { ToastState } from '../../components/Toast';
+import { ToastContainer } from '../../components/Toast';
+import { defaultToastState, triggerToast } from '../../components/toast-state';
+import type { ToastState } from '../../components/toast-state';
 import { Bell, Ticket, HelpCircle } from 'lucide-react';
 
 export interface ActivityLogItem {

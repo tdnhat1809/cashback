@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
-import { ToastContainer, defaultToastState, triggerToast } from '../components/Toast';
-import type { ToastState } from '../components/Toast';
+import { ToastContainer } from '../components/Toast';
+import { defaultToastState, triggerToast } from '../components/toast-state';
+import type { ToastState } from '../components/toast-state';
 import { KeyRound, Phone, Sparkles } from 'lucide-react';
 
 export const Login: React.FC = () => {

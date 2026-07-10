@@ -3,8 +3,9 @@ import { mockUserProfile } from '../../mockData';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Dropdown } from '../../components/Dropdown';
-import { ToastContainer, defaultToastState, triggerToast } from '../../components/Toast';
-import type { ToastState } from '../../components/Toast';
+import { ToastContainer } from '../../components/Toast';
+import { defaultToastState, triggerToast } from '../../components/toast-state';
+import type { ToastState } from '../../components/toast-state';
 import { Landmark, User, Mail, ShieldCheck } from 'lucide-react';
 
 export const Settings: React.FC = () => {

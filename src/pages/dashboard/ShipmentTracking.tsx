@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { mockShipments, mockCarriersList } from '../../mockData';
 import type { Shipment } from '../../mockData';
 import { Button } from '../../components/Button';
@@ -8,11 +9,13 @@ import { Badge } from '../../components/Badge';
 import { Table } from '../../components/Table';
 import type { Column } from '../../components/Table';
 import { Modal } from '../../components/Modal';
-import { ToastContainer, defaultToastState, triggerToast } from '../../components/Toast';
-import type { ToastState } from '../../components/Toast';
+import { ToastContainer } from '../../components/Toast';
+import { defaultToastState, triggerToast } from '../../components/toast-state';
+import type { ToastState } from '../../components/toast-state';
 import { Truck, Search, Plus, Calendar, MapPin, Clock } from 'lucide-react';
 
 export const ShipmentTracking: React.FC = () => {
+  const navigate = useNavigate();
   const [shipments, setShipments] = useState<Shipment[]>(mockShipments);
   const [trackingNum, setTrackingNum] = useState('');
   const [selectedCarrier, setSelectedCarrier] = useState('auto');
@@ -32,23 +35,33 @@ export const ShipmentTracking: React.FC = () => {
       return;
     }
 
+    const normalizedTrackingNumber = trackingNum.trim().toUpperCase();
+    const carrierByPrefix: Array<[string, string]> = [
+      ['SPX', 'SPX'], ['LEX', 'LEX'], ['EMS', 'EMS'], ['J&T', 'J&T'], ['JNT', 'J&T'],
+      ['GHN', 'GHN'], ['247', '247Express'], ['VN', 'VNPost'], ['VTP', 'Viettel Post'],
+      ['GHTK', 'GHTK'], ['BEST', 'Best'], ['FUTA', 'Futa'], ['NHT', 'Nhất Tín'],
+      ['NETCO', 'Netco'], ['NETPOST', 'NetPost'],
+    ];
+    const detectedCarrier = carrierByPrefix.find(([prefix]) => normalizedTrackingNumber.startsWith(prefix))?.[1];
+    const carrier = selectedCarrier === 'auto' ? detectedCarrier : selectedCarrier;
+
+    if (!carrier) {
+      triggerToast(setToast, 'Không nhận diện được hãng vận chuyển. Vui lòng chọn hãng trước khi thêm.', 'error');
+      return;
+    }
+    if (shipments.some((shipment) => shipment.trackingNumber === normalizedTrackingNumber && shipment.carrier === carrier)) {
+      triggerToast(setToast, 'Vận đơn này đã có trong danh sách theo dõi.', 'warning');
+      return;
+    }
+
     setLoading(true);
     // Simulate API tracking addition
     setTimeout(() => {
       setLoading(false);
       
-      // Auto detect simple mock carrier mapping
-      let carrier = selectedCarrier;
-      if (carrier === 'auto') {
-        if (trackingNum.startsWith('SPX') || trackingNum.startsWith('spx')) carrier = 'SPX';
-        else if (trackingNum.startsWith('LEX') || trackingNum.startsWith('lex')) carrier = 'LEX';
-        else if (trackingNum.startsWith('EMS') || trackingNum.startsWith('ems')) carrier = 'EMS';
-        else carrier = 'GHTK'; // default mock fallback
-      }
-
       const newShipment: Shipment = {
         id: `s_${Math.random().toString(36).substr(2, 5)}`,
-        trackingNumber: trackingNum.toUpperCase(),
+        trackingNumber: normalizedTrackingNumber,
         carrier: carrier,
         latestStatus: 'Đang vận chuyển',
         lastSynced: new Date().toISOString().replace('T', ' ').substring(0, 16),
@@ -71,9 +84,10 @@ export const ShipmentTracking: React.FC = () => {
   };
 
   const getStatusColor = (status: string) => {
-    if (status.includes('thành công') || status === 'DELIVERED') return 'success';
-    if (status.includes('đang giao') || status === 'OUT_FOR_DELIVERY') return 'warning';
-    if (status.includes('hủy') || status === 'CANCELLED') return 'danger';
+    const normalizedStatus = status.toLowerCase();
+    if (normalizedStatus.includes('thành công') || status === 'DELIVERED') return 'success';
+    if (normalizedStatus.includes('đang giao') || status === 'OUT_FOR_DELIVERY') return 'warning';
+    if (normalizedStatus.includes('hủy') || status === 'CANCELLED') return 'danger';
     return 'info';
   };
 
@@ -113,10 +127,10 @@ export const ShipmentTracking: React.FC = () => {
         <Button 
           variant="ghost" 
           size="sm" 
-          onClick={() => setActiveShipment(row)}
-          className="!p-1.5"
+          onClick={() => navigate(`/dashboard/shipment/${row.trackingNumber}`)}
+          className="!p-1.5 font-bold"
         >
-          Timeline
+          Chi tiết
         </Button>
       )
     }

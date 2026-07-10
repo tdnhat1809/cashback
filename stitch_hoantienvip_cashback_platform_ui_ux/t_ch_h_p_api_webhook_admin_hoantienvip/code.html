@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HOANTIENVIP - Affiliate API Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed": "#3d0600",
+                    "on-secondary-fixed-variant": "#3f465b",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "primary-fixed-dim": "#ffb4a3",
+                    "surface-tint": "#b52603",
+                    "on-surface": "#271814",
+                    "secondary-fixed": "#dae2fc",
+                    "primary-fixed": "#ffdad2",
+                    "tertiary-fixed": "#6ffbbe",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#fff0ed",
+                    "secondary": "#565e74",
+                    "primary": "#b52603",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#e3beb6",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "surface-container-high": "#ffe2dc",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed-variant": "#8c1900",
+                    "background": "#fff8f6",
+                    "on-secondary-fixed": "#131b2e",
+                    "tertiary-container": "#00a773",
+                    "surface-variant": "#f9dcd6",
+                    "inverse-primary": "#ffb4a3",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#d7dff9",
+                    "on-secondary-container": "#5a6278",
+                    "on-error": "#ffffff",
+                    "tertiary": "#006c49",
+                    "surface-container-highest": "#f9dcd6",
+                    "on-surface-variant": "#5b403a",
+                    "surface-dim": "#f0d4ce",
+                    "primary-container": "#ff5a36",
+                    "on-error-container": "#93000a",
+                    "outline": "#8f7069",
+                    "on-primary-container": "#5a0c00",
+                    "on-tertiary-fixed": "#002113",
+                    "on-background": "#271814",
+                    "secondary-fixed-dim": "#bec6df",
+                    "inverse-on-surface": "#ffede9",
+                    "surface": "#fff8f6",
+                    "surface-container": "#ffe9e5",
+                    "on-tertiary-container": "#003320",
+                    "inverse-surface": "#3e2c28",
+                    "surface-bright": "#fff8f6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "gutter": "24px",
+                    "2xl": "48px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "3xl": "64px",
+                    "xl": "32px",
+                    "base": "4px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "title-lg": ["Be Vietnam Pro"],
+                    "display-lg": ["Be Vietnam Pro"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "body-md": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { backdrop-filter: blur(8px); background: rgba(255, 248, 246, 0.8); }
+        .bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+        .shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Top Navigation Bar (Shared Component) -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto w-full">
+<div class="flex items-center gap-md">
+<span class="font-display-lg text-display-lg font-black text-primary tracking-tighter">HOANTIENVIP</span>
+</div>
+<div class="hidden md:flex items-center gap-xl">
+<nav class="flex gap-lg">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Dashboard</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Integrations</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">help_outline</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="Close up professional headshot of a modern software engineer in a high-tech minimalist office. The background features soft blue bokeh lights and a clean white wall. The person has a friendly, confident expression, wearing a stylish dark blazer. Lighting is cinematic and focused, following the premium fintech aesthetic of HOANTIENVIP." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYhkaiQzXP58CpJq_oShvmcFLo1EabZW6KdNkczcFSsBD70m_8G0XCOXZGRAblFLxLKBDzq5AwHbLb6KfQrLhEJZVg2Cvpx-68gA9-rV0mvHkAW7ubQt653muhdyeP92o6Y-vqefXWHYpX-sjYjW18OnxCL5q_MPvuF9J59NC1GTK2O243DC_JTk7QZD6MSoRwQsUGwA13gMICtafaP0SFC23nIcbSiEQqCu4JjK5U24HNQ9gVVXVYmQ"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Side Navigation (Shared Component) -->
+<aside class="hidden lg:flex flex-col p-md fixed left-0 top-16 bottom-0 z-40 bg-surface-container dark:bg-surface-container-high h-full w-64 rounded-r-xl shadow-md">
+<div class="mb-xl px-sm">
+<h2 class="font-title-lg text-title-lg text-primary font-bold">My Account</h2>
+<p class="font-label-md text-label-md text-on-surface-variant">Admin Control</p>
+</div>
+<nav class="space-y-base flex-1">
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-md text-label-md">Stores</span>
+</a>
+<a class="flex items-center gap-md p-md bg-primary-container text-on-primary-container rounded-lg font-bold shadow-sm" href="#">
+<span class="material-symbols-outlined">settings_ethernet</span>
+<span class="font-label-md text-label-md">API &amp; Webhooks</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Earnings</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-label-md">History</span>
+</a>
+</nav>
+<div class="mt-auto pt-md border-t border-outline-variant">
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant rounded-lg" href="#">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<a class="flex items-center gap-md p-md text-error hover:bg-error-container rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-20 pb-24 px-gutter">
+<div class="max-w-container-max mx-auto">
+<!-- Hero Title & Critical Alerts -->
+<div class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Affiliate API Integration</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Manage Shopee, TikTok, and RioHub connections and webhook events.</p>
+</div>
+<!-- Alert Banner -->
+<div class="bg-error-container text-on-error-container px-lg py-sm rounded-xl flex items-center gap-sm animate-pulse shadow-sm border border-error/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">warning</span>
+<span class="font-label-md text-label-md">Warning: TikTok API Credential expiring in 48h</span>
+</div>
+</div>
+<!-- Bento Grid Dashboard -->
+<div class="bento-grid">
+<!-- Shopee Integration Card -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-surface-container-lowest rounded-3xl p-lg shadow-sm border border-outline-variant hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-lg">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-2xl bg-[#EE4D2D]/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#EE4D2D]" style="font-variation-settings: 'FILL' 1">shopping_bag</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg">Shopee Vietnam</h3>
+<span class="inline-flex items-center px-sm py-xs rounded-full bg-tertiary-container/10 text-tertiary font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary mr-1 animate-pulse"></span>
+                                    Connected
+                                </span>
+</div>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">more_vert</button>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-center py-sm border-b border-outline-variant/30">
+<span class="text-on-surface-variant font-label-md">Credential Status</span>
+<span class="text-tertiary font-bold font-label-md">Active</span>
+</div>
+<div class="flex justify-between items-center py-sm border-b border-outline-variant/30">
+<span class="text-on-surface-variant font-label-md">Last Sync</span>
+<span class="text-on-surface font-medium font-label-md">2 mins ago</span>
+</div>
+<div class="flex justify-between items-center py-sm">
+<span class="text-on-surface-variant font-label-md">Daily Limit</span>
+<span class="text-on-surface font-medium font-label-md">84,200 / 100k</span>
+</div>
+</div>
+<button class="w-full mt-lg py-sm border border-primary text-primary rounded-xl font-bold hover:bg-primary/5 active:scale-95 transition-all">Manual Sync</button>
+</div>
+<!-- RioHub TikTok Card -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-surface-container-lowest rounded-3xl p-lg shadow-sm border border-outline-variant hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-lg">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-2xl bg-on-surface text-white flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">music_video</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg">RioHub (TikTok)</h3>
+<span class="inline-flex items-center px-sm py-xs rounded-full bg-error-container/10 text-error font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-error mr-1"></span>
+                                    Connection Error
+                                </span>
+</div>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">more_vert</button>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-center py-sm border-b border-outline-variant/30">
+<span class="text-on-surface-variant font-label-md">Credential Status</span>
+<span class="text-error font-bold font-label-md">Expired</span>
+</div>
+<div class="flex justify-between items-center py-sm border-b border-outline-variant/30">
+<span class="text-on-surface-variant font-label-md">Last Sync</span>
+<span class="text-on-surface font-medium font-label-md">14 hours ago</span>
+</div>
+<div class="flex justify-between items-center py-sm">
+<span class="text-on-surface-variant font-label-md">Active Webhooks</span>
+<span class="text-on-surface font-medium font-label-md">0 / 4 active</span>
+</div>
+</div>
+<button class="w-full mt-lg py-sm bg-primary text-white rounded-xl font-bold hover:bg-primary-container active:scale-95 transition-all">Re-authenticate</button>
+</div>
+<!-- Webhook Statistics Summary -->
+<div class="col-span-12 lg:col-span-4 grid grid-cols-2 gap-md">
+<div class="col-span-1 bg-surface-container rounded-3xl p-lg flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1">check_circle</span>
+<span class="font-label-sm text-label-sm text-tertiary">+12%</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-md">Success Events</p>
+<h4 class="text-headline-md font-headline-md text-on-surface">1,284</h4>
+</div>
+</div>
+<div class="col-span-1 bg-surface-container rounded-3xl p-lg flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1">error</span>
+<span class="font-label-sm text-label-sm text-error">Critical</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-md">Failed Events</p>
+<h4 class="text-headline-md font-headline-md text-on-surface">24</h4>
+</div>
+</div>
+<div class="col-span-2 bg-inverse-surface rounded-3xl p-lg text-inverse-on-surface flex items-center gap-lg">
+<div class="flex-1">
+<h4 class="font-title-lg text-title-lg mb-xs">Uptime Monitor</h4>
+<p class="text-on-surface-variant font-label-md">Global gateway response</p>
+</div>
+<div class="text-right">
+<p class="text-headline-md font-headline-md text-primary-container">99.98%</p>
+</div>
+</div>
+</div>
+<!-- Webhook Log Table Section -->
+<div class="col-span-12 bg-surface-container-lowest rounded-3xl p-xl shadow-sm border border-outline-variant overflow-hidden">
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-xl gap-md">
+<div>
+<h3 class="font-headline-md text-headline-md">Live Webhook Log</h3>
+<p class="text-on-surface-variant font-body-md">Real-time incoming data stream from affiliate partners.</p>
+</div>
+<div class="flex gap-sm">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">search</span>
+<input class="pl-10 pr-md py-sm bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary text-label-md w-64" placeholder="Search event ID..." type="text"/>
+</div>
+<button class="flex items-center gap-xs px-md py-sm bg-surface-container rounded-xl font-bold text-on-surface hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined">filter_list</span>
+                                Filter
+                            </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-on-surface-variant border-b border-outline-variant/30">
+<th class="py-md font-label-md">Event ID</th>
+<th class="py-md font-label-md">Source</th>
+<th class="py-md font-label-md">Type</th>
+<th class="py-md font-label-md">Timestamp</th>
+<th class="py-md font-label-md">Status</th>
+<th class="py-md font-label-md text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-lg font-label-md text-on-surface font-medium">#WH-827419</td>
+<td class="py-lg">
+<div class="flex items-center gap-xs">
+<span class="w-5 h-5 rounded bg-[#EE4D2D] text-white text-[10px] flex items-center justify-center font-bold">S</span>
+<span class="font-label-md">Shopee</span>
+</div>
+</td>
+<td class="py-lg font-label-md">ORDER_COMPLETED</td>
+<td class="py-lg font-label-md text-on-surface-variant">Oct 24, 14:32:01</td>
+<td class="py-lg">
+<span class="px-sm py-1 rounded-full bg-tertiary-container/10 text-tertiary font-label-sm text-label-sm border border-tertiary/20">Success</span>
+</td>
+<td class="py-lg text-right">
+<button class="text-on-surface-variant hover:text-primary material-symbols-outlined">visibility</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-lg font-label-md text-on-surface font-medium">#WH-827420</td>
+<td class="py-lg">
+<div class="flex items-center gap-xs">
+<span class="w-5 h-5 rounded bg-black text-white text-[10px] flex items-center justify-center font-bold">T</span>
+<span class="font-label-md">TikTok</span>
+</div>
+</td>
+<td class="py-lg font-label-md">PAYMENT_SETTLED</td>
+<td class="py-lg font-label-md text-on-surface-variant">Oct 24, 14:35:12</td>
+<td class="py-lg">
+<span class="px-sm py-1 rounded-full bg-error-container/10 text-error font-label-sm text-label-sm border border-error/20">Failed</span>
+</td>
+<td class="py-lg text-right">
+<button class="flex items-center gap-xs ml-auto px-md py-1 bg-primary/10 text-primary border border-primary/20 rounded-lg font-bold text-label-sm hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+                                            Retry
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-lg font-label-md text-on-surface font-medium">#WH-827421</td>
+<td class="py-lg">
+<div class="flex items-center gap-xs">
+<span class="w-5 h-5 rounded bg-[#EE4D2D] text-white text-[10px] flex items-center justify-center font-bold">S</span>
+<span class="font-label-md">Shopee</span>
+</div>
+</td>
+<td class="py-lg font-label-md">ORDER_PENDING</td>
+<td class="py-lg font-label-md text-on-surface-variant">Oct 24, 14:40:45</td>
+<td class="py-lg">
+<span class="px-sm py-1 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-label-sm">Processing</span>
+</td>
+<td class="py-lg text-right">
+<button class="text-on-surface-variant hover:text-primary material-symbols-outlined">visibility</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-lg font-label-md text-on-surface font-medium">#WH-827422</td>
+<td class="py-lg">
+<div class="flex items-center gap-xs">
+<span class="w-5 h-5 rounded bg-black text-white text-[10px] flex items-center justify-center font-bold">T</span>
+<span class="font-label-md">TikTok</span>
+</div>
+</td>
+<td class="py-lg font-label-md">ORDER_CANCELLED</td>
+<td class="py-lg font-label-md text-on-surface-variant">Oct 24, 14:42:10</td>
+<td class="py-lg">
+<span class="px-sm py-1 rounded-full bg-error-container/10 text-error font-label-sm text-label-sm border border-error/20">Failed</span>
+</td>
+<td class="py-lg text-right">
+<button class="flex items-center gap-xs ml-auto px-md py-1 bg-primary/10 text-primary border border-primary/20 rounded-lg font-bold text-label-sm hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+                                            Retry
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-lg flex items-center justify-between border-t border-outline-variant/30 pt-lg">
+<p class="text-on-surface-variant font-label-md">Showing 4 of 2,490 events</p>
+<div class="flex gap-xs">
+<button class="p-xs rounded-lg hover:bg-surface-container disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="px-md py-xs rounded-lg bg-primary-container text-on-primary-container font-bold">1</button>
+<button class="px-md py-xs rounded-lg hover:bg-surface-container text-on-surface-variant font-medium">2</button>
+<button class="px-md py-xs rounded-lg hover:bg-surface-container text-on-surface-variant font-medium">3</button>
+<button class="p-xs rounded-lg hover:bg-surface-container">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Shared Component - Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-2 py-3 pb-safe bg-surface/90 dark:bg-inverse-surface/90 backdrop-blur-md rounded-t-xl z-50 shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm-mobile">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">local_offer</span>
+<span class="font-label-sm text-label-sm-mobile">Offers</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1" href="#">
+<span class="material-symbols-outlined">settings_ethernet</span>
+<span class="font-label-sm text-label-sm-mobile">API</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm-mobile">Account</span>
+</a>
+</nav>
+<!-- Footer (Shared Component) -->
+<footer class="lg:ml-64 bg-surface-container-highest dark:bg-surface-container-lowest w-full rounded-t-3xl mt-xl">
+<div class="w-full py-2xl px-gutter flex flex-col md:flex-row justify-between items-center gap-md max-w-container-max mx-auto">
+<div>
+<span class="font-headline-md text-headline-md font-bold text-on-surface">HOANTIENVIP</span>
+<p class="text-on-surface-variant font-body-md mt-xs">© 2024 HOANTIENVIP. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md" href="#">Affiliate Program</a>
+</div>
+</div>
+</footer>
+<!-- Micro-interactions Script -->
+<script>
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Simulating Live Log Updates
+        const logEntries = document.querySelectorAll('tbody tr');
+        setInterval(() => {
+            const randomRow = logEntries[Math.floor(Math.random() * logEntries.length)];
+            randomRow.classList.add('bg-primary/10');
+            setTimeout(() => {
+                randomRow.classList.remove('bg-primary/10');
+            }, 1000);
+        }, 5000);
+    </script>
+</body></html>

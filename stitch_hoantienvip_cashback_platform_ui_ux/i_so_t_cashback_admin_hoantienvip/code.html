@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HOANTIENVIP - Admin Reconciliation Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#3d0600",
+                        "on-secondary-fixed-variant": "#3f465b",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "primary-fixed-dim": "#ffb4a3",
+                        "surface-tint": "#b52603",
+                        "on-surface": "#271814",
+                        "secondary-fixed": "#dae2fc",
+                        "primary-fixed": "#ffdad2",
+                        "tertiary-fixed": "#6ffbbe",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#fff0ed",
+                        "secondary": "#565e74",
+                        "primary": "#b52603",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#e3beb6",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface-container-high": "#ffe2dc",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#8c1900",
+                        "background": "#fff8f6",
+                        "on-secondary-fixed": "#131b2e",
+                        "tertiary-container": "#00a773",
+                        "surface-variant": "#f9dcd6",
+                        "inverse-primary": "#ffb4a3",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#d7dff9",
+                        "on-secondary-container": "#5a6278",
+                        "on-error": "#ffffff",
+                        "tertiary": "#006c49",
+                        "surface-container-highest": "#f9dcd6",
+                        "on-surface-variant": "#5b403a",
+                        "surface-dim": "#f0d4ce",
+                        "primary-container": "#ff5a36",
+                        "on-error-container": "#93000a",
+                        "outline": "#8f7069",
+                        "on-primary-container": "#5a0c00",
+                        "on-tertiary-fixed": "#002113",
+                        "on-background": "#271814",
+                        "secondary-fixed-dim": "#bec6df",
+                        "inverse-on-surface": "#ffede9",
+                        "surface": "#fff8f6",
+                        "surface-container": "#ffe9e5",
+                        "on-tertiary-container": "#003320",
+                        "inverse-surface": "#3e2c28",
+                        "surface-bright": "#fff8f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "gutter": "24px",
+                        "2xl": "48px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "3xl": "64px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Be Vietnam Pro"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "title-lg": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "body-md": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .glass-effect { backdrop-filter: blur(8px); }
+        @keyframes subtle-pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        .animate-pulse-subtle { animation: subtle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md shadow-sm border-b border-outline-variant/30">
+<div class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto w-full">
+<div class="flex items-center gap-4">
+<span class="font-display-lg text-display-lg font-black text-primary tracking-tighter">HOANTIENVIP</span>
+<div class="hidden md:flex ml-8 gap-6">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md" href="#">Dashboard</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-label-md text-label-md" href="#">Đối soát</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-label-md text-label-md" href="#">Người dùng</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container rounded-full border-none focus:ring-2 focus:ring-primary text-body-md font-body-md w-64" placeholder="Tìm kiếm đơn hàng..." type="text"/>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary">
+<img class="w-full h-full object-cover" data-alt="Admin user profile avatar, clean studio portrait with a professional lighting setup. High quality digital photography style with a soft blurred background focusing on the user's friendly expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBARWXzJPwyuBl4m1ykJC3kYAyAZSgXA0cmJZ4h1lqquSC19PFyzokMvFHlYCEX-VpCPA7BGAwYN6lv5uWOvjSJX0VBAUWpuxoxy0Okntk0BaXW9Hd8rYUo-2l-vyB4C897SGiskop-goEs1CYr5qn7vHQxDg71tXRRCiV1chXI0suvs7ZI-Ok6bZCtgxZ4tsvFioFAxKmBkulIZ9C6oA5lmuBtt2VU_AeJ_UNgz86yZ0btqRj7nsv6zg"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Hidden on mobile) -->
+<aside class="hidden lg:flex flex-col p-md fixed left-0 top-16 bottom-0 z-40 bg-surface-container-low dark:bg-surface-container w-64 border-r border-outline-variant/30">
+<div class="mb-lg px-2">
+<h3 class="font-title-lg text-title-lg text-primary font-bold">My Account</h3>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Gold Member</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 p-3 bg-primary-container text-on-primary-container rounded-lg font-bold font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">storefront</span> Stores
+            </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">payments</span> Earnings
+            </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">history</span> History
+            </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</nav>
+<div class="mt-auto pt-lg border-t border-outline-variant/30 space-y-1">
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">support_agent</span> Support
+            </a>
+<a class="flex items-center gap-3 p-3 text-error hover:bg-error-container/30 rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">logout</span> Sign Out
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-20 px-gutter pb-32">
+<div class="max-w-container-max mx-auto space-y-lg">
+<!-- Dashboard Stats -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+<div class="bg-surface-container-lowest p-lg rounded-2xl shadow-sm border border-outline-variant/20">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-primary-container/10 text-primary rounded-xl">
+<span class="material-symbols-outlined">shopping_cart</span>
+</span>
+<span class="text-xs font-bold text-tertiary bg-tertiary/10 px-2 py-1 rounded-full">+12.5%</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">Tổng đơn hàng (Tháng)</p>
+<h2 class="font-display-lg text-headline-lg font-black text-on-surface mt-1">2,840</h2>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-2xl shadow-sm border border-outline-variant/20">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-tertiary-container/10 text-tertiary rounded-xl">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</span>
+<span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-full">Alert</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">Tổng hoa hồng thực nhận</p>
+<h2 class="font-display-lg text-headline-lg font-black text-on-surface mt-1">45.2M <span class="text-body-md font-normal text-on-surface-variant">VNĐ</span></h2>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-2xl shadow-sm border border-outline-variant/20">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-secondary-container/10 text-secondary rounded-xl">
+<span class="material-symbols-outlined">pending_actions</span>
+</span>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-variant px-2 py-1 rounded-full">Pending</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">Chờ đối soát</p>
+<h2 class="font-display-lg text-headline-lg font-black text-on-surface mt-1">156</h2>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-2xl shadow-sm border border-outline-variant/20">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-error-container/10 text-error rounded-xl">
+<span class="material-symbols-outlined">report_problem</span>
+</span>
+<span class="text-xs font-bold text-error bg-error/10 px-2 py-1 rounded-full">Fix now</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">Chênh lệch cảnh báo</p>
+<h2 class="font-display-lg text-headline-lg font-black text-error mt-1">12</h2>
+</div>
+</div>
+<!-- Reconciliation Table Section -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-md border border-outline-variant/20 overflow-hidden">
+<div class="p-lg border-b border-outline-variant/30 flex flex-col md:flex-row md:items-center justify-between gap-md">
+<div>
+<h3 class="font-title-lg text-title-lg font-bold text-on-surface">Bảng dữ liệu đối soát Cashback</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Quản lý và phê duyệt hoa hồng từ đối tác API.</p>
+</div>
+<div class="flex gap-sm">
+<button class="px-4 py-2 bg-surface-container border border-outline-variant/30 rounded-full font-label-md text-label-md hover:bg-surface-variant transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">filter_list</span> Lọc dữ liệu
+                        </button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-full font-label-md text-label-md hover:shadow-lg active:scale-95 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">sync</span> Đối soát tự động
+                        </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/30">
+<th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Order ID</th>
+<th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Nguồn / User</th>
+<th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Dự tính vs Thực nhận</th>
+<th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Cashback 90% (User)</th>
+<th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant">Trạng thái</th>
+<th class="px-lg py-4 font-label-md text-label-md text-on-surface-variant text-right">Hành động</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<!-- Row 1: Alert/Mismatch -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-lg py-4">
+<span class="font-label-md text-label-md text-on-surface block">#SHP-92834</span>
+<span class="text-[10px] text-on-surface-variant opacity-60">24/10/2024 14:20</span>
+</td>
+<td class="px-lg py-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2 h-2 rounded-full bg-[#EE4D2D]"></span>
+<span class="font-label-md text-label-md font-bold">Shopee API</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">UID: 48293-TUAN</span>
+</td>
+<td class="px-lg py-4">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">Est: 15.000đ</span>
+<span class="font-label-md text-label-md text-error font-bold flex items-center gap-1">
+                                            Rec: 12.000đ
+                                            <span class="material-symbols-outlined text-[14px] animate-pulse-subtle">warning</span>
+</span>
+</div>
+</td>
+<td class="px-lg py-4">
+<span class="font-title-lg text-title-lg text-tertiary font-bold">10.800đ</span>
+</td>
+<td class="px-lg py-4">
+<span class="px-3 py-1 bg-surface-variant text-on-surface-variant rounded-full text-[12px] font-bold">Chờ đối soát</span>
+</td>
+<td class="px-lg py-4 text-right">
+<button class="p-2 text-primary hover:bg-primary/10 rounded-full transition-all" onclick="toggleModal('modal-adjust')">
+<span class="material-symbols-outlined">edit_square</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Settled -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="px-lg py-4">
+<span class="font-label-md text-label-md text-on-surface block">#TTK-10294</span>
+<span class="text-[10px] text-on-surface-variant opacity-60">24/10/2024 12:05</span>
+</td>
+<td class="px-lg py-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2 h-2 rounded-full bg-black"></span>
+<span class="font-label-md text-label-md font-bold">TikTok RioHub</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">UID: 10293-ANH</span>
+</td>
+<td class="px-lg py-4">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">Est: 50.000đ</span>
+<span class="font-label-md text-label-md text-on-surface">Rec: 50.000đ</span>
+</div>
+</td>
+<td class="px-lg py-4">
+<span class="font-title-lg text-title-lg text-tertiary font-bold">45.000đ</span>
+</td>
+<td class="px-lg py-4">
+<span class="px-3 py-1 bg-tertiary/10 text-tertiary rounded-full text-[12px] font-bold">Đã khớp</span>
+</td>
+<td class="px-lg py-4 text-right">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+</td>
+</tr>
+<!-- Row 3: Refunded -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="px-lg py-4">
+<span class="font-label-md text-label-md text-on-surface block">#SHP-99201</span>
+<span class="text-[10px] text-on-surface-variant opacity-60">23/10/2024 18:30</span>
+</td>
+<td class="px-lg py-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2 h-2 rounded-full bg-[#EE4D2D]"></span>
+<span class="font-label-md text-label-md font-bold">Shopee API</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">UID: 48293-TUAN</span>
+</td>
+<td class="px-lg py-4">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">Est: 20.000đ</span>
+<span class="font-label-md text-label-md text-on-surface">Rec: 0đ</span>
+</div>
+</td>
+<td class="px-lg py-4">
+<span class="font-title-lg text-title-lg text-on-surface-variant/50 font-bold line-through">18.000đ</span>
+</td>
+<td class="px-lg py-4">
+<span class="px-3 py-1 bg-error-container text-error rounded-full text-[12px] font-bold">Hoàn hàng</span>
+</td>
+<td class="px-lg py-4 text-right">
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all">
+<span class="material-symbols-outlined">info</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-lg bg-surface-container-low flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface-variant">Hiển thị 10 trong 2.840 bản ghi</span>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-lg text-on-surface-variant hover:bg-surface-variant">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center bg-primary text-on-primary rounded-lg">1</button>
+<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-lg text-on-surface-variant hover:bg-surface-variant">2</button>
+<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-lg text-on-surface-variant hover:bg-surface-variant">3</button>
+<button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 rounded-lg text-on-surface-variant hover:bg-surface-variant">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Detailed Analysis Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<div class="md:col-span-2 bg-surface-container-lowest p-lg rounded-2xl shadow-sm border border-outline-variant/20 h-96 relative overflow-hidden">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-lg text-title-lg font-bold">Xu hướng Cashback theo tuần</h3>
+<select class="bg-surface-container border-none rounded-lg font-label-md text-label-md">
+<option>7 ngày qua</option>
+<option>30 ngày qua</option>
+</select>
+</div>
+<!-- Placeholder for Chart Canvas -->
+<div class="absolute inset-x-lg bottom-lg top-24 flex items-end justify-around gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg transition-all hover:bg-primary" style="height: 40%"></div>
+<div class="w-full bg-primary/20 rounded-t-lg transition-all hover:bg-primary" style="height: 65%"></div>
+<div class="w-full bg-primary/20 rounded-t-lg transition-all hover:bg-primary" style="height: 85%"></div>
+<div class="w-full bg-primary rounded-t-lg transition-all" style="height: 55%"></div>
+<div class="w-full bg-primary/20 rounded-t-lg transition-all hover:bg-primary" style="height: 90%"></div>
+<div class="w-full bg-primary/20 rounded-t-lg transition-all hover:bg-primary" style="height: 70%"></div>
+<div class="w-full bg-primary/20 rounded-t-lg transition-all hover:bg-primary" style="height: 100%"></div>
+</div>
+</div>
+<div class="bg-surface-container-highest p-lg rounded-2xl shadow-sm border border-outline-variant/20 flex flex-col justify-between">
+<div>
+<h3 class="font-title-lg text-title-lg font-bold mb-2">Thông báo khẩn cấp</h3>
+<div class="space-y-4 mt-4">
+<div class="flex gap-3 items-start p-3 bg-error-container/30 rounded-xl">
+<span class="material-symbols-outlined text-error mt-0.5">error</span>
+<p class="text-label-md font-label-md text-on-error-container">Có 5 đơn hàng Shopee bị lệch giá trị hoa hồng &gt; 20%.</p>
+</div>
+<div class="flex gap-3 items-start p-3 bg-primary-container/20 rounded-xl">
+<span class="material-symbols-outlined text-primary mt-0.5">task_alt</span>
+<p class="text-label-md font-label-md text-on-primary-container">Đã tự động khớp 1.204 đơn hàng từ TikTok RioHub.</p>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-on-surface text-surface rounded-xl font-bold hover:bg-primary transition-all active:scale-95">
+                        Xem chi tiết báo cáo
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Modal: Adjust Reconciliation -->
+<div class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-on-surface/40 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300" id="modal-adjust">
+<div class="bg-surface w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden scale-90 transition-transform duration-300" id="modal-content">
+<div class="p-lg bg-surface-container-high flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md font-bold">Điều chỉnh Đối soát</h3>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors" onclick="toggleModal('modal-adjust')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-lg space-y-lg">
+<div class="p-md bg-error-container/20 border border-error/20 rounded-2xl flex gap-3">
+<span class="material-symbols-outlined text-error">info</span>
+<div>
+<p class="font-label-md text-label-md text-on-error-container font-bold">Cảnh báo chênh lệch dữ liệu!</p>
+<p class="text-label-sm text-on-error-container opacity-80">Hoa hồng thực nhận (12k) thấp hơn dự kiến (15k) từ API.</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface-variant">Hoa hồng thực nhận (VNĐ)</label>
+<input class="w-full px-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary font-title-lg text-title-lg" type="number" value="12000"/>
+</div>
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface-variant">Cashback user (90%)</label>
+<div class="w-full px-4 py-3 bg-surface-container-low rounded-xl font-title-lg text-title-lg text-tertiary font-bold">10.800đ</div>
+</div>
+</div>
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface-variant">Lý do điều chỉnh / Ghi chú</label>
+<textarea class="w-full px-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary min-h-[100px]" placeholder="Nhập lý do ví dụ: Người dùng áp mã giảm giá không hỗ trợ..."></textarea>
+</div>
+<div class="flex flex-col gap-sm pt-4">
+<div class="flex gap-sm">
+<button class="flex-1 py-4 bg-tertiary text-on-tertiary rounded-xl font-bold hover:shadow-lg active:scale-95 transition-all" onclick="toggleModal('modal-adjust')">Duyệt &amp; Thanh toán</button>
+<button class="flex-1 py-4 bg-error text-on-error rounded-xl font-bold hover:shadow-lg active:scale-95 transition-all" onclick="toggleModal('modal-adjust')">Từ chối đơn</button>
+</div>
+<button class="w-full py-3 text-on-surface-variant font-medium hover:bg-surface-variant rounded-xl transition-all" onclick="toggleModal('modal-adjust')">Lưu nháp</button>
+</div>
+</div>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-2 py-3 pb-safe bg-surface/90 backdrop-blur-md shadow-lg rounded-t-xl z-50">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined">local_offer</span>
+<span class="font-label-sm text-label-sm">Offers</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Account</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="lg:ml-64 bg-surface-container-highest w-full py-2xl px-gutter rounded-t-3xl border-t border-outline-variant/30">
+<div class="w-full max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-md">
+<div>
+<span class="font-headline-md text-headline-md font-bold text-on-surface">HOANTIENVIP</span>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">© 2024 HOANTIENVIP. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Affiliate Program</a>
+</div>
+</div>
+</footer>
+<script>
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const content = modal.querySelector('#modal-content');
+            if (modal.classList.contains('opacity-0')) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                content.classList.remove('scale-90');
+                content.classList.add('scale-100');
+            } else {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                content.classList.add('scale-90');
+                content.classList.remove('scale-100');
+            }
+        }
+
+        // Close modal when clicking backdrop
+        document.querySelectorAll('.fixed.inset-0').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) toggleModal(modal.id);
+            });
+        });
+    </script>
+</body></html>

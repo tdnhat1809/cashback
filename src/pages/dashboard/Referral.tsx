@@ -4,8 +4,9 @@ import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Table } from '../../components/Table';
 import type { Column } from '../../components/Table';
-import { ToastContainer, defaultToastState, triggerToast } from '../../components/Toast';
-import type { ToastState } from '../../components/Toast';
+import { ToastContainer } from '../../components/Toast';
+import { defaultToastState, triggerToast } from '../../components/toast-state';
+import type { ToastState } from '../../components/toast-state';
 import { Share2, Copy, QrCode, Sparkles, Users, Award } from 'lucide-react';
 
 interface ReferralHistoryItem {
@@ -19,14 +20,21 @@ export const Referral: React.FC = () => {
   const stats = mockReferralStats;
   const [toast, setToast] = useState<ToastState>(defaultToastState);
 
+  const copyText = async (value: string, successMessage: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      triggerToast(setToast, successMessage, 'success');
+    } catch {
+      triggerToast(setToast, 'Trình duyệt không cho phép sao chép. Hãy sao chép thủ công.', 'error');
+    }
+  };
+
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(stats.referralLink);
-    triggerToast(setToast, 'Đã sao chép đường dẫn giới thiệu!', 'success');
+    void copyText(stats.referralLink, 'Đã sao chép đường dẫn giới thiệu!');
   };
 
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(stats.referralCode);
-    triggerToast(setToast, 'Đã sao chép mã giới thiệu!', 'success');
+    void copyText(stats.referralCode, 'Đã sao chép mã giới thiệu!');
   };
 
   const columns: Column<ReferralHistoryItem>[] = [

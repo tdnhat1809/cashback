@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HOANTIENVIP - Coupons &amp; Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed": "#3d0600",
+                    "on-secondary-fixed-variant": "#3f465b",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "primary-fixed-dim": "#ffb4a3",
+                    "surface-tint": "#b52603",
+                    "on-surface": "#271814",
+                    "secondary-fixed": "#dae2fc",
+                    "primary-fixed": "#ffdad2",
+                    "tertiary-fixed": "#6ffbbe",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#fff0ed",
+                    "secondary": "#565e74",
+                    "primary": "#b52603",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#e3beb6",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "surface-container-high": "#ffe2dc",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed-variant": "#8c1900",
+                    "background": "#fff8f6",
+                    "on-secondary-fixed": "#131b2e",
+                    "tertiary-container": "#00a773",
+                    "surface-variant": "#f9dcd6",
+                    "inverse-primary": "#ffb4a3",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#d7dff9",
+                    "on-secondary-container": "#5a6278",
+                    "on-error": "#ffffff",
+                    "tertiary": "#006c49",
+                    "surface-container-highest": "#f9dcd6",
+                    "on-surface-variant": "#5b403a",
+                    "surface-dim": "#f0d4ce",
+                    "primary-container": "#ff5a36",
+                    "on-error-container": "#93000a",
+                    "outline": "#8f7069",
+                    "on-primary-container": "#5a0c00",
+                    "on-tertiary-fixed": "#002113",
+                    "on-background": "#271814",
+                    "secondary-fixed-dim": "#bec6df",
+                    "inverse-on-surface": "#ffede9",
+                    "surface": "#fff8f6",
+                    "surface-container": "#ffe9e5",
+                    "on-tertiary-container": "#003320",
+                    "inverse-surface": "#3e2c28",
+                    "surface-bright": "#fff8f6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "gutter": "24px",
+                    "2xl": "48px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "3xl": "64px",
+                    "xl": "32px",
+                    "base": "4px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Be Vietnam Pro"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Be Vietnam Pro"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "title-lg": ["Be Vietnam Pro"],
+                    "display-lg": ["Be Vietnam Pro"],
+                    "headline-lg": ["Be Vietnam Pro"],
+                    "body-md": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .coupon-cutout { position: relative; }
+        .coupon-cutout::before, .coupon-cutout::after {
+            content: ''; position: absolute; left: -8px; width: 16px; height: 16px; 
+            background: #fff8f6; border-radius: 50%; z-index: 10;
+        }
+        .coupon-cutout::before { top: 25%; transform: translateY(-50%); }
+        .coupon-cutout::after { bottom: 25%; transform: translateY(50%); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e3beb6; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto w-full">
+<div class="font-display-lg text-display-lg font-black text-primary tracking-tighter">HOANTIENVIP</div>
+<!-- Desktop Nav -->
+<nav class="hidden md:flex gap-xl">
+<button class="tab-trigger text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md" data-tab="coupons" onclick="switchTab('coupons')">Coupons</button>
+<button class="tab-trigger text-on-surface-variant font-medium hover:text-primary transition-colors font-label-md text-label-md" data-tab="alerts" onclick="switchTab('alerts')">Price Alerts</button>
+<button class="tab-trigger text-on-surface-variant font-medium hover:text-primary transition-colors font-label-md text-label-md" data-tab="legal" onclick="switchTab('legal')">Pháp lý</button>
+</nav>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary cursor-pointer">notifications</span>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist portrait of a happy young professional Asian man in a stylish studio setting. The lighting is soft and high-key, emphasizing a modern fintech brand aesthetic. The background is a soft gradient of peach and white, matching the HOANTIENVIP primary color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuJcxFxiGXbcQQOFTQXcJmaLHShwmFXZ59dvY0yfWigHDnF_XqiOE2iMddVt-WoDziDykujf-3xIQbysZHMEytRGSN0ZBiRRwcIrIIbPEcueatFTS9evhaaVF19uWxINpzvsesiX0JabUauDXghi0R3iUlYhH1QygQfrH2xZyiW8-Hkpfwn0yOxsZMN1eHxw7-hPue8pXHRDY5IO7tYY0_YVbXcW7eb6O_ffIvKoL-Jg5A2rA_LspByw"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-gutter max-w-container-max mx-auto">
+<!-- Tab 1: Coupon List -->
+<section class="tab-content active" id="coupons">
+<div class="mb-lg">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Mã Giảm Giá Độc Quyền</h1>
+<p class="text-on-surface-variant font-body-md text-body-md mt-2">Săn deal hời nhất từ Shopee và Lazada hôm nay.</p>
+</div>
+<div class="flex gap-md mb-lg overflow-x-auto pb-2 custom-scrollbar">
+<button class="px-6 py-2 bg-primary text-on-primary rounded-full font-label-md text-label-md">Tất cả</button>
+<button class="px-6 py-2 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all">Shopee</button>
+<button class="px-6 py-2 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all">Lazada</button>
+<button class="px-6 py-2 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all">Thời trang</button>
+<button class="px-6 py-2 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-all">Điện máy</button>
+</div>
+<!-- Bento Grid of Coupons -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+<!-- Coupon Card 1 -->
+<div class="glass-card rounded-xl p-md flex flex-col gap-md relative coupon-cutout overflow-hidden hover:shadow-md transition-all group">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm">
+<span class="text-primary font-black text-xl">S</span>
+</div>
+<span class="bg-primary-container/20 text-primary px-3 py-1 rounded-full font-label-sm text-label-sm">Hoàn 15%</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Mã giảm Shopee Mall</h3>
+<p class="text-on-surface-variant font-body-md text-body-md">Giảm tối đa 100k cho đơn từ 500k toàn sàn Mall.</p>
+</div>
+<div class="mt-auto border-t border-dashed border-outline-variant pt-md flex items-center justify-between">
+<div class="bg-surface-container px-4 py-2 rounded-lg border border-outline-variant font-mono font-bold text-primary tracking-widest">
+                            SHOP77M
+                        </div>
+<button class="bg-primary hover:bg-primary-container text-white px-4 py-2 rounded-lg font-label-md text-label-md transition-colors active:scale-95" onclick="copyCode(this, 'SHOP77M')">Copy</button>
+</div>
+</div>
+<!-- Coupon Card 2 -->
+<div class="glass-card rounded-xl p-md flex flex-col gap-md relative coupon-cutout overflow-hidden hover:shadow-md transition-all group">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm">
+<span class="text-secondary font-black text-xl">L</span>
+</div>
+<span class="bg-tertiary-container/20 text-tertiary px-3 py-1 rounded-full font-label-sm text-label-sm">Freeship</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Lazada Free Shipping</h3>
+<p class="text-on-surface-variant font-body-md text-body-md">Giảm 50k phí vận chuyển cho đơn hàng từ 199k.</p>
+</div>
+<div class="mt-auto border-t border-dashed border-outline-variant pt-md flex items-center justify-between">
+<div class="bg-surface-container px-4 py-2 rounded-lg border border-outline-variant font-mono font-bold text-primary tracking-widest">
+                            LZDSHIP
+                        </div>
+<button class="bg-primary hover:bg-primary-container text-white px-4 py-2 rounded-lg font-label-md text-label-md transition-colors active:scale-95" onclick="copyCode(this, 'LZDSHIP')">Copy</button>
+</div>
+</div>
+<!-- Featured Wide Coupon -->
+<div class="md:col-span-2 lg:col-span-1 bg-primary text-on-primary rounded-xl p-md relative overflow-hidden group shadow-lg">
+<div class="absolute -right-10 -bottom-10 opacity-10 transform -rotate-12 group-hover:rotate-0 transition-transform duration-500">
+<span class="material-symbols-outlined text-[160px]" style="font-variation-settings: 'FILL' 1;">local_offer</span>
+</div>
+<div class="relative z-10">
+<span class="bg-white/20 px-3 py-1 rounded-full font-label-sm text-label-sm">Hot Deal</span>
+<h3 class="font-headline-md text-headline-md mt-4">X2 Cashback Today</h3>
+<p class="opacity-90 font-body-md text-body-md mt-2">Áp dụng cho mọi đơn hàng thời trang Lazada tối nay.</p>
+<button class="mt-6 bg-white text-primary px-6 py-2 rounded-full font-label-md text-label-md font-bold hover:shadow-xl transition-all active:scale-95">Lấy Mã Ngay</button>
+</div>
+</div>
+<!-- More Coupons... -->
+<div class="glass-card rounded-xl p-md flex flex-col gap-md relative coupon-cutout overflow-hidden hover:shadow-md transition-all group">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm">
+<span class="text-primary font-black text-xl">S</span>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-label-sm">Điện tử</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Giảm 500k iPhone 15</h3>
+<p class="text-on-surface-variant font-body-md text-body-md">Mã độc quyền dành cho hội viên Gold của HOANTIENVIP.</p>
+</div>
+<div class="mt-auto border-t border-dashed border-outline-variant pt-md flex items-center justify-between">
+<div class="bg-surface-container px-4 py-2 rounded-lg border border-outline-variant font-mono font-bold text-primary tracking-widest">
+                            HTVIP500
+                        </div>
+<button class="bg-primary hover:bg-primary-container text-white px-4 py-2 rounded-lg font-label-md text-label-md transition-colors active:scale-95" onclick="copyCode(this, 'HTVIP500')">Copy</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Tab 2: Price Alert Settings -->
+<section class="tab-content" id="alerts">
+<div class="mb-lg">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Thông Báo &amp; Theo Dõi Giá</h1>
+<p class="text-on-surface-variant font-body-md text-body-md mt-2">Quản lý các sản phẩm bạn đang chờ giảm giá hoặc tăng cashback.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Left Sidebar: Settings Summary -->
+<div class="lg:col-span-1 space-y-md">
+<div class="bg-surface-container rounded-2xl p-lg">
+<h2 class="font-title-lg text-title-lg mb-4">Cài đặt chung</h2>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md">Thông báo App</label>
+<div class="w-12 h-6 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-4 h-4 bg-white rounded-full ml-auto"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md">Email hàng tuần</label>
+<div class="w-12 h-6 bg-outline-variant rounded-full relative flex items-center px-1">
+<div class="w-4 h-4 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md">Telegram Alert</label>
+<div class="w-12 h-6 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-4 h-4 bg-white rounded-full ml-auto"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-primary-container/10 border border-primary-container rounded-2xl p-lg">
+<span class="material-symbols-outlined text-primary mb-2">trending_down</span>
+<h3 class="font-title-lg text-title-lg text-primary">Mẹo tiết kiệm</h3>
+<p class="text-on-surface-variant font-body-md text-body-md mt-1">Đặt mức giá mục tiêu thấp hơn 10% để nhận thông báo sớm nhất.</p>
+</div>
+</div>
+<!-- Right Side: Tracked Items -->
+<div class="lg:col-span-2 space-y-md">
+<div class="flex justify-between items-center mb-2">
+<h2 class="font-title-lg text-title-lg">Sản phẩm đang theo dõi (3)</h2>
+<button class="text-primary font-bold flex items-center gap-2 font-label-md text-label-md hover:underline transition-all">
+<span class="material-symbols-outlined">add_circle</span> Thêm sản phẩm
+                        </button>
+</div>
+<!-- Item 1 -->
+<div class="bg-surface border border-outline-variant rounded-xl p-md flex gap-md items-center group hover:bg-surface-container-low transition-colors">
+<div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A premium Apple iPhone 15 Pro in Titanium Blue, isolated on a clean white background. High-quality product photography with sharp details and soft professional lighting. The style is modern and high-end, fitting for an e-commerce platform's price alert feature." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA337wzJOG5Mna2KFvzpuBwy1DlG-FCXt6SBB2262bGQO-KAHGYKZeqiya6s0IyKAklMR6-TaKAopHLLoVVOL_TJZaC5O2Typp5cdfKbMugpYo4WsB3SPlG2XQ7N8FlNW--HlZBe40DolWEsRbKXXdGboEtalyKdTWkhYGlUYkazAhOvipHHS6tnhferXV6U5fz0X5sSQ4J1VY_NF8ZMMuRyodDAE7vy3UHQ5MdoJWmybMTs0n3jPjZ_g"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-title-lg text-title-lg text-on-surface truncate max-w-xs md:max-w-md">iPhone 15 Pro Max 256GB</h4>
+<div class="flex items-center gap-4 mt-1">
+<p class="text-on-surface-variant font-body-md text-body-md">Hiện tại: <span class="text-primary font-bold">28.990.000đ</span></p>
+<span class="bg-tertiary-container/10 text-tertiary px-2 py-0.5 rounded font-label-sm text-label-sm">Cashback 2.5%</span>
+</div>
+</div>
+<div class="hidden md:block shrink-0 text-right">
+<div class="text-on-surface-variant font-label-sm text-label-sm">Thông báo khi</div>
+<div class="text-primary font-bold font-title-lg text-title-lg">&lt; 27.5tr</div>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<!-- Item 2 -->
+<div class="bg-surface border border-outline-variant rounded-xl p-md flex gap-md items-center group hover:bg-surface-container-low transition-colors">
+<div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A pair of stylish, high-end Sony WH-1000XM5 noise-cancelling headphones in Silver, displayed on a minimalist wooden surface. Soft natural window light creates beautiful reflections and a warm, inviting atmosphere. Minimalist and clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPs__0HbxzLJjZnmD9NjU6Q3-hcoC5WP0ti2dkAxX5CIf_52k3fCWz_v3vM_UrTNljlAfSY-HBev8Q6uYQb-gqSd2msb33OWAIkl-fLyldtofnSDM6yOMtp3dPLmWA5zBgp3Fm9OF8Ybc5x5y24ntK8VqvmcTldQbbOXcJ14guKWVTiXNrgH9ugiihR3eHCGhxEkZGGveTt5Py3gw0YIMUyzknpfRwPoTtA3z_1jONzolbf_pBx6X3zA"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-title-lg text-title-lg text-on-surface truncate">Sony WH-1000XM5</h4>
+<div class="flex items-center gap-4 mt-1">
+<p class="text-on-surface-variant font-body-md text-body-md">Hiện tại: <span class="text-primary font-bold">7.200.000đ</span></p>
+<span class="bg-error-container/20 text-error px-2 py-0.5 rounded font-label-sm text-label-sm">Giá đang cao</span>
+</div>
+</div>
+<div class="hidden md:block shrink-0 text-right">
+<div class="text-on-surface-variant font-label-sm text-label-sm">Thông báo khi</div>
+<div class="text-primary font-bold font-title-lg text-title-lg">&lt; 6.5tr</div>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<!-- Item 3 -->
+<div class="bg-surface border border-outline-variant rounded-xl p-md flex gap-md items-center group hover:bg-surface-container-low transition-colors">
+<div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A modern, high-speed gaming laptop with a glowing RGB keyboard and a sleek metallic finish. The screen shows a vibrant colorful abstract wallpaper. The product is photographed in a dark, high-tech studio environment with subtle neon blue and red accents, reflecting a powerful and modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFylwFoZWEEup-YfPTGT5-VoKfWkDtfzjbGytoI9plHHLweXlK1-is9YEiG95TDoVcJ1WRIn3T7YNpkGLvud2BUgmnh_gCevaxMkeOCrBTDOZmC-I07OSaeRL-YEIutL2Za54RGb-MZPio22N-kTjcQjwDNTLJARWLBA-eavmze9m8nkkjV2EjSn-Lrf6auJWXsFo8DR2C593_osUwJ6GqvIBfnfeOQJIbhmtHVxw5SGTK1dMv5WggDA"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-title-lg text-title-lg text-on-surface truncate">Laptop Gaming ROG Strix G16</h4>
+<div class="flex items-center gap-4 mt-1">
+<p class="text-on-surface-variant font-body-md text-body-md">Hiện tại: <span class="text-primary font-bold">34.500.000đ</span></p>
+<span class="bg-primary-container/20 text-primary px-2 py-0.5 rounded font-label-sm text-label-sm">Hot Deal!</span>
+</div>
+</div>
+<div class="hidden md:block shrink-0 text-right">
+<div class="text-on-surface-variant font-label-sm text-label-sm">Thông báo khi</div>
+<div class="text-primary font-bold font-title-lg text-title-lg">Tăng CB &gt; 5%</div>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Tab 3: Legal -->
+<section class="tab-content" id="legal">
+<div class="max-w-4xl mx-auto">
+<div class="mb-lg text-center">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Trung Tâm Pháp Lý</h1>
+<p class="text-on-surface-variant font-body-md text-body-md mt-2">Cập nhật lần cuối: 15/07/2024</p>
+</div>
+<div class="space-y-gutter">
+<!-- Section 1 -->
+<div class="bg-white rounded-2xl shadow-sm p-xl">
+<h2 class="font-headline-md text-headline-md text-primary flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined">gavel</span>
+                            Điều khoản sử dụng
+                        </h2>
+<div class="prose prose-slate max-w-none space-y-4 text-on-surface-variant font-body-md text-body-md leading-relaxed">
+<p>Chào mừng bạn đến với <strong>HOANTIENVIP</strong>. Bằng việc truy cập và sử dụng dịch vụ của chúng tôi, bạn đồng ý tuân thủ các điều khoản sau đây:</p>
+<ul class="list-disc pl-5 space-y-2">
+<li>Bạn phải từ 18 tuổi trở lên để tham gia hệ thống hoàn tiền.</li>
+<li>Mỗi người dùng chỉ được sở hữu duy nhất một tài khoản cá nhân.</li>
+<li>Chúng tôi có quyền tạm khóa tài khoản nếu phát hiện hành vi gian lận hoặc lạm dụng ưu đãi.</li>
+<li>Thông tin giao dịch được ghi nhận dựa trên dữ liệu từ các sàn thương mại điện tử đối tác (Shopee, Lazada, Tiki...).</li>
+</ul>
+</div>
+</div>
+<!-- Section 2 -->
+<div class="bg-white rounded-2xl shadow-sm p-xl">
+<h2 class="font-headline-md text-headline-md text-primary flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined">verified_user</span>
+                            Chính sách bảo mật
+                        </h2>
+<div class="prose prose-slate max-w-none space-y-4 text-on-surface-variant font-body-md text-body-md leading-relaxed">
+<p>Chúng tôi cam kết bảo vệ quyền riêng tư của khách hàng thông qua các biện pháp bảo mật hiện đại nhất:</p>
+<p>1. <strong>Thu thập dữ liệu:</strong> Chúng tôi chỉ thu thập thông tin cần thiết để xác minh giao dịch hoàn tiền, bao gồm Email, Số điện thoại và Mã đơn hàng.</p>
+<p>2. <strong>Sử dụng dữ liệu:</strong> Thông tin của bạn không bao giờ được bán cho bên thứ ba. Chúng tôi chỉ sử dụng để cải thiện trải nghiệm người dùng.</p>
+<p>3. <strong>Quyền của bạn:</strong> Bạn có quyền yêu cầu xóa bỏ hoàn toàn dữ liệu cá nhân khỏi hệ thống của chúng tôi bất cứ lúc nào.</p>
+</div>
+</div>
+<!-- Section 3 -->
+<div class="bg-white rounded-2xl shadow-sm p-xl">
+<h2 class="font-headline-md text-headline-md text-primary flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined">payments</span>
+                            Quy định Cashback
+                        </h2>
+<div class="prose prose-slate max-w-none space-y-4 text-on-surface-variant font-body-md text-body-md leading-relaxed">
+<p>Hệ thống hoàn tiền hoạt động theo quy trình minh bạch sau:</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md my-6">
+<div class="p-4 bg-surface-container rounded-lg text-center">
+<div class="text-primary font-bold text-2xl mb-1">01</div>
+<div class="font-label-md">Ghi nhận</div>
+<p class="text-xs mt-1">Giao dịch sẽ hiện "Chờ duyệt" sau 24-48h.</p>
+</div>
+<div class="p-4 bg-surface-container rounded-lg text-center">
+<div class="text-primary font-bold text-2xl mb-1">02</div>
+<div class="font-label-md">Đối soát</div>
+<p class="text-xs mt-1">Sàn xác nhận đơn thành công sau 30-60 ngày.</p>
+</div>
+<div class="p-4 bg-surface-container rounded-lg text-center">
+<div class="text-primary font-bold text-2xl mb-1">03</div>
+<div class="font-label-md">Rút tiền</div>
+<p class="text-xs mt-1">Đủ 50.000đ số dư khả dụng có thể rút về NH.</p>
+</div>
+</div>
+<p class="text-sm italic text-error">* Lưu ý: Đơn hàng bị hủy hoặc đổi trả sẽ không được tính hoàn tiền.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="w-full bg-surface-container-highest rounded-t-3xl mt-20">
+<div class="w-full py-2xl px-gutter flex flex-col md:flex-row justify-between items-center gap-md max-w-container-max mx-auto">
+<div class="text-center md:text-left">
+<div class="font-headline-md text-headline-md font-bold text-on-surface">HOANTIENVIP</div>
+<p class="text-on-surface-variant font-body-md text-body-md mt-2">Nâng tầm trải nghiệm mua sắm của bạn.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Affiliate Program</a>
+</div>
+<div class="text-on-surface-variant font-label-md text-label-md">
+                © 2024 HOANTIENVIP. All rights reserved.
+            </div>
+</div>
+</footer>
+<!-- Mobile Bottom Navigation -->
+<div class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-2 py-3 pb-safe bg-surface/90 backdrop-blur-md shadow-lg rounded-t-xl z-50">
+<button class="tab-trigger flex flex-col items-center justify-center text-on-surface-variant font-label-sm text-label-sm-mobile" data-tab="coupons" onclick="switchTab('coupons')">
+<span class="material-symbols-outlined">home</span>
+<span>Home</span>
+</button>
+<button class="tab-trigger flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 font-label-sm text-label-sm-mobile" data-tab="coupons" onclick="switchTab('coupons')">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_offer</span>
+<span>Offers</span>
+</button>
+<button class="tab-trigger flex flex-col items-center justify-center text-on-surface-variant font-label-sm text-label-sm-mobile" data-tab="alerts" onclick="switchTab('alerts')">
+<span class="material-symbols-outlined">notifications</span>
+<span>Alerts</span>
+</button>
+<button class="tab-trigger flex flex-col items-center justify-center text-on-surface-variant font-label-sm text-label-sm-mobile" data-tab="legal" onclick="switchTab('legal')">
+<span class="material-symbols-outlined">person</span>
+<span>Account</span>
+</button>
+</div>
+<!-- Micro-interaction Scripts -->
+<script>
+        function switchTab(tabId) {
+            // Update Tab Content
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+
+            // Update Desktop Nav UI
+            document.querySelectorAll('.tab-trigger').forEach(trigger => {
+                if (trigger.getAttribute('data-tab') === tabId) {
+                    trigger.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                    trigger.classList.remove('text-on-surface-variant', 'font-medium');
+                    
+                    // Mobile specific styling
+                    if(trigger.closest('.fixed.bottom-0')) {
+                        trigger.classList.add('bg-primary-container', 'text-on-primary-container', 'rounded-full', 'px-4', 'py-1');
+                    }
+                } else {
+                    trigger.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                    trigger.classList.add('text-on-surface-variant', 'font-medium');
+
+                    // Mobile specific styling
+                    if(trigger.closest('.fixed.bottom-0')) {
+                        trigger.classList.remove('bg-primary-container', 'text-on-primary-container', 'rounded-full', 'px-4', 'py-1');
+                    }
+                }
+            });
+
+            // Scroll to top on switch
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function copyCode(btn, code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied!';
+                btn.classList.replace('bg-primary', 'bg-tertiary-container');
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.replace('bg-tertiary-container', 'bg-primary');
+                }, 2000);
+            });
+        }
+
+        // Initialize active tab for mobile from desktop triggers logic
+        window.addEventListener('DOMContentLoaded', () => {
+            // Smooth reveal animation for cards
+            const observerOptions = { threshold: 0.1 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-4');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.glass-card, .bg-surface').forEach(card => {
+                card.classList.add('transition-all', 'duration-500', 'opacity-0', 'translate-y-4');
+                observer.observe(card);
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HOANTIENVIP | Carrier Health &amp; Logistics Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "on-primary-fixed": "#3d0600",
+                "on-secondary-fixed-variant": "#3f465b",
+                "tertiary-fixed-dim": "#4edea3",
+                "primary-fixed-dim": "#ffb4a3",
+                "surface-tint": "#b52603",
+                "on-surface": "#271814",
+                "secondary-fixed": "#dae2fc",
+                "primary-fixed": "#ffdad2",
+                "tertiary-fixed": "#6ffbbe",
+                "error-container": "#ffdad6",
+                "surface-container-low": "#fff0ed",
+                "secondary": "#565e74",
+                "primary": "#b52603",
+                "surface-container-lowest": "#ffffff",
+                "outline-variant": "#e3beb6",
+                "on-tertiary-fixed-variant": "#005236",
+                "surface-container-high": "#ffe2dc",
+                "on-primary": "#ffffff",
+                "on-primary-fixed-variant": "#8c1900",
+                "background": "#fff8f6",
+                "on-secondary-fixed": "#131b2e",
+                "tertiary-container": "#00a773",
+                "surface-variant": "#f9dcd6",
+                "inverse-primary": "#ffb4a3",
+                "error": "#ba1a1a",
+                "secondary-container": "#d7dff9",
+                "on-secondary-container": "#5a6278",
+                "on-error": "#ffffff",
+                "tertiary": "#006c49",
+                "surface-container-highest": "#f9dcd6",
+                "on-surface-variant": "#5b403a",
+                "surface-dim": "#f0d4ce",
+                "primary-container": "#ff5a36",
+                "on-error-container": "#93000a",
+                "outline": "#8f7069",
+                "on-primary-container": "#5a0c00",
+                "on-tertiary-fixed": "#002113",
+                "on-background": "#271814",
+                "secondary-fixed-dim": "#bec6df",
+                "inverse-on-surface": "#ffede9",
+                "surface": "#fff8f6",
+                "surface-container": "#ffe9e5",
+                "on-tertiary-container": "#003320",
+                "inverse-surface": "#3e2c28",
+                "surface-bright": "#fff8f6"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "sm": "8px",
+                "gutter": "24px",
+                "2xl": "48px",
+                "xs": "4px",
+                "md": "16px",
+                "lg": "24px",
+                "3xl": "64px",
+                "xl": "32px",
+                "base": "4px",
+                "container-max": "1280px"
+            },
+            "fontFamily": {
+                "headline-md": ["Be Vietnam Pro"],
+                "label-sm": ["Be Vietnam Pro"],
+                "label-md": ["Be Vietnam Pro"],
+                "headline-lg-mobile": ["Be Vietnam Pro"],
+                "body-lg": ["Be Vietnam Pro"],
+                "title-lg": ["Be Vietnam Pro"],
+                "display-lg": ["Be Vietnam Pro"],
+                "headline-lg": ["Be Vietnam Pro"],
+                "body-md": ["Be Vietnam Pro"]
+            },
+            "fontSize": {
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e3beb6; border-radius: 10px; }
+        .glass-panel { backdrop-filter: blur(8px); background: rgba(255, 248, 246, 0.8); }
+        .carrier-card:hover .test-btn { opacity: 1; transform: translateY(0); }
+        .test-btn { opacity: 0; transform: translateY(10px); transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-16 px-gutter max-w-container-max mx-auto w-full">
+<div class="flex items-center gap-md">
+<span class="font-display-lg text-headline-md font-black text-primary tracking-tighter">HOANTIENVIP</span>
+<div class="hidden md:flex gap-lg ml-xl">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md" href="#">Dashboard</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-label-md text-label-md" href="#">Vận đơn</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-label-md text-label-md" href="#">Cấu hình API</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant scale-90">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container rounded-full border-none focus:ring-2 focus:ring-primary text-label-md w-64" placeholder="Tìm hãng vận chuyển..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-variant/50 rounded-full transition-all">notifications</button>
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-variant/50 rounded-full transition-all">help_outline</button>
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+<img class="w-full h-full object-cover" data-alt="High-resolution professional headshot of a technical administrator in a modern office, wearing a dark blazer, soft studio lighting with warm orange highlights, minimalist fintech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3V3aNf2WRSHS5PWAlfw9zHy8s-s48cfY3ri-mSfEzhgFUvY2KS94wQf5IKUv0dbfU5aDfoG2yH9hskIPufS_omD9_l5-y8hz_dfPYWzVi983K2t5LlZ1_08VaO59lz7nDnYzrCH351M1lt-sJQAhFrfWSfl2N5Crytn3V_LYVhTJMxRnFa8Ga4-ElA_vcPLQCiSkg0LWLAt66VDrUfG9EcLmBkmqFvH6ciBX6eVok1uavGpYV-9EA1A"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col p-md fixed left-0 top-16 bottom-0 z-40 h-full w-64 bg-surface-container-low dark:bg-surface-container shadow-md">
+<div class="mb-xl px-2">
+<h2 class="font-title-lg text-title-lg font-bold text-primary">Hệ thống Logistics</h2>
+<p class="text-on-surface-variant text-label-sm">Admin Operation Center</p>
+</div>
+<nav class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard Tổng quan</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label-md text-label-md">Danh sách Hãng</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Đối soát Cước</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-label-md">Lịch sử Vận đơn</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Cấu hình Hệ thống</span>
+</a>
+</nav>
+<div class="mt-auto pt-md border-t border-outline-variant">
+<button class="w-full py-3 mb-md bg-primary text-white rounded-xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm">bolt</span>
+                Redeem Rewards
+            </button>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">
+<span class="material-symbols-outlined scale-90">support_agent</span>
+                    Hỗ trợ kỹ thuật
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-error hover:opacity-80 transition-opacity text-label-md" href="#">
+<span class="material-symbols-outlined scale-90">logout</span>
+                    Đăng xuất
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-24 pb-32 px-gutter min-h-screen">
+<header class="max-w-container-max mx-auto mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Carrier Health Monitor</h1>
+<p class="text-on-surface-variant font-body-md text-body-md mt-1">Theo dõi thời gian thực kết nối API của 14 đơn vị vận chuyển.</p>
+</div>
+<div class="flex items-center gap-sm bg-surface-container-high px-4 py-2 rounded-full shadow-sm">
+<div class="w-2.5 h-2.5 rounded-full bg-tertiary-container animate-pulse"></div>
+<span class="text-on-surface-variant font-label-md text-label-md">Live Status: System Normal</span>
+</div>
+</header>
+<!-- Stats Overview Bento Grid -->
+<section class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-4 gap-lg mb-2xl">
+<div class="bg-surface-container-lowest p-lg rounded-3xl shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+<span class="text-on-surface-variant font-label-md text-label-md">Total Connectors</span>
+<div class="mt-md flex items-baseline gap-2">
+<span class="text-display-lg font-display-lg text-primary">14</span>
+<span class="text-tertiary font-bold text-label-sm">+2 New</span>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[100%]"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-3xl shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+<span class="text-on-surface-variant font-label-md text-label-md">API Uptime (24h)</span>
+<div class="mt-md flex items-baseline gap-2">
+<span class="text-display-lg font-display-lg text-tertiary">99.8</span>
+<span class="text-tertiary font-bold text-label-sm">%</span>
+</div>
+<div class="mt-4 flex gap-1">
+<div class="h-4 w-full bg-tertiary-container/30 rounded-sm"></div>
+<div class="h-4 w-full bg-tertiary-container rounded-sm"></div>
+<div class="h-4 w-full bg-tertiary-container rounded-sm"></div>
+<div class="h-4 w-full bg-error-container rounded-sm"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-3xl shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+<span class="text-on-surface-variant font-label-md text-label-md">Retry Queue</span>
+<div class="mt-md flex items-baseline gap-2">
+<span class="text-display-lg font-display-lg text-on-surface">1.2k</span>
+<span class="text-on-surface-variant font-bold text-label-sm">Jobs</span>
+</div>
+<p class="text-on-surface-variant text-label-sm mt-2">Active backlog processing</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-3xl shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+<span class="text-on-surface-variant font-label-md text-label-md">Avg. Latency</span>
+<div class="mt-md flex items-baseline gap-2">
+<span class="text-display-lg font-display-lg text-primary-container">420</span>
+<span class="text-on-surface-variant font-bold text-label-sm">ms</span>
+</div>
+<p class="text-on-surface-variant text-label-sm mt-2">Optimized via Edge Cache</p>
+</div>
+</section>
+<!-- Carrier Matrix -->
+<section class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-lg">
+<!-- Carrier Card: SPX -->
+<div class="carrier-card group bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center font-bold text-primary text-xl">SPX</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">SPX Express</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="text-tertiary font-label-sm text-label-sm">API Connected</span>
+</div>
+</div>
+</div>
+<button class="test-btn p-2 bg-primary-container text-on-primary-container rounded-full shadow-lg active:scale-90 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">dynamic_form</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-sm mb-lg">
+<div class="bg-surface p-sm rounded-xl">
+<p class="text-on-surface-variant text-label-sm mb-1">Rate Limit</p>
+<p class="font-bold text-on-surface">450 / 600 <span class="text-xs font-normal">rpm</span></p>
+</div>
+<div class="bg-surface p-sm rounded-xl">
+<p class="text-on-surface-variant text-label-sm mb-1">Retry Queue</p>
+<p class="font-bold text-on-surface">12 <span class="text-xs font-normal">tasks</span></p>
+</div>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-center text-label-md">
+<span class="text-on-surface-variant">Secret Key</span>
+<div class="flex items-center gap-2">
+<span class="text-on-surface tracking-widest">••••••••••••••••</span>
+<button class="material-symbols-outlined text-primary scale-75">visibility_off</button>
+</div>
+</div>
+<div class="p-md bg-surface rounded-xl border border-dashed border-outline-variant">
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-bold text-on-surface">Lỗi gần nhất</span>
+<span class="text-[10px] text-on-surface-variant">2 mins ago</span>
+</div>
+<code class="text-xs text-error font-mono break-all block leading-tight">429: Too Many Requests - Global lock active</code>
+</div>
+</div>
+</div>
+<!-- Carrier Card: LEX -->
+<div class="carrier-card group bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center font-bold text-primary text-xl">LEX</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Lazada Express</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="text-error font-label-sm text-label-sm">Timeout Detected</span>
+</div>
+</div>
+</div>
+<button class="test-btn p-2 bg-primary-container text-on-primary-container rounded-full shadow-lg active:scale-90 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">dynamic_form</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-sm mb-lg">
+<div class="bg-surface p-sm rounded-xl">
+<p class="text-on-surface-variant text-label-sm mb-1">Rate Limit</p>
+<p class="font-bold text-on-surface">120 / 1000 <span class="text-xs font-normal">rpm</span></p>
+</div>
+<div class="bg-surface p-sm rounded-xl">
+<p class="text-on-surface-variant text-label-sm mb-1">Retry Queue</p>
+<p class="font-bold text-error">154 <span class="text-xs font-normal">tasks</span></p>
+</div>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-center text-label-md">
+<span class="text-on-surface-variant">Secret Key</span>
+<div class="flex items-center gap-2">
+<span class="text-on-surface tracking-widest">••••••••••••••••</span>
+<button class="material-symbols-outlined text-primary scale-75">visibility_off</button>
+</div>
+</div>
+<div class="p-md bg-error-container/20 rounded-xl border border-dashed border-error/30">
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-bold text-error">Lỗi gần nhất</span>
+<span class="text-[10px] text-on-surface-variant">30s ago</span>
+</div>
+<code class="text-xs text-error font-mono break-all block leading-tight">504: Gateway Timeout - Upstream LEX unstable</code>
+</div>
+</div>
+</div>
+<!-- Carrier Card: J&T -->
+<div class="carrier-card group bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center font-bold text-primary text-xl">J&amp;T</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">J&amp;T Express</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="text-tertiary font-label-sm text-label-sm">API Connected</span>
+</div>
+</div>
+</div>
+<button class="test-btn p-2 bg-primary-container text-on-primary-container rounded-full shadow-lg active:scale-90 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">dynamic_form</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-sm mb-lg">
+<div class="bg-surface p-sm rounded-xl">
+<p class="text-on-surface-variant text-label-sm mb-1">Rate Limit</p>
+<p class="font-bold text-on-surface">840 / 1200 <span class="text-xs font-normal">rpm</span></p>
+</div>
+<div class="bg-surface p-sm rounded-xl">
+<p class="text-on-surface-variant text-label-sm mb-1">Retry Queue</p>
+<p class="font-bold text-on-surface">0 <span class="text-xs font-normal">tasks</span></p>
+</div>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-center text-label-md">
+<span class="text-on-surface-variant">Secret Key</span>
+<div class="flex items-center gap-2">
+<span class="text-on-surface tracking-widest">••••••••••••••••</span>
+<button class="material-symbols-outlined text-primary scale-75">visibility_off</button>
+</div>
+</div>
+<div class="p-md bg-surface rounded-xl border border-dashed border-outline-variant">
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-bold text-on-surface">Lỗi gần nhất</span>
+<span class="text-[10px] text-on-surface-variant">8h ago</span>
+</div>
+<code class="text-xs text-on-surface-variant font-mono break-all block leading-tight">No errors recorded in the last 6 hours.</code>
+</div>
+</div>
+</div>
+<!-- More Carriers Placeholder (Logic for 14 carriers) -->
+<!-- Viettel Post -->
+<div class="carrier-card group bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center font-bold text-primary text-xl">VTP</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Viettel Post</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="text-tertiary font-label-sm text-label-sm">API Connected</span>
+</div>
+</div>
+</div>
+<button class="test-btn p-2 bg-primary-container text-on-primary-container rounded-full shadow-lg active:scale-90 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">dynamic_form</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-sm mb-lg">
+<div class="bg-surface p-sm rounded-xl"><p class="text-on-surface-variant text-label-sm mb-1">Rate Limit</p><p class="font-bold text-on-surface">200 / 500</p></div>
+<div class="bg-surface p-sm rounded-xl"><p class="text-on-surface-variant text-label-sm mb-1">Retry Queue</p><p class="font-bold text-on-surface">4</p></div>
+</div>
+<div class="flex justify-between items-center text-label-md">
+<span class="text-on-surface-variant">Secret Key</span>
+<div class="flex items-center gap-2">
+<span class="text-on-surface tracking-widest">••••••••••••••••</span>
+<button class="material-symbols-outlined text-primary scale-75">visibility_off</button>
+</div>
+</div>
+</div>
+<!-- VNPost -->
+<div class="carrier-card group bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center font-bold text-primary text-xl">VNP</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">VNPost</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="text-tertiary font-label-sm text-label-sm">API Connected</span>
+</div>
+</div>
+</div>
+<button class="test-btn p-2 bg-primary-container text-on-primary-container rounded-full shadow-lg active:scale-90 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">dynamic_form</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-sm mb-lg">
+<div class="bg-surface p-sm rounded-xl"><p class="text-on-surface-variant text-label-sm mb-1">Rate Limit</p><p class="font-bold text-on-surface">150 / 400</p></div>
+<div class="bg-surface p-sm rounded-xl"><p class="text-on-surface-variant text-label-sm mb-1">Retry Queue</p><p class="font-bold text-on-surface">0</p></div>
+</div>
+<div class="flex justify-between items-center text-label-md">
+<span class="text-on-surface-variant">Secret Key</span>
+<div class="flex items-center gap-2">
+<span class="text-on-surface tracking-widest">••••••••••••••••</span>
+<button class="material-symbols-outlined text-primary scale-75">visibility_off</button>
+</div>
+</div>
+</div>
+<!-- GHTK -->
+<div class="carrier-card group bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center font-bold text-primary text-xl">HTK</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">GHTK</h3>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="text-tertiary font-label-sm text-label-sm">API Connected</span>
+</div>
+</div>
+</div>
+<button class="test-btn p-2 bg-primary-container text-on-primary-container rounded-full shadow-lg active:scale-90 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">dynamic_form</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-sm mb-lg">
+<div class="bg-surface p-sm rounded-xl"><p class="text-on-surface-variant text-label-sm mb-1">Rate Limit</p><p class="font-bold text-on-surface">600 / 800</p></div>
+<div class="bg-surface p-sm rounded-xl"><p class="text-on-surface-variant text-label-sm mb-1">Retry Queue</p><p class="font-bold text-on-surface">2</p></div>
+</div>
+<div class="flex justify-between items-center text-label-md">
+<span class="text-on-surface-variant">Secret Key</span>
+<div class="flex items-center gap-2">
+<span class="text-on-surface tracking-widest">••••••••••••••••</span>
+<button class="material-symbols-outlined text-primary scale-75">visibility_off</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Technical Deep-Dive Table Section -->
+<section class="max-w-container-max mx-auto mt-2xl">
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl overflow-hidden shadow-sm">
+<div class="p-lg border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-low">
+<h2 class="font-title-lg text-title-lg text-on-surface">Retry Queue Analysis &amp; Real-time Logs</h2>
+<div class="flex gap-sm">
+<button class="px-4 py-2 bg-surface text-on-surface-variant rounded-full text-label-md border border-outline-variant hover:bg-surface-variant transition-colors">Clear Logs</button>
+<button class="px-4 py-2 bg-primary text-white rounded-full text-label-md font-bold hover:shadow-lg transition-all">Export Report</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-high/50">
+<tr>
+<th class="px-lg py-md text-label-sm font-bold text-on-surface-variant uppercase tracking-wider">Hãng</th>
+<th class="px-lg py-md text-label-sm font-bold text-on-surface-variant uppercase tracking-wider">Endpoint</th>
+<th class="px-lg py-md text-label-sm font-bold text-on-surface-variant uppercase tracking-wider">Mã lỗi</th>
+<th class="px-lg py-md text-label-sm font-bold text-on-surface-variant uppercase tracking-wider">Timestamp</th>
+<th class="px-lg py-md text-label-sm font-bold text-on-surface-variant uppercase tracking-wider">Payload</th>
+<th class="px-lg py-md text-label-sm font-bold text-on-surface-variant uppercase tracking-wider text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr class="hover:bg-surface-variant/10 transition-colors">
+<td class="px-lg py-md font-bold text-primary">EMS</td>
+<td class="px-lg py-md font-mono text-xs">/v1/tracking/batch</td>
+<td class="px-lg py-md"><span class="px-2 py-1 rounded bg-error-container text-on-error-container text-[10px] font-bold">503 SERVICE UNAVAILABLE</span></td>
+<td class="px-lg py-md text-label-sm">2024-05-24 14:20:11</td>
+<td class="px-lg py-md font-mono text-[10px] text-on-surface-variant truncate max-w-xs">{ "tracking_ids": ["EMS-V90..."] }</td>
+<td class="px-lg py-md text-right"><button class="text-primary hover:underline text-label-sm font-bold">Manual Retry</button></td>
+</tr>
+<tr class="hover:bg-surface-variant/10 transition-colors">
+<td class="px-lg py-md font-bold text-primary">GHN</td>
+<td class="px-lg py-md font-mono text-xs">/shipping/order/create</td>
+<td class="px-lg py-md"><span class="px-2 py-1 rounded bg-error-container text-on-error-container text-[10px] font-bold">401 UNAUTHORIZED</span></td>
+<td class="px-lg py-md text-label-sm">2024-05-24 14:18:45</td>
+<td class="px-lg py-md font-mono text-[10px] text-on-surface-variant truncate max-w-xs">{ "shop_id": 19445, "weight": 500... }</td>
+<td class="px-lg py-md text-right"><button class="text-primary hover:underline text-label-sm font-bold">Fix Auth</button></td>
+</tr>
+<tr class="hover:bg-surface-variant/10 transition-colors">
+<td class="px-lg py-md font-bold text-primary">247Express</td>
+<td class="px-lg py-md font-mono text-xs">/api/v2/pricing</td>
+<td class="px-lg py-md"><span class="px-2 py-1 rounded bg-error-container text-on-error-container text-[10px] font-bold">422 UNPROCESSABLE ENTITY</span></td>
+<td class="px-lg py-md text-label-sm">2024-05-24 14:15:02</td>
+<td class="px-lg py-md font-mono text-[10px] text-on-surface-variant truncate max-w-xs">{ "origin": "HN", "dest": "HCM"... }</td>
+<td class="px-lg py-md text-right"><button class="text-primary hover:underline text-label-sm font-bold">View Context</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md flex justify-center bg-surface-container-low">
+<button class="text-primary font-bold text-label-md flex items-center gap-2">
+                        Xem tất cả lỗi hệ thống
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-2 py-3 pb-safe bg-surface/90 dark:bg-inverse-surface/90 backdrop-blur-md rounded-t-xl z-50 shadow-lg">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined">local_offer</span>
+<span class="font-label-sm text-[10px]">Offers</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-[10px]">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-[10px]">Account</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="lg:ml-64 bg-surface-container-highest dark:bg-surface-container-lowest w-full py-xl px-gutter rounded-t-3xl">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-md">
+<div class="text-center md:text-left">
+<span class="font-headline-md text-title-lg font-bold text-on-surface">HOANTIENVIP Logistics</span>
+<p class="text-on-surface-variant font-body-md text-label-md mt-2">© 2024 HOANTIENVIP. Hệ thống quản trị vận đơn và sức khỏe đối tác.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="#">API Docs</a>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions for buttons and interactions
+        document.querySelectorAll('.test-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const originalContent = this.innerHTML;
+                this.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span>';
+                this.classList.add('bg-tertiary-container');
+                
+                setTimeout(() => {
+                    this.innerHTML = '<span class="material-symbols-outlined text-sm">check_circle</span>';
+                    this.classList.remove('bg-tertiary-container');
+                    this.classList.add('bg-tertiary', 'text-white');
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalContent;
+                        this.classList.remove('bg-tertiary', 'text-white');
+                    }, 2000);
+                }, 1500);
+            });
+        });
+
+        // Visibility Toggle for Secret Keys
+        document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
+            if (icon.innerText === 'visibility_off') {
+                icon.addEventListener('click', function() {
+                    const keySpan = this.previousElementSibling;
+                    if (this.innerText === 'visibility_off') {
+                        this.innerText = 'visibility';
+                        keySpan.innerText = 'HTV_7721_XJ92_SEC_9901';
+                        keySpan.classList.remove('tracking-widest');
+                    } else {
+                        this.innerText = 'visibility_off';
+                        keySpan.innerText = '••••••••••••••••';
+                        keySpan.classList.add('tracking-widest');
+                    }
+                });
+            }
+        });
+    </script>
+</body></html>

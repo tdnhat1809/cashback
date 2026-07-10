@@ -3,9 +3,10 @@ import { mockPoints, mockTasks, mockGifts } from '../../mockData';
 import type { RewardTask, RewardGift } from '../../mockData';
 import { Button } from '../../components/Button';
 import { Badge } from '../../components/Badge';
-import { ToastContainer, defaultToastState, triggerToast } from '../../components/Toast';
-import type { ToastState } from '../../components/Toast';
-import { Award, Sparkles, Check, Gift, ShoppingBag } from 'lucide-react';
+import { ToastContainer } from '../../components/Toast';
+import { defaultToastState, triggerToast } from '../../components/toast-state';
+import type { ToastState } from '../../components/toast-state';
+import { Award, Sparkles, Check, Gift } from 'lucide-react';
 
 export const Rewards: React.FC = () => {
   const [points, setPoints] = useState(mockPoints.total);
@@ -14,17 +15,11 @@ export const Rewards: React.FC = () => {
   const [toast, setToast] = useState<ToastState>(defaultToastState);
 
   const handleCheckIn = (taskId: string) => {
-    setTasks(prev => 
-      prev.map(t => {
-        if (t.id === taskId) {
-          if (t.completed) return t;
-          setPoints(p => p + t.reward);
-          triggerToast(setToast, `Điểm danh thành công! Nhận ngay +${t.reward} Xu thưởng.`, 'success');
-          return { ...t, completed: true };
-        }
-        return t;
-      })
-    );
+    const task = tasks.find((item) => item.id === taskId);
+    if (!task || task.completed) return;
+    setTasks((previous) => previous.map((item) => item.id === taskId ? { ...item, completed: true } : item));
+    setPoints((previous) => previous + task.reward);
+    triggerToast(setToast, `Điểm danh thành công! Nhận ngay +${task.reward} Xu thưởng.`, 'success');
   };
 
   const handleRedeem = (gift: RewardGift) => {
@@ -120,7 +115,7 @@ export const Rewards: React.FC = () => {
                 <div key={gift.id} className="bg-white p-4 rounded-2xl border border-outline-variant/30 shadow-soft flex flex-col justify-between gap-4 h-full">
                   <div className="flex gap-3">
                     <div className="w-16 h-16 rounded-xl bg-surface-container overflow-hidden shrink-0">
-                      <ShoppingBag size={24} className="m-auto h-full text-outline-variant" />
+                      <img src={gift.imageUrl} alt="" className="w-full h-full object-cover" />
                     </div>
                     <div className="text-left min-w-0">
                       <h4 className="font-bold text-xs text-on-surface truncate block">{gift.title}</h4>
