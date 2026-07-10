@@ -67,7 +67,7 @@ function App() {
           <Route path="/admin" element={<AdminLayout><AdminOverview /></AdminLayout>} />
           <Route path="/admin/management" element={<AdminLayout><AdminManagement /></AdminLayout>} />
 
-          <Route path="*" element={<PublicLayout><NotFound /></PublicLayout>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </Router>
