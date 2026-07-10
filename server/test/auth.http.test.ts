@@ -38,6 +38,8 @@ const createApp = () => {
     cookieName: 'hoantienvip_session',
     environment: 'development',
     sessionTtlHours: 24,
+    appUrl: 'http://localhost:5173',
+    google: { clientId: '', clientSecret: '', redirectUri: '' },
   }));
   app.use(authErrorHandler);
   app.use((_error: unknown, _request: Request, response: Response, _next: NextFunction) => {
@@ -47,28 +49,23 @@ const createApp = () => {
 };
 
 describe('auth HTTP handlers', () => {
-  it('runs login, current-user, and logout through an HttpOnly cookie', async () => {
+  it('registers, logs in, and logs out through an HttpOnly cookie', async () => {
     const { app, database } = createApp();
     const agent = request.agent(app);
 
-    const requested = await agent.post('/auth/otp/request').send({ phone: '0912 345 678' }).expect(201);
-    expect(requested.body.data).toMatchObject({ phone: '+84912345678', devCode: '123456' });
-
-    const verified = await agent.post('/auth/otp/verify').send({
-      challengeId: requested.body.data.challengeId,
-      phone: requested.body.data.phone,
-      code: '123456',
-    }).expect(200);
-    expect(verified.body.data.user.phone).toBe('+84912345678');
-    expect(verified.body.data.sessionToken).toBeUndefined();
-    expect(verified.headers['set-cookie']?.[0]).toContain('hoantienvip_session=opaque-http-session-token');
-    expect(verified.headers['set-cookie']?.[0]).toContain('HttpOnly');
-    expect(verified.headers['set-cookie']?.[0]).toContain('SameSite=Lax');
+    const registered = await agent.post('/auth/register').send({
+      name: 'Nguyễn Văn A', email: 'member@example.com', password: 'Password1234',
+    }).expect(201);
+    expect(registered.body.data.user).toMatchObject({ email: 'member@example.com', phone: null, name: 'Nguyễn Văn A' });
+    expect(registered.body.data.sessionToken).toBeUndefined();
+    expect(registered.headers['set-cookie']?.[0]).toContain('hoantienvip_session=opaque-http-session-token');
+    expect(registered.headers['set-cookie']?.[0]).toContain('HttpOnly');
+    expect(registered.headers['set-cookie']?.[0]).toContain('SameSite=Lax');
 
     const stored = database.prepare('SELECT token_hash FROM sessions').get() as { token_hash: string };
     expect(stored.token_hash).toBe(hashSessionToken('opaque-http-session-token'));
     await agent.get('/auth/me').expect(200).expect(({ body }) => {
-      expect(body.data.user.phone).toBe('+84912345678');
+      expect(body.data.user.email).toBe('member@example.com');
     });
 
     const loggedOut = await agent.post('/auth/logout').expect(204);
@@ -76,18 +73,22 @@ describe('auth HTTP handlers', () => {
     await agent.get('/auth/me').expect(401).expect(({ body }) => {
       expect(body.error.code).toBe('AUTH_REQUIRED');
     });
+
+    await agent.post('/auth/login').send({ email: 'member@example.com', password: 'Password1234' }).expect(200);
   });
 
-  it('returns structured validation and rate-limit errors', async () => {
+  it('returns structured validation, credential, and Google-provider responses', async () => {
     const { app } = createApp();
-    await request(app).post('/auth/otp/request').send({ phone: '' }).expect(400).expect(({ body }) => {
-      expect(body.error.code).toBe('VALIDATION_ERROR');
-      expect(body.error.details.fields.phone).toBeDefined();
-    });
-
-    await request(app).post('/auth/otp/request').send({ phone: '0912345678' }).expect(201);
-    const limited = await request(app).post('/auth/otp/request').send({ phone: '0912345678' }).expect(429);
-    expect(limited.body.error.code).toBe('OTP_RATE_LIMITED');
-    expect(limited.headers['retry-after']).toBe('60');
+    await request(app).post('/auth/register').send({ name: 'A', email: 'not-email', password: 'short' }).expect(400)
+      .expect(({ body }) => expect(body.error.code).toBe('VALIDATION_ERROR'));
+    await request(app).post('/auth/register').send({
+      name: 'Người dùng', email: 'member@example.com', password: 'Password1234',
+    }).expect(201);
+    await request(app).post('/auth/login').send({ email: 'member@example.com', password: 'wrong-password' }).expect(401)
+      .expect(({ body }) => expect(body.error.code).toBe('INVALID_CREDENTIALS'));
+    await request(app).get('/auth/providers').expect(200)
+      .expect(({ body }) => expect(body.data).toEqual({ google: false }));
+    await request(app).get('/auth/google/start').expect(503)
+      .expect(({ body }) => expect(body.error.code).toBe('GOOGLE_NOT_CONFIGURED'));
   });
 });

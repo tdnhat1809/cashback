@@ -10,7 +10,7 @@ import { z } from 'zod';
 import type { AppConfig } from './config.js';
 import { openDatabase, type SqliteDatabase } from './db/database.js';
 import { seedDatabase } from './db/seed.js';
-import { hmacSha256 } from './lib/security.js';
+import { decryptString, hmacSha256 } from './lib/security.js';
 import { nowIso } from './lib/ids.js';
 import { AffiliateLinkService } from './modules/affiliate/AffiliateLinkService.js';
 import { AuthError, AuthService, authErrorHandler, createAuthRouter, getSessionToken } from './modules/auth/index.js';
@@ -25,8 +25,14 @@ import { ShopeeAffiliateProvider } from './providers/shopee/ShopeeAffiliateProvi
 
 const affiliateLinkInput = z.object({ platform: z.enum(['shopee', 'tiktok']).default('shopee'), destinationUrl: z.string().url() });
 const withdrawalInput = z.object({
-  amountVnd: z.number().int().positive(), bankName: z.string().min(2).max(100),
-  bankAccountNumber: z.string().regex(/^\d{6,20}$/), accountName: z.string().min(2).max(150),
+  amountVnd: z.number().int().positive(),
+  bankAccountId: z.string().min(1).max(128).optional(),
+  bankName: z.string().min(2).max(100).optional(),
+  bankAccountNumber: z.string().regex(/^\d{6,20}$/).optional(),
+  accountName: z.string().min(2).max(150).optional(),
+}).superRefine((value, context) => {
+  if (value.bankAccountId || (value.bankName && value.bankAccountNumber && value.accountName)) return;
+  context.addIssue({ code: 'custom', message: 'Chọn tài khoản ngân hàng đã lưu hoặc nhập đầy đủ thông tin nhận tiền.' });
 });
 const shipmentInput = z.object({
   trackingNumber: z.string().trim().min(6).max(64), carrierCode: z.string().trim().min(2).max(40), orderId: z.string().optional(),
@@ -52,7 +58,7 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
   const affiliateLinks = new AffiliateLinkService(database, shopee, tikTok);
   const wallet = new WalletService(database, config.DATA_ENCRYPTION_KEY);
   const shipments = new ShipmentService(database);
-  const userFeatures = new UserFeaturesService({ database });
+  const userFeatures = new UserFeaturesService({ database, encryptionKey: config.DATA_ENCRYPTION_KEY });
   const app = express();
 
   app.disable('x-powered-by');
@@ -77,7 +83,16 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
     const provider = await shopee.healthCheck();
     response.json({ data: { status: 'ok', database: 'ok', providers: [provider], timestamp: nowIso() } });
   }));
-  app.use('/api/v1/auth', createAuthRouter({ service: auth, ...cookieOptions }));
+  app.use('/api/v1/auth', createAuthRouter({
+    service: auth,
+    ...cookieOptions,
+    appUrl: config.APP_URL,
+    google: {
+      clientId: config.GOOGLE_CLIENT_ID,
+      clientSecret: config.GOOGLE_CLIENT_SECRET,
+      redirectUri: config.GOOGLE_REDIRECT_URI,
+    },
+  }));
   app.use('/api/v1', createUserFeaturesRouter({ service: userFeatures, auth, cookieName: config.SESSION_COOKIE }));
 
   app.get('/api/v1/deals', asyncHandler(async (request, response) => {
@@ -189,7 +204,22 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
     const user = currentUser(request);
     const idempotencyKey = request.get('idempotency-key') ?? '';
     const input = withdrawalInput.parse(request.body);
-    const withdrawal = wallet.requestWithdrawal({ userId: user.id, idempotencyKey, ...input });
+    const savedBank = input.bankAccountId
+      ? database.prepare(`
+        SELECT bank_name, account_number_ciphertext, account_name FROM bank_accounts
+        WHERE id = ? AND user_id = ? AND active = 1
+      `).get(input.bankAccountId, user.id) as { bank_name: string; account_number_ciphertext: string; account_name: string } | undefined
+      : undefined;
+    if (input.bankAccountId && !savedBank) {
+      response.status(404).json({ error: { code: 'bank_account_not_found', message: 'Không tìm thấy tài khoản ngân hàng đang dùng.' } });
+      return;
+    }
+    const withdrawal = wallet.requestWithdrawal({
+      userId: user.id, idempotencyKey, amountVnd: input.amountVnd,
+      bankName: savedBank?.bank_name ?? input.bankName!,
+      bankAccountNumber: savedBank ? decryptString(savedBank.account_number_ciphertext, config.DATA_ENCRYPTION_KEY) : input.bankAccountNumber!,
+      accountName: savedBank?.account_name ?? input.accountName!,
+    });
     response.status(201).json({ data: withdrawal });
   }));
 

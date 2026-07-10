@@ -241,7 +241,7 @@ export const LegalCenter: React.FC = () => {
                 <section>
                   <h3 className="font-title-lg text-sm font-bold text-on-surface mb-2 border-l-4 border-primary pl-3">1. Thu thập thông tin</h3>
                   <p className="font-body-md text-xs leading-relaxed pl-4">
-                    Chúng tôi thu thập các thông tin cá nhân cần thiết bao gồm: Số điện thoại, email, họ tên và thông tin tài khoản ngân hàng khi bạn thực hiện yêu cầu rút tiền.
+                    Chúng tôi thu thập các thông tin cần thiết gồm email, họ tên và thông tin tài khoản ngân hàng khi bạn thực hiện yêu cầu rút tiền.
                   </p>
                 </section>
                 <section>

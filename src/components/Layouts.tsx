@@ -287,7 +287,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
     { label: 'Thông báo', path: '/dashboard/notifications', icon: <Bell size={20} /> },
     { label: 'Biến động số dư', path: '/dashboard/ledger', icon: <WalletCards size={20} /> },
     { label: 'Nhật ký hoạt động', path: '/dashboard/logs', icon: <FileText size={20} /> },
-    { label: 'Yêu cầu hỗ trợ', path: '/dashboard/support/TK123', icon: <HelpCircle size={20} /> },
+    { label: 'Yêu cầu hỗ trợ', path: '/dashboard/support', icon: <HelpCircle size={20} /> },
     { label: 'Cài đặt tài khoản', path: '/dashboard/settings', icon: <Settings size={20} /> },
   ];
 
@@ -308,7 +308,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
           </div>
           <div className="text-left min-w-0">
             <p className="text-sm font-bold text-on-surface truncate">{user?.name ?? 'Thành viên'}</p>
-            <p className="text-xs text-on-surface-variant truncate">{user?.phone ?? ''}</p>
+            <p className="text-xs text-on-surface-variant truncate">{user?.email ?? 'Tài khoản thành viên'}</p>
           </div>
         </div>
 

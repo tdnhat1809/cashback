@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import type { LedgerEntry } from '../../mockData';
+import React, { useEffect, useState } from 'react';
 import { Table } from '../../components/Table';
 import type { Column } from '../../components/Table';
 import { Button } from '../../components/Button';
@@ -10,7 +9,15 @@ import { defaultToastState, triggerToast } from '../../components/toast-state';
 import type { ToastState } from '../../components/toast-state';
 import { Bell, Ticket, HelpCircle } from 'lucide-react';
 import { EmptyState } from '../../components/EmptyState';
-import { useAppData } from '../../state/AppDataContext';
+import { dashboardApi, userFeaturesApi } from '../../services/apiClient';
+
+interface LedgerEntry {
+  id: string;
+  type: string;
+  amount: number;
+  date: string;
+  description: string;
+}
 
 export interface ActivityLogItem {
   id: string;
@@ -22,7 +29,13 @@ export interface ActivityLogItem {
 
 // 1. Balance History (Biến động số dư)
 export const BalanceHistory: React.FC = () => {
-  const { ledgerEntries } = useAppData();
+  const [ledgerEntries, setLedgerEntries] = useState<LedgerEntry[]>([]);
+  const [loadError, setLoadError] = useState('');
+  useEffect(() => {
+    void dashboardApi.ledger()
+      .then((rows) => setLedgerEntries(rows.map((row) => ({ id: row.id, type: row.reference_type, amount: row.amount_vnd, date: row.created_at, description: row.description }))))
+      .catch((error: unknown) => setLoadError(error instanceof Error ? error.message : 'Không thể tải biến động số dư.'));
+  }, []);
   const getEntryTypeBadge = (type: string) => {
     const badges = {
       cashback_received: <Badge variant="success">Hoàn tiền đơn hàng</Badge>,
@@ -60,13 +73,9 @@ export const BalanceHistory: React.FC = () => {
       }
     },
     {
-      header: 'Số dư sau GD',
-      accessor: (row: any) => (
-        <span className="text-xs font-bold text-on-surface">
-          {row.balanceAfter.toLocaleString('vi-VN')}đ
-        </span>
-      )
-    }
+      header: 'Mã tham chiếu',
+      accessor: (row: LedgerEntry) => <span className="text-xs font-mono text-outline-variant">{row.id}</span>
+    },
   ];
 
   return (
@@ -75,6 +84,8 @@ export const BalanceHistory: React.FC = () => {
         <h1 className="font-headline-md text-on-surface">Biến động số dư</h1>
         <p className="text-xs text-on-surface-variant">Lịch sử thu chi chi tiết và số dư tài khoản của bạn.</p>
       </div>
+
+      {loadError && <p className="rounded-xl border border-error/20 bg-error-container/20 p-3 text-sm text-error" role="alert">{loadError}</p>}
 
       <Table
         data={ledgerEntries}
@@ -86,12 +97,12 @@ export const BalanceHistory: React.FC = () => {
 
 // 2. Activity Log (Nhật ký hoạt động)
 export const ActivityLog: React.FC = () => {
-  const mockActivityLogs = [
-    { id: 'al_1', date: '2026-07-10 18:02', action: 'ĐĂNG_NHẬP', detail: 'Đăng nhập hệ thống qua số điện thoại thành công.', ip: '192.168.1.15' },
-    { id: 'al_2', date: '2026-07-09 23:45', action: 'RÚT_TIỀN', detail: 'Gửi yêu cầu rút tiền về thẻ ngân hàng (200.000đ).', ip: '192.168.1.15' },
-    { id: 'al_3', date: '2026-07-08 11:22', action: 'TẠO_AFFILIATE_LINK', detail: 'Tạo link hoàn tiền thành công cho sản phẩm Shopee.', ip: '113.161.42.10' },
-    { id: 'al_4', date: '2026-07-01 10:00', action: 'ĐĂNG_KÝ', detail: 'Khởi tạo tài khoản thành viên mới thành công.', ip: '127.0.0.1' }
-  ];
+  const [activityLogs, setActivityLogs] = useState<ActivityLogItem[]>([]);
+  useEffect(() => {
+    void userFeaturesApi.activityLogs().then((result) => setActivityLogs(result.items.map((item) => ({
+      id: item.id, date: item.createdAt, action: item.action, detail: `${item.targetType}: ${item.targetId}`, ip: '—',
+    })))).catch(() => setActivityLogs([]));
+  }, []);
 
   const columns: Column<ActivityLogItem>[] = [
     {
@@ -127,7 +138,7 @@ export const ActivityLog: React.FC = () => {
       </div>
 
       <Table
-        data={mockActivityLogs}
+        data={activityLogs}
         columns={columns}
       />
     </div>
@@ -136,18 +147,16 @@ export const ActivityLog: React.FC = () => {
 
 // 3. Notifications (Thông báo)
 export const Notifications: React.FC = () => {
-  const [notifs, setNotifs] = useState([
-    { id: 'n_1', title: 'Tiền hoàn đã về ví!', desc: 'Đơn hàng SP-992384210 của bạn đã được sàn duyệt. Ví khả dụng của bạn được cộng +15.000đ.', time: '2026-07-08 12:00', read: false },
-    { id: 'n_2', title: 'Thưởng Referral thành công!', desc: 'Bạn bè đã hoàn thành việc liên kết ví. Bạn nhận thưởng giới thiệu +50.000đ.', time: '2026-07-05 15:30', read: true },
-    { id: 'n_3', title: 'Yêu cầu rút tiền được phê duyệt', desc: 'Lệnh rút tiền 500K về Techcombank đã được chuyển khoản thành công. Mã GD: FT261819034281.', time: '2026-06-30 08:00', read: true }
-  ]);
+  const [notifs, setNotifs] = useState<Array<{ id: string; title: string; desc: string; time: string; read: boolean }>>([]);
+  useEffect(() => {
+    void userFeaturesApi.notifications().then((result) => setNotifs(result.items.map((item) => ({
+      id: item.id, title: item.title, desc: item.body, time: item.createdAt, read: item.readAt !== null,
+    })))).catch(() => setNotifs([]));
+  }, []);
 
-  const handleMarkAllRead = () => {
-    setNotifs(prev => prev.map(n => ({ ...n, read: true })));
-  };
-
-  const handleClearAll = () => {
-    setNotifs([]);
+  const handleMarkAllRead = async () => {
+    await userFeaturesApi.markAllNotificationsRead();
+    setNotifs((previous) => previous.map((notification) => ({ ...notification, read: true })));
   };
 
   return (
@@ -161,17 +170,10 @@ export const Notifications: React.FC = () => {
           {notifs.length > 0 && (
             <>
               <button 
-                onClick={handleMarkAllRead}
+                onClick={() => void handleMarkAllRead()}
                 className="text-xs font-bold text-primary hover:underline cursor-pointer"
               >
                 Đọc tất cả
-              </button>
-              <span className="text-outline-variant">|</span>
-              <button 
-                onClick={handleClearAll}
-                className="text-xs font-bold text-error hover:underline cursor-pointer"
-              >
-                Xóa tất cả
               </button>
             </>
           )}
@@ -179,14 +181,7 @@ export const Notifications: React.FC = () => {
       </div>
 
       {notifs.length === 0 ? (
-        <EmptyState 
-          variant="notifications"
-          onAction={() => {
-            setNotifs([
-              { id: 'n_mock', title: 'Thông báo giả lập', desc: 'Đây là thông báo giả lập để kiểm tra tính năng hiển thị.', time: new Date().toLocaleString(), read: false }
-            ]);
-          }}
-        />
+        <EmptyState variant="notifications" />
       ) : (
         <div className="space-y-4">
           {notifs.map((n) => (
@@ -224,12 +219,11 @@ export const Notifications: React.FC = () => {
 
 // 4. Giftcode (Đổi mã thưởng giftcode)
 export const Giftcode: React.FC = () => {
-  const { redeemGiftCode } = useAppData();
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<ToastState>(defaultToastState);
 
-  const handleRedeem = (e: React.FormEvent) => {
+  const handleRedeem = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code.trim()) {
       triggerToast(setToast, 'Vui lòng nhập mã Giftcode.', 'error');
@@ -238,8 +232,8 @@ export const Giftcode: React.FC = () => {
 
     setLoading(true);
     try {
-      const rewardVnd = redeemGiftCode(code);
-      triggerToast(setToast, `Kích hoạt Giftcode thành công! Số dư khả dụng được cộng +${rewardVnd.toLocaleString('vi-VN')}đ.`, 'success');
+      const result = await userFeaturesApi.redeemGiftcode(code);
+      triggerToast(setToast, `Kích hoạt thành công: +${result.points.toLocaleString('vi-VN')} Xu thưởng. Số dư Xu hiện tại: ${result.balance.toLocaleString('vi-VN')}.`, 'success');
       setCode('');
     } catch (error) {
       triggerToast(setToast, error instanceof Error ? error.message : 'Không thể kích hoạt Giftcode.', 'error');
@@ -282,7 +276,7 @@ export const Giftcode: React.FC = () => {
         <div className="bg-surface-container-low p-4 rounded-xl border border-outline-variant/20 flex gap-2.5">
           <HelpCircle className="text-outline shrink-0 mt-0.5" size={16} />
           <p className="text-[10px] text-on-surface-variant/90 leading-relaxed">
-            Mỗi mã Giftcode chỉ được kích hoạt sử dụng một lần duy nhất cho mỗi tài khoản. Phần thưởng sẽ được chuyển khoản thẳng vào Số dư khả dụng của bạn ngay lập tức.
+            Mỗi mã Giftcode chỉ được kích hoạt một lần cho mỗi tài khoản. Ở phiên bản hiện tại, giftcode chỉ đổi Xu thưởng; không cộng trực tiếp tiền mặt vào ví.
           </p>
         </div>
       </div>

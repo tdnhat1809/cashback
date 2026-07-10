@@ -1,0 +1,33 @@
+services:
+  hoantienvip:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    environment:
+      NODE_ENV: production
+      PORT: 8787
+      APP_URL: ${APP_URL}
+      API_PUBLIC_URL: ${API_PUBLIC_URL}
+      DATABASE_PATH: /app/storage/hoantienvip.sqlite
+      WEB_DIST_PATH: /app/dist
+      SEED_DEMO_DATA: "false"
+      SESSION_COOKIE: ${SESSION_COOKIE:-hoantienvip_session}
+      SESSION_TTL_HOURS: ${SESSION_TTL_HOURS:-720}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-}
+      IP_HASH_PEPPER: ${IP_HASH_PEPPER}
+      DATA_ENCRYPTION_KEY: ${DATA_ENCRYPTION_KEY}
+      SHOPEE_AFFILIATE_MODE: ${SHOPEE_AFFILIATE_MODE:-disabled}
+      SHOPEE_AFFILIATE_ID: ${SHOPEE_AFFILIATE_ID:-}
+      SHOPEE_AFFILIATE_APP_ID: ${SHOPEE_AFFILIATE_APP_ID:-}
+      SHOPEE_AFFILIATE_SECRET: ${SHOPEE_AFFILIATE_SECRET:-}
+      TIKTOK_ADAPTER_MODE: mock
+      RIOHUB_BASE_URL: https://riohub.vn/api/v1
+      RIOHUB_API_KEY: ${RIOHUB_API_KEY:-}
+    volumes:
+      - hoantienvip_storage:/app/storage
+
+volumes:
+  hoantienvip_storage:

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { mockReferralStats } from '../../mockData';
+import React, { useEffect, useState } from 'react';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Table } from '../../components/Table';
@@ -8,6 +7,7 @@ import { ToastContainer } from '../../components/Toast';
 import { defaultToastState, triggerToast } from '../../components/toast-state';
 import type { ToastState } from '../../components/toast-state';
 import { Share2, Copy, QrCode, Sparkles, Users, Award } from 'lucide-react';
+import { userFeaturesApi } from '../../services/apiClient';
 
 interface ReferralHistoryItem {
   name: string;
@@ -17,8 +17,12 @@ interface ReferralHistoryItem {
 }
 
 export const Referral: React.FC = () => {
-  const stats = mockReferralStats;
+  const [stats, setStats] = useState({ referralCode: '', counts: { total: 0, pending: 0, qualified: 0, rewarded: 0, rejected: 0 }, items: [] as Array<{ id: string; referredUser: { name: string }; status: string; createdAt: string }> });
   const [toast, setToast] = useState<ToastState>(defaultToastState);
+  useEffect(() => {
+    void userFeaturesApi.referrals().then((result) => setStats(result as typeof stats)).catch(() => undefined);
+  }, []);
+  const referralLink = `${window.location.origin}/register?ref=${encodeURIComponent(stats.referralCode)}`;
 
   const copyText = async (value: string, successMessage: string) => {
     try {
@@ -30,7 +34,7 @@ export const Referral: React.FC = () => {
   };
 
   const handleCopyLink = () => {
-    void copyText(stats.referralLink, 'Đã sao chép đường dẫn giới thiệu!');
+    void copyText(referralLink, 'Đã sao chép đường dẫn giới thiệu!');
   };
 
   const handleCopyCode = () => {
@@ -78,7 +82,7 @@ export const Referral: React.FC = () => {
           </div>
           <div>
             <span className="text-[10px] text-on-surface-variant uppercase font-bold block mb-0.5">Số bạn bè đã mời</span>
-            <span className="text-2xl font-black text-on-surface tracking-tight">{stats.totalInvited} thành viên</span>
+            <span className="text-2xl font-black text-on-surface tracking-tight">{stats.counts.total} thành viên</span>
           </div>
         </div>
 
@@ -88,7 +92,7 @@ export const Referral: React.FC = () => {
           </div>
           <div>
             <span className="text-[10px] text-on-surface-variant uppercase font-bold block mb-0.5">Đã nhận thưởng</span>
-            <span className="text-2xl font-black text-tertiary tracking-tight">{stats.earned.toLocaleString('vi-VN')}đ</span>
+            <span className="text-2xl font-black text-tertiary tracking-tight">{stats.counts.rewarded} người</span>
           </div>
         </div>
 
@@ -98,7 +102,7 @@ export const Referral: React.FC = () => {
           </div>
           <div>
             <span className="text-[10px] text-on-surface-variant uppercase font-bold block mb-0.5">Hoa hồng chờ duyệt</span>
-            <span className="text-2xl font-black text-amber-600 tracking-tight">100.000đ</span>
+            <span className="text-2xl font-black text-amber-600 tracking-tight">{stats.counts.pending} người</span>
           </div>
         </div>
       </div>
@@ -114,7 +118,7 @@ export const Referral: React.FC = () => {
               <div className="flex-1 w-full">
                 <Input
                   label="Đường dẫn giới thiệu riêng biệt"
-                  value={stats.referralLink}
+                  value={referralLink}
                   readOnly
                   startIcon={<Share2 size={16} />}
                 />
@@ -168,7 +172,7 @@ export const Referral: React.FC = () => {
       <div className="space-y-4">
         <h3 className="font-title-lg text-sm font-bold">Lịch sử giới thiệu bạn bè</h3>
         <Table
-          data={stats.history.map((item, idx) => ({ ...item, id: idx }))}
+          data={stats.items.map((item) => ({ id: item.id, name: item.referredUser.name, date: new Date(item.createdAt).toLocaleDateString('vi-VN'), status: item.status, bonus: item.status === 'rewarded' ? 'Đã thưởng' : '—' }))}
           columns={columns}
           emptyMessage="Bạn chưa giới thiệu người bạn nào."
         />

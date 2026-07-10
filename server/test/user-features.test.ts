@@ -40,6 +40,8 @@ beforeEach(() => {
     cookieName: 'test_session',
     environment: 'development',
     sessionTtlHours: 24,
+    appUrl: 'http://localhost:5173',
+    google: { clientId: '', clientSecret: '', redirectUri: '' },
   }));
   app.use('/api/v1', createUserFeaturesRouter({ service: features, auth, cookieName: 'test_session' }));
   app.use(authErrorHandler);
@@ -53,14 +55,11 @@ afterEach(() => {
   context.database.close();
 });
 
-const login = async (phone: string): Promise<{ agent: Agent; userId: string }> => {
+const login = async (email: string): Promise<{ agent: Agent; userId: string }> => {
   const agent = request.agent(context.app);
-  const otp = await agent.post('/auth/otp/request').send({ phone }).expect(201);
-  await agent.post('/auth/otp/verify').send({
-    challengeId: otp.body.data.challengeId,
-    phone,
-    code: '123456',
-  }).expect(200);
+  await agent.post('/auth/register').send({
+    name: 'Người dùng kiểm thử', email, password: 'Password1234',
+  }).expect(201);
   const me = await agent.get('/auth/me').expect(200);
   return { agent, userId: me.body.data.user.id as string };
 };
@@ -68,8 +67,8 @@ const login = async (phone: string): Promise<{ agent: Agent; userId: string }> =
 describe('user feature HTTP modules', () => {
   it('requires a valid session and isolates saved products by user', async () => {
     await request(context.app).get('/api/v1/saved-products').expect(401);
-    const first = await login('0912345678');
-    const second = await login('0987654321');
+    const first = await login('first-1@example.com');
+    const second = await login('second-1@example.com');
 
     const created = await first.agent.post('/api/v1/saved-products')
       .send({ productId: 'seed_shopee_headphones' }).expect(201);
@@ -93,8 +92,8 @@ describe('user feature HTTP modules', () => {
   });
 
   it('lists only owned notifications, marks them read, and stores preferences', async () => {
-    const first = await login('0912345678');
-    const second = await login('0987654321');
+    const first = await login('first-2@example.com');
+    const second = await login('second-2@example.com');
     const timestamp = fixedNow.toISOString();
     const insert = context.database.prepare(`
       INSERT INTO notifications(id, user_id, type, title, body, created_at) VALUES (?, ?, ?, ?, ?, ?)
@@ -120,8 +119,8 @@ describe('user feature HTTP modules', () => {
   });
 
   it('redeems point giftcodes exactly once and never credits wallet giftcodes', async () => {
-    const first = await login('0912345678');
-    const second = await login('0987654321');
+    const first = await login('first-3@example.com');
+    const second = await login('second-3@example.com');
     context.database.prepare(`
       INSERT INTO giftcodes(id, code, reward_type, reward_amount, usage_limit, used_count, starts_at, expires_at, active, created_at)
       VALUES ('gift_points_100', 'POINT100', 'points', 100, 1, 0, '2026-01-01T00:00:00.000Z', '2027-01-01T00:00:00.000Z', 1, ?)
@@ -148,8 +147,8 @@ describe('user feature HTTP modules', () => {
   });
 
   it('returns referral summary and keeps support tickets private to their owner', async () => {
-    const first = await login('0912345678');
-    const second = await login('0987654321');
+    const first = await login('first-4@example.com');
+    const second = await login('second-4@example.com');
     context.database.prepare(`
       INSERT INTO referrals(id, referrer_user_id, referred_user_id, status, created_at)
       VALUES ('ref_test', ?, ?, 'qualified', ?)
@@ -178,8 +177,8 @@ describe('user feature HTTP modules', () => {
   });
 
   it('updates profile safely and exposes only the current user activity log', async () => {
-    const first = await login('0912345678');
-    const second = await login('0987654321');
+    const first = await login('first-5@example.com');
+    const second = await login('second-5@example.com');
     await second.agent.patch('/api/v1/profile').send({ email: 'used@example.com' }).expect(200);
     await first.agent.patch('/api/v1/profile').send({ name: 'Nguyễn Văn A', email: 'a@example.com' }).expect(200)
       .expect(({ body }) => expect(body.data).toMatchObject({ name: 'Nguyễn Văn A', email: 'a@example.com' }));

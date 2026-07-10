@@ -1,19 +1,19 @@
+import { OAuth2Client } from 'google-auth-library';
 import type { CookieOptions, NextFunction, Request, RequestHandler, Response } from 'express';
 import { Router } from 'express';
 import { z } from 'zod';
 import { AuthError, type AuthEnvironment, type AuthService } from './service.js';
 
-const requestOtpSchema = z.object({
-  phone: z.string().min(1),
-  purpose: z.enum(['login', 'password_reset']).optional(),
-});
+const registerSchema = z.object({
+  name: z.string().trim().min(2).max(100),
+  email: z.string().trim().email().max(254),
+  password: z.string().min(1).max(128),
+}).strict();
 
-const verifyOtpSchema = z.object({
-  challengeId: z.string().min(1),
-  phone: z.string().min(1),
-  code: z.string().min(1),
-  purpose: z.enum(['login', 'password_reset']).optional(),
-});
+const loginSchema = z.object({
+  email: z.string().trim().email().max(254),
+  password: z.string().min(1).max(128),
+}).strict();
 
 export interface SessionCookieOptions {
   cookieName: string;
@@ -21,8 +21,16 @@ export interface SessionCookieOptions {
   sessionTtlHours: number;
 }
 
+export interface GoogleOAuthOptions {
+  clientId: string;
+  clientSecret: string;
+  redirectUri: string;
+}
+
 export interface AuthHttpOptions extends SessionCookieOptions {
   service: AuthService;
+  appUrl: string;
+  google: GoogleOAuthOptions;
 }
 
 export const sessionCookieSettings = (options: SessionCookieOptions): CookieOptions => ({
@@ -48,6 +56,12 @@ export const getSessionToken = (request: Request, cookieName: string): string | 
   return typeof value === 'string' && value.length > 0 ? value : undefined;
 };
 
+const getCookieValue = (request: Request, cookieName: string): string | undefined => {
+  const cookies = request.cookies as Record<string, unknown> | undefined;
+  const value = cookies?.[cookieName];
+  return typeof value === 'string' && value.length > 0 ? value : undefined;
+};
+
 const parseBody = <T>(schema: z.ZodType<T>, body: unknown): T => {
   const result = schema.safeParse(body);
   if (!result.success) {
@@ -58,32 +72,102 @@ const parseBody = <T>(schema: z.ZodType<T>, body: unknown): T => {
   return result.data;
 };
 
-const handler = (run: (request: Request, response: Response) => void): RequestHandler =>
+const handler = (run: (request: Request, response: Response) => Promise<void> | void): RequestHandler =>
   (request: Request, response: Response, next: NextFunction): void => {
-    try {
-      run(request, response);
-    } catch (error) {
-      next(error);
-    }
+    Promise.resolve(run(request, response)).catch(next);
   };
+
+const isGoogleConfigured = (google: GoogleOAuthOptions): boolean =>
+  Boolean(google.clientId && google.clientSecret && google.redirectUri);
+
+const safeRedirectPath = (value: unknown): string =>
+  typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') ? value : '/dashboard';
+
+const appRedirectUrl = (appUrl: string, path: string): string => new URL(path, appUrl).toString();
+
+const googleStateCookieSettings = (options: SessionCookieOptions): CookieOptions => ({
+  httpOnly: true,
+  secure: options.environment === 'production',
+  sameSite: 'lax',
+  path: '/',
+  maxAge: 10 * 60 * 1_000,
+});
+
+const googleStateCookieName = (options: SessionCookieOptions): string => `${options.cookieName}_google_state`;
+
+const clearGoogleStateCookie = (response: Response, options: SessionCookieOptions): void => {
+  const { maxAge: _maxAge, ...clearOptions } = googleStateCookieSettings(options);
+  response.clearCookie(googleStateCookieName(options), clearOptions);
+};
 
 export const createAuthHandlers = (options: AuthHttpOptions) => {
   const cookieOptions: SessionCookieOptions = options;
 
   return {
-    requestOtp: handler((request, response) => {
-      const result = options.service.requestOtp(parseBody(requestOtpSchema, request.body));
-      response.status(201).json({ data: result });
-    }),
-    verifyOtp: handler((request, response) => {
-      const result = options.service.verifyOtp(parseBody(verifyOtpSchema, request.body));
+    register: handler((request, response) => {
+      const result = options.service.registerWithPassword(parseBody(registerSchema, request.body));
       setSessionCookie(response, result.sessionToken, cookieOptions);
-      response.json({
-        data: {
-          user: result.user,
-          sessionExpiresAt: result.sessionExpiresAt,
-        },
-      });
+      response.status(201).json({ data: { user: result.user, sessionExpiresAt: result.sessionExpiresAt } });
+    }),
+    login: handler((request, response) => {
+      const result = options.service.loginWithPassword(parseBody(loginSchema, request.body));
+      setSessionCookie(response, result.sessionToken, cookieOptions);
+      response.json({ data: { user: result.user, sessionExpiresAt: result.sessionExpiresAt } });
+    }),
+    providers: handler((_request, response) => {
+      response.json({ data: { google: isGoogleConfigured(options.google) } });
+    }),
+    googleStart: handler((request, response) => {
+      if (!isGoogleConfigured(options.google)) {
+        throw new AuthError('GOOGLE_NOT_CONFIGURED', 'Đăng nhập Google chưa được cấu hình.', 503);
+      }
+      const state = options.service.beginGoogleLogin(safeRedirectPath(request.query.redirect));
+      response.cookie(googleStateCookieName(cookieOptions), state.state, googleStateCookieSettings(cookieOptions));
+      const authorizeUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+      authorizeUrl.searchParams.set('client_id', options.google.clientId);
+      authorizeUrl.searchParams.set('redirect_uri', options.google.redirectUri);
+      authorizeUrl.searchParams.set('response_type', 'code');
+      authorizeUrl.searchParams.set('scope', 'openid email profile');
+      authorizeUrl.searchParams.set('state', state.state);
+      authorizeUrl.searchParams.set('nonce', state.nonce);
+      authorizeUrl.searchParams.set('prompt', 'select_account');
+      response.redirect(authorizeUrl.toString());
+    }),
+    googleCallback: handler(async (request, response) => {
+      const callbackError = typeof request.query.error === 'string' ? request.query.error : undefined;
+      const state = typeof request.query.state === 'string' ? request.query.state : '';
+      const code = typeof request.query.code === 'string' ? request.query.code : '';
+      let destination = '/dashboard';
+      try {
+        if (callbackError || !state || !code || !isGoogleConfigured(options.google)) {
+          throw new AuthError('GOOGLE_LOGIN_FAILED', 'Không thể đăng nhập với Google.', 400);
+        }
+        const loginState = options.service.consumeGoogleLoginState(
+          state,
+          getCookieValue(request, googleStateCookieName(cookieOptions)),
+        );
+        destination = loginState.redirectPath;
+        const client = new OAuth2Client(options.google.clientId, options.google.clientSecret, options.google.redirectUri);
+        const tokens = await client.getToken(code);
+        if (!tokens.tokens.id_token) throw new AuthError('GOOGLE_LOGIN_FAILED', 'Google không trả về thông tin xác thực.', 400);
+        const ticket = await client.verifyIdToken({ idToken: tokens.tokens.id_token, audience: options.google.clientId });
+        const payload = ticket.getPayload();
+        if (!payload?.sub || !payload.email || payload.email_verified !== true || payload.nonce !== loginState.nonce) {
+          throw new AuthError('GOOGLE_LOGIN_FAILED', 'Không thể xác thực tài khoản Google.', 400);
+        }
+        const result = options.service.authenticateWithGoogle({
+          subject: payload.sub,
+          email: payload.email,
+          name: payload.name,
+        });
+        setSessionCookie(response, result.sessionToken, cookieOptions);
+        clearGoogleStateCookie(response, cookieOptions);
+        response.redirect(appRedirectUrl(options.appUrl, destination));
+      } catch (error) {
+        clearGoogleStateCookie(response, cookieOptions);
+        const authCode = error instanceof AuthError ? error.code : 'GOOGLE_LOGIN_FAILED';
+        response.redirect(appRedirectUrl(options.appUrl, `/login?auth_error=${encodeURIComponent(authCode)}`));
+      }
     }),
     me: handler((request, response) => {
       const user = options.service.getCurrentUser(getSessionToken(request, options.cookieName));
@@ -100,8 +184,11 @@ export const createAuthHandlers = (options: AuthHttpOptions) => {
 export const createAuthRouter = (options: AuthHttpOptions): Router => {
   const router = Router();
   const handlers = createAuthHandlers(options);
-  router.post('/otp/request', handlers.requestOtp);
-  router.post('/otp/verify', handlers.verifyOtp);
+  router.post('/register', handlers.register);
+  router.post('/login', handlers.login);
+  router.get('/providers', handlers.providers);
+  router.get('/google/start', handlers.googleStart);
+  router.get('/google/callback', handlers.googleCallback);
   router.get('/me', handlers.me);
   router.post('/logout', handlers.logout);
   return router;
@@ -113,7 +200,7 @@ export const authErrorHandler = (error: unknown, _request: Request, response: Re
     return;
   }
 
-  if (error.code === 'OTP_RATE_LIMITED') {
+  if (error.code === 'AUTH_RATE_LIMITED') {
     const retryAfterSeconds = error.details?.retryAfterSeconds;
     if (typeof retryAfterSeconds === 'number') response.setHeader('Retry-After', String(retryAfterSeconds));
   }

@@ -2,7 +2,6 @@ import { createContext, useContext } from 'react';
 import type {
   ApiError,
   AuthUser,
-  OtpChallenge,
   VerifiedSession,
 } from '../services/apiClient';
 
@@ -12,8 +11,8 @@ export interface AuthContextValue {
   user: AuthUser | null;
   status: AuthStatus;
   error: ApiError | null;
-  requestOtp: (phone: string) => Promise<OtpChallenge>;
-  verifyOtp: (input: { challengeId: string; phone: string; code: string }) => Promise<VerifiedSession>;
+  register: (input: { name: string; email: string; password: string }) => Promise<VerifiedSession>;
+  login: (input: { email: string; password: string }) => Promise<VerifiedSession>;
   refreshSession: () => Promise<void>;
   logout: () => Promise<void>;
 }

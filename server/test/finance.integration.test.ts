@@ -19,13 +19,10 @@ const config = loadConfig({
 const databases: SqliteDatabase[] = [];
 afterEach(() => { while (databases.length) databases.pop()?.close(); });
 
-const login = async (agent: ReturnType<typeof request.agent>, phone: string) => {
-  const challenge = await agent.post('/api/v1/auth/otp/request').send({ phone }).expect(201);
-  await agent.post('/api/v1/auth/otp/verify').send({
-    challengeId: challenge.body.data.challengeId,
-    phone,
-    code: '123456',
-  }).expect(200);
+const login = async (agent: ReturnType<typeof request.agent>, email: string, password = 'Password1234') => {
+  await agent.post('/api/v1/auth/register').send({
+    name: 'Người dùng kiểm thử', email, password,
+  }).expect(201);
 };
 
 describe('settlement and manual payout operations', () => {
@@ -35,8 +32,8 @@ describe('settlement and manual payout operations', () => {
     const built = createApp(config, { database });
     const customer = request.agent(built.app);
     const admin = request.agent(built.app);
-    await login(customer, '0912345678');
-    await login(admin, '0900000000');
+    await login(customer, 'customer@example.com');
+    await admin.post('/api/v1/auth/login').send({ email: 'admin@hoantienvip.local', password: 'ChangeMe123!' }).expect(200);
 
     const link = await customer.post('/api/v1/affiliate-links').send({
       platform: 'shopee',

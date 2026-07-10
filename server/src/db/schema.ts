@@ -479,4 +479,42 @@ export const migrations: readonly Migration[] = [
       );
     `,
   },
+  {
+    version: 5,
+    name: 'email_and_google_authentication',
+    sql: `
+      -- The existing users.phone column remains for legacy records. New email/OAuth
+      -- users receive an opaque internal value there and it is never returned by the API.
+      CREATE TABLE IF NOT EXISTS auth_identities (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        provider TEXT NOT NULL CHECK (provider IN ('password', 'google')),
+        provider_subject TEXT NOT NULL,
+        email TEXT NOT NULL COLLATE NOCASE,
+        password_hash TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        UNIQUE(provider, provider_subject),
+        UNIQUE(email)
+      );
+      CREATE INDEX IF NOT EXISTS idx_auth_identities_user ON auth_identities(user_id);
+
+      CREATE TABLE IF NOT EXISTS password_login_attempts (
+        email TEXT PRIMARY KEY COLLATE NOCASE,
+        failures INTEGER NOT NULL DEFAULT 0,
+        first_failed_at TEXT NOT NULL,
+        locked_until TEXT,
+        updated_at TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS google_oauth_states (
+        state_hash TEXT PRIMARY KEY,
+        nonce TEXT NOT NULL,
+        redirect_path TEXT NOT NULL,
+        expires_at TEXT NOT NULL,
+        created_at TEXT NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS idx_google_oauth_states_expiry ON google_oauth_states(expires_at);
+    `,
+  },
 ];

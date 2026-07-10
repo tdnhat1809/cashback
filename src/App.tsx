@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom
 import { AdminLayout, DashboardLayout, PublicLayout } from './components/Layouts';
 import { RequireRole } from './components/RequireRole';
 import type { UserRole } from './services/apiClient';
-import { AppDataProvider } from './state/AppDataContext';
 import { AuthProvider } from './state/AuthContext';
 
 const Home = lazy(async () => ({ default: (await import('./pages/Home')).Home }));
@@ -29,6 +28,7 @@ const Settings = lazy(async () => ({ default: (await import('./pages/dashboard/S
 const ShipmentTracking = lazy(async () => ({ default: (await import('./pages/dashboard/ShipmentTracking')).ShipmentTracking }));
 const ShipmentDetail = lazy(async () => ({ default: (await import('./pages/dashboard/ShipmentDetail')).ShipmentDetail }));
 const SupportTicketDetail = lazy(async () => ({ default: (await import('./pages/dashboard/SupportTicketDetail')).SupportTicketDetail }));
+const SupportTickets = lazy(async () => ({ default: (await import('./pages/dashboard/SupportTickets')).SupportTickets }));
 const BalanceHistory = lazy(async () => ({ default: (await import('./pages/dashboard/OtherDashboardPages')).BalanceHistory }));
 const ActivityLog = lazy(async () => ({ default: (await import('./pages/dashboard/OtherDashboardPages')).ActivityLog }));
 const Notifications = lazy(async () => ({ default: (await import('./pages/dashboard/OtherDashboardPages')).Notifications }));
@@ -58,8 +58,7 @@ const RouteLoader = () => (
 
 function App() {
   return (
-    <AppDataProvider>
-      <AuthProvider>
+    <AuthProvider>
         <Router>
         <Suspense fallback={<RouteLoader />}>
         <Routes>
@@ -81,6 +80,7 @@ function App() {
             <Route path="/dashboard/withdrawal" element={<DashboardLayout><Withdrawal /></DashboardLayout>} />
             <Route path="/dashboard/shipment" element={<DashboardLayout><ShipmentTracking /></DashboardLayout>} />
             <Route path="/dashboard/shipment/:id" element={<DashboardLayout><ShipmentDetail /></DashboardLayout>} />
+            <Route path="/dashboard/support" element={<DashboardLayout><SupportTickets /></DashboardLayout>} />
             <Route path="/dashboard/support/:ticketId" element={<DashboardLayout><SupportTicketDetail /></DashboardLayout>} />
             <Route path="/dashboard/saved" element={<DashboardLayout><SavedProducts /></DashboardLayout>} />
             <Route path="/dashboard/referral" element={<DashboardLayout><Referral /></DashboardLayout>} />
@@ -107,8 +107,7 @@ function App() {
         </Routes>
         </Suspense>
         </Router>
-      </AuthProvider>
-    </AppDataProvider>
+    </AuthProvider>
   );
 }
 

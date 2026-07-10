@@ -8,16 +8,16 @@ import type { ToastState } from '../components/toast-state';
 
 export const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
-  const [identifier, setIdentifier] = useState('');
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<ToastState>(defaultToastState);
   const [errorBorder, setErrorBorder] = useState(false);
 
   const handleVerify = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!identifier.trim()) {
+    if (!email.trim()) {
       setErrorBorder(true);
-      triggerToast(setToast, 'Vui lòng nhập Email hoặc Số điện thoại.', 'error');
+      triggerToast(setToast, 'Vui lòng nhập địa chỉ email đã đăng ký.', 'error');
       return;
     }
 
@@ -27,7 +27,7 @@ export const ForgotPassword: React.FC = () => {
       setLoading(false);
       triggerToast(
         setToast, 
-        `Mã xác thực OTP đã được gửi thành công đến: ${identifier.trim()}`, 
+        `Hướng dẫn đặt lại mật khẩu đã được gửi đến: ${email.trim()}`,
         'success'
       );
       
@@ -39,7 +39,7 @@ export const ForgotPassword: React.FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIdentifier(e.target.value);
+    setEmail(e.target.value);
     if (errorBorder) {
       setErrorBorder(false);
     }
@@ -75,7 +75,7 @@ export const ForgotPassword: React.FC = () => {
           </div>
           <h2 className="font-headline-md text-xl font-bold text-on-surface mb-2">Quên mật khẩu?</h2>
           <p className="font-body-md text-xs text-on-surface-variant max-w-[280px]">
-            Nhập số điện thoại hoặc email đã đăng ký của bạn để nhận mã xác minh đặt lại mật khẩu.
+            Nhập email đã đăng ký để nhận hướng dẫn đặt lại mật khẩu.
           </p>
         </div>
 
@@ -83,18 +83,18 @@ export const ForgotPassword: React.FC = () => {
         <form onSubmit={handleVerify} className="space-y-6 flex-grow">
           <div className="space-y-1 text-left">
             <label className="font-label-md text-xs font-bold text-on-surface-variant ml-1" htmlFor="identifier">
-              Email hoặc Số điện thoại
+              Địa chỉ email
             </label>
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <User size={18} className="text-on-surface-variant group-focus-within:text-primary transition-colors" />
               </div>
               <input 
-                id="identifier"
-                name="identifier"
-                type="text"
-                placeholder="example@email.com"
-                value={identifier}
+              id="email"
+              name="email"
+              type="email"
+              placeholder="example@email.com"
+              value={email}
                 onChange={handleInputChange}
                 disabled={loading}
                 className={`block w-full pl-11 pr-4 py-3.5 bg-surface-container-low/40 rounded-xl font-body-md text-sm outline-none border-2 focus:ring-0 focus:border-primary transition-all placeholder:text-on-surface-variant/40

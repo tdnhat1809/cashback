@@ -1,0 +1,12 @@
+node_modules
+server/node_modules
+dist
+server/dist
+server/storage
+.git
+.env
+server/.env
+stitch*
+agent
+.agents
+*.log

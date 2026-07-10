@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Badge } from '../../components/Badge';
 import { Button } from '../../components/Button';
@@ -10,14 +10,31 @@ import {
   ChevronRight, ArrowLeft, Send, Paperclip, 
   HelpCircle, Star, Ban, ExternalLink, Info, MessageSquare
 } from 'lucide-react';
-import { useAppData } from '../../state/AppDataContext';
+import { userFeaturesApi } from '../../services/apiClient';
+
+type TicketView = {
+  id: string; subject: string; status: 'Open' | 'Resolved' | 'Closed'; priority: 'Low' | 'Medium' | 'High';
+  category: string; createdAt: string; linkedOrder?: string;
+  messages: Array<{ id: string; sender: 'user' | 'agent' | 'system'; senderName: string; text: string; time: string; imageUrl?: string }>;
+};
+
+const toTicketView = (ticket: Awaited<ReturnType<typeof userFeaturesApi.supportTicket>>): TicketView => ({
+  id: ticket.id, subject: ticket.subject,
+  status: ({ open: 'Open', resolved: 'Resolved', closed: 'Closed' } as const)[ticket.status as 'open' | 'resolved' | 'closed'],
+  priority: ({ low: 'Low', medium: 'Medium', high: 'High' } as const)[ticket.priority as 'low' | 'medium' | 'high'],
+  category: ticket.category, createdAt: ticket.createdAt,
+  messages: ticket.messages.map((message) => ({
+    id: message.id, sender: message.senderType, senderName: message.senderType === 'user' ? 'Bạn' : message.senderType === 'agent' ? 'Hỗ trợ viên' : 'Hệ thống',
+    text: message.body, time: new Date(message.createdAt).toLocaleString('vi-VN'),
+  })),
+});
 
 export const SupportTicketDetail: React.FC = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
   const navigate = useNavigate();
   
-  const { supportTickets, sendTicketMessage, closeSupportTicket } = useAppData();
-  const ticket = supportTickets.find((item) => item.id === ticketId) ?? supportTickets[0];
+  const [ticket, setTicket] = useState<TicketView | null>(null);
+  const [loadError, setLoadError] = useState('');
   const [inputText, setInputText] = useState('');
   const [rating, setRating] = useState(0);
   const [toast, setToast] = useState<ToastState>(defaultToastState);
@@ -29,26 +46,38 @@ export const SupportTicketDetail: React.FC = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [ticket?.messages]);
 
+  const reload = useCallback(async () => {
+    if (!ticketId) return;
+    try { setTicket(toTicketView(await userFeaturesApi.supportTicket(ticketId))); setLoadError(''); }
+    catch (error) { setLoadError(error instanceof Error ? error.message : 'Không thể tải yêu cầu hỗ trợ.'); setTicket(null); }
+  }, [ticketId]);
+
+  useEffect(() => { void reload(); }, [reload]);
+
   if (!ticket) {
-    return <EmptyState variant="tickets" />;
+    return <div className="space-y-4"><EmptyState variant="tickets" onAction={() => navigate('/dashboard/support')} />{loadError && <p className="text-sm text-error" role="alert">{loadError}</p>}</div>;
   }
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim()) return;
 
     try {
-      sendTicketMessage(ticket.id, inputText);
+      await userFeaturesApi.addSupportMessage(ticket.id, inputText);
       setInputText('');
+      await reload();
       triggerToast(setToast, 'Đã gửi phản hồi cho bộ phận hỗ trợ.', 'success');
     } catch (error) {
       triggerToast(setToast, error instanceof Error ? error.message : 'Không thể gửi phản hồi.', 'error');
     }
   };
 
-  const handleCloseTicket = () => {
-    closeSupportTicket(ticket.id);
-    triggerToast(setToast, 'Đã đóng yêu cầu hỗ trợ thành công. Bạn có thể đánh giá chất lượng phục vụ.', 'success');
+  const handleCloseTicket = async () => {
+    try {
+      await userFeaturesApi.closeSupportTicket(ticket.id);
+      await reload();
+      triggerToast(setToast, 'Đã đóng yêu cầu hỗ trợ thành công. Bạn có thể đánh giá chất lượng phục vụ.', 'success');
+    } catch (error) { triggerToast(setToast, error instanceof Error ? error.message : 'Không thể đóng yêu cầu.', 'error'); }
   };
 
   return (
@@ -102,7 +131,7 @@ export const SupportTicketDetail: React.FC = () => {
               <EmptyState 
                 variant="tickets"
                 onAction={() => {
-                  void sendTicketMessage(ticket.id, 'Tôi cần hỗ trợ kiểm tra yêu cầu này.');
+                  void userFeaturesApi.addSupportMessage(ticket.id, 'Tôi cần hỗ trợ kiểm tra yêu cầu này.').then(reload);
                 }}
               />
             ) : (
@@ -265,7 +294,7 @@ export const SupportTicketDetail: React.FC = () => {
               {ticket.status === 'Open' && (
                 <Button 
                   variant="outline" 
-                  onClick={handleCloseTicket}
+                  onClick={() => void handleCloseTicket()}
                   className="w-full py-3.5 font-bold text-error hover:bg-error-container/20 border-error/40"
                   icon={<Ban size={16} />}
                 >

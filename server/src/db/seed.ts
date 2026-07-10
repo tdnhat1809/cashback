@@ -1,5 +1,6 @@
 import type { SqliteDatabase } from './database.js';
 import { nowIso } from '../lib/ids.js';
+import { hashPassword } from '../modules/auth/crypto.js';
 
 const carriers = ['SPX', 'LEX', 'EMS', 'J&T', 'GHN', '247Express', 'VNPost', 'Viettel Post', 'GHTK', 'Best', 'Futa', 'Nhất Tín', 'Netco', 'NetPost'];
 
@@ -12,9 +13,20 @@ export const seedDatabase = (database: SqliteDatabase) => {
   const timestamp = nowIso();
   const transaction = database.transaction(() => {
     database.prepare(`
-      INSERT OR IGNORE INTO users(id, public_id, phone, name, role, status, created_at, updated_at)
-      VALUES ('seed_admin', 'ADMIN-DEMO', '+84900000000', 'Quản trị viên demo', 'admin', 'active', ?, ?)
+      INSERT INTO users(id, public_id, phone, email, name, role, status, created_at, updated_at)
+      VALUES ('seed_admin', 'ADMIN-DEMO', 'identity:seed_admin', 'admin@hoantienvip.local', 'Quản trị viên demo', 'admin', 'active', ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        phone = excluded.phone,
+        email = excluded.email,
+        name = excluded.name,
+        role = excluded.role,
+        status = excluded.status,
+        updated_at = excluded.updated_at
     `).run(timestamp, timestamp);
+    database.prepare(`
+      INSERT OR IGNORE INTO auth_identities(id, user_id, provider, provider_subject, email, password_hash, created_at, updated_at)
+      VALUES ('auth_seed_admin_password', 'seed_admin', 'password', 'admin@hoantienvip.local', 'admin@hoantienvip.local', ?, ?, ?)
+    `).run(hashPassword('ChangeMe123!'), timestamp, timestamp);
     database.prepare(`
       INSERT OR IGNORE INTO cashback_policies(id, version, user_share_bps, withholding_tax_bps, effective_from, active, created_at)
       VALUES ('policy_mvp_v1', 'mvp-v1', 9000, 0, ?, 1, ?)

@@ -18,10 +18,9 @@ const authenticatedAgent = async () => {
   databases.push(database);
   const built = createApp(config, { database });
   const agent = request.agent(built.app);
-  const otp = await agent.post('/api/v1/auth/otp/request').send({ phone: '0912345678' }).expect(201);
-  await agent.post('/api/v1/auth/otp/verify').send({
-    challengeId: otp.body.data.challengeId, phone: '0912345678', code: '123456',
-  }).expect(200);
+  await agent.post('/api/v1/auth/register').send({
+    name: 'Người dùng kiểm thử', email: 'member@example.com', password: 'Password1234',
+  }).expect(201);
   const me = await agent.get('/api/v1/auth/me').expect(200);
   return { ...built, agent, user: me.body.data.user as { id: string } };
 };
@@ -32,7 +31,7 @@ describe('HTTP API integration', () => {
     const health = await request(app).get('/api/v1/health').expect(200);
     expect(health.body.data.status).toBe('ok');
     const me = await agent.get('/api/v1/auth/me').expect(200);
-    expect(me.body.data.user.phone).toBe('+84912345678');
+    expect(me.body.data.user.email).toBe('member@example.com');
   });
 
   it('creates a Shopee tracking link and records redirect clicks', async () => {
@@ -59,6 +58,22 @@ describe('HTTP API integration', () => {
     expect(balances.body.data.wallet.available).toBe(100000);
     expect(balances.body.data.wallet.reserved).toBe(100000);
     expect((database.prepare('SELECT count(*) AS count FROM withdrawal_requests').get() as { count: number }).count).toBe(1);
+  });
+
+  it('uses an encrypted saved bank account without returning its full account number', async () => {
+    const { agent, database, user } = await authenticatedAgent();
+    const bank = await agent.put('/api/v1/bank-accounts/default').send({
+      bankCode: 'TCB', bankName: 'Techcombank', accountNumber: '19034298104321', accountName: 'NGUYEN VAN A',
+    }).expect(200);
+    expect(bank.body.data.accountNumberMasked).not.toContain('19034298104321');
+    expect(database.prepare('SELECT account_number_ciphertext FROM bank_accounts WHERE id = ?').get(bank.body.data.id))
+      .toBeDefined();
+    await agent.get('/api/v1/dashboard').expect(200);
+    const wallet = database.prepare('SELECT id FROM wallet_accounts WHERE user_id = ?').get(user.id) as { id: string };
+    database.prepare(`UPDATE wallet_buckets SET balance_vnd = 100000 WHERE wallet_account_id = ? AND bucket = 'available'`).run(wallet.id);
+    const withdrawal = await agent.post('/api/v1/withdrawals').set('Idempotency-Key', 'withdrawal_saved_bank_001')
+      .send({ amountVnd: 50000, bankAccountId: bank.body.data.id }).expect(201);
+    expect(withdrawal.body.data.bank_account_masked).toBe(bank.body.data.accountNumberMasked);
   });
 
   it('isolates shipments by authenticated user and rejects duplicates', async () => {

@@ -1,4 +1,5 @@
 import { resolve } from 'node:path';
+import 'dotenv/config';
 import { z } from 'zod';
 
 const envBoolean = z.preprocess((value) => {
@@ -19,6 +20,11 @@ const schema = z.object({
   SESSION_COOKIE: z.string().min(1).default('hoantienvip_session'),
   SESSION_TTL_HOURS: z.coerce.number().int().positive().default(720),
   DEV_OTP: z.string().regex(/^\d{6}$/).optional(),
+  OTP_DELIVERY_WEBHOOK_URL: z.union([z.string().url(), z.literal('')]).default(''),
+  OTP_DELIVERY_WEBHOOK_TOKEN: z.string().default(''),
+  GOOGLE_CLIENT_ID: z.string().default(''),
+  GOOGLE_CLIENT_SECRET: z.string().default(''),
+  GOOGLE_REDIRECT_URI: z.union([z.string().url(), z.literal('')]).default(''),
   IP_HASH_PEPPER: z.string().default('development-only-ip-hash-pepper'),
   DATA_ENCRYPTION_KEY: z.string().default('development-only-encryption-key'),
   SHOPEE_AFFILIATE_MODE: z.enum(['disabled', 'dynamic', 'graphql']).default('disabled'),
@@ -37,7 +43,6 @@ export type AppConfig = ReturnType<typeof loadConfig>;
 export const loadConfig = (environment: NodeJS.ProcessEnv = process.env) => {
   const parsed = schema.parse(environment);
   if (parsed.NODE_ENV === 'production') {
-    if (parsed.DEV_OTP) throw new Error('DEV_OTP must not be configured in production.');
     if (parsed.IP_HASH_PEPPER.length < 32) throw new Error('IP_HASH_PEPPER must contain at least 32 characters in production.');
     if (parsed.DATA_ENCRYPTION_KEY.length < 32) throw new Error('DATA_ENCRYPTION_KEY must contain at least 32 characters in production.');
   }

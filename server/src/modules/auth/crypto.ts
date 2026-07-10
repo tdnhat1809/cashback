@@ -1,6 +1,7 @@
 import { createHash, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 
 const OTP_HASH_PREFIX = 'scrypt';
+const PASSWORD_HASH_PREFIX = 'scrypt-password';
 
 export const createOpaqueToken = (): string => randomBytes(32).toString('base64url');
 
@@ -17,5 +18,19 @@ export const verifyOtpCodeHash = (code: string, encodedHash: string): boolean =>
 
   const expected = Buffer.from(expectedEncoded, 'base64url');
   const actual = scryptSync(code, salt, expected.length);
+  return expected.length === actual.length && timingSafeEqual(expected, actual);
+};
+
+export const hashPassword = (password: string, salt = randomBytes(16).toString('base64url')): string => {
+  const digest = scryptSync(password, salt, 64).toString('base64url');
+  return `${PASSWORD_HASH_PREFIX}$${salt}$${digest}`;
+};
+
+export const verifyPasswordHash = (password: string, encodedHash: string): boolean => {
+  const [prefix, salt, expectedEncoded, extra] = encodedHash.split('$');
+  if (prefix !== PASSWORD_HASH_PREFIX || !salt || !expectedEncoded || extra !== undefined) return false;
+
+  const expected = Buffer.from(expectedEncoded, 'base64url');
+  const actual = scryptSync(password, salt, expected.length);
   return expected.length === actual.length && timingSafeEqual(expected, actual);
 };

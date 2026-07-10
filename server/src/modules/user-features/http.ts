@@ -52,6 +52,12 @@ const profileSchema = z.object({
   name: z.string().trim().min(2).max(100).optional(),
   email: z.union([z.string().trim().email().max(254).transform((value) => value.toLowerCase()), z.null()]).optional(),
 }).strict().refine((value) => Object.keys(value).length > 0, { message: 'Cần có ít nhất một thay đổi.' });
+const bankAccountSchema = z.object({
+  bankCode: z.string().trim().min(2).max(32),
+  bankName: z.string().trim().min(2).max(100),
+  accountNumber: z.string().trim().regex(/^\d{6,20}$/),
+  accountName: z.string().trim().min(2).max(150),
+}).strict();
 
 const parse = <T>(schema: z.ZodType<T>, input: unknown): T => {
   const result = schema.safeParse(input);
@@ -173,12 +179,21 @@ export const createUserFeaturesRouter = (options: UserFeaturesHttpOptions): Rout
       data: options.service.addSupportMessage(userId(request), String(request.params.ticketId), input),
     });
   }));
+  router.patch('/support/tickets/:ticketId/close', handler((request, response) => {
+    response.json({ data: options.service.closeSupportTicket(userId(request), String(request.params.ticketId)) });
+  }));
 
   router.get('/profile', handler((request, response) => {
     response.json({ data: options.service.getProfile(userId(request)) });
   }));
   router.patch('/profile', handler((request, response) => {
     response.json({ data: options.service.updateProfile(userId(request), parse(profileSchema, request.body) as ProfilePatch) });
+  }));
+  router.get('/bank-accounts', handler((request, response) => {
+    response.json({ data: options.service.listBankAccounts(userId(request)) });
+  }));
+  router.put('/bank-accounts/default', handler((request, response) => {
+    response.json({ data: options.service.replaceDefaultBankAccount(userId(request), parse(bankAccountSchema, request.body)) });
   }));
   router.get('/activity-logs', handler((request, response) => {
     response.json({ data: options.service.listActivityLogs(userId(request), parse(paginationSchema, request.query)) });

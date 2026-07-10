@@ -1,6 +1,14 @@
-import { randomUUID } from 'node:crypto';
+import { randomInt, randomUUID } from 'node:crypto';
 import type { SqliteDatabase } from '../../db/database.js';
-import { createOpaqueToken, hashOtpCode, hashSessionToken, verifyOtpCodeHash } from './crypto.js';
+import type { OtpDelivery } from './delivery.js';
+import {
+  createOpaqueToken,
+  hashOtpCode,
+  hashPassword,
+  hashSessionToken,
+  verifyOtpCodeHash,
+  verifyPasswordHash,
+} from './crypto.js';
 import { InvalidVietnamesePhoneError, normalizeVietnamesePhone } from './phone.js';
 
 export type AuthEnvironment = 'development' | 'test' | 'production';
@@ -9,7 +17,7 @@ export type OtpPurpose = 'login' | 'password_reset';
 export interface AuthUser {
   id: string;
   publicId: string;
-  phone: string;
+  phone: string | null;
   email: string | null;
   name: string;
   role: 'user' | 'support' | 'operation' | 'finance' | 'admin';
@@ -46,6 +54,33 @@ export interface VerifyOtpResult {
   sessionExpiresAt: string;
 }
 
+export interface PasswordRegistrationInput {
+  email: string;
+  password: string;
+  name: string;
+}
+
+export interface PasswordLoginInput {
+  email: string;
+  password: string;
+}
+
+export interface GoogleIdentityInput {
+  subject: string;
+  email: string;
+  name?: string;
+}
+
+export interface GoogleLoginState {
+  state: string;
+  nonce: string;
+}
+
+export interface ConsumedGoogleLoginState {
+  nonce: string;
+  redirectPath: string;
+}
+
 export interface AuthServiceOptions {
   database: SqliteDatabase;
   environment: AuthEnvironment;
@@ -59,6 +94,8 @@ export interface AuthServiceOptions {
   otpRateLimitWindowMs?: number;
   otpMaxRequestsPerWindow?: number;
   otpMaxVerifyAttempts?: number;
+  delivery?: OtpDelivery;
+  generateOtp?: () => string;
 }
 
 export class AuthError extends Error {
@@ -101,10 +138,28 @@ interface SessionUserRow extends UserRow {
   session_expires_at: string;
 }
 
+interface PasswordIdentityRow extends UserRow {
+  password_hash: string;
+}
+
+interface GoogleIdentityRow extends UserRow {}
+
+interface LoginAttemptRow {
+  failures: number;
+  first_failed_at: string;
+  locked_until: string | null;
+}
+
+interface GoogleStateRow {
+  nonce: string;
+  redirect_path: string;
+  expires_at: string;
+}
+
 const toAuthUser = (row: UserRow): AuthUser => ({
   id: row.id,
   publicId: row.public_id,
-  phone: row.phone,
+  phone: row.phone.startsWith('identity:') ? null : row.phone,
   email: row.email,
   name: row.name,
   role: row.role,
@@ -132,6 +187,24 @@ const assertOtpCode = (code: string): string => {
   return trimmed;
 };
 
+const normalizeEmailOrThrow = (email: string): string => {
+  const normalized = email.trim().toLowerCase();
+  if (normalized.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
+    throw new AuthError('INVALID_EMAIL', 'Địa chỉ email không hợp lệ.', 400);
+  }
+  return normalized;
+};
+
+const assertPassword = (password: string): string => {
+  if (password.length < 10 || password.length > 128 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+    throw new AuthError('WEAK_PASSWORD', 'Mật khẩu cần từ 10–128 ký tự và có cả chữ lẫn số.', 400);
+  }
+  return password;
+};
+
+const normalizeRedirectPath = (redirectPath: string): string =>
+  redirectPath.startsWith('/') && !redirectPath.startsWith('//') ? redirectPath : '/dashboard';
+
 export class AuthService {
   private readonly database: SqliteDatabase;
   private readonly environment: AuthEnvironment;
@@ -145,6 +218,10 @@ export class AuthService {
   private readonly otpRateLimitWindowMs: number;
   private readonly otpMaxRequestsPerWindow: number;
   private readonly otpMaxVerifyAttempts: number;
+  private readonly delivery?: OtpDelivery;
+  private readonly generateOtp: () => string;
+  private readonly passwordLoginWindowMs = 15 * 60 * 1_000;
+  private readonly passwordLoginMaxFailures = 5;
 
   constructor(options: AuthServiceOptions) {
     if (!/^\d{6}$/.test(options.devOtp)) throw new Error('devOtp must contain exactly 6 digits');
@@ -164,9 +241,11 @@ export class AuthService {
     this.otpRateLimitWindowMs = options.otpRateLimitWindowMs ?? 15 * 60 * 1_000;
     this.otpMaxRequestsPerWindow = options.otpMaxRequestsPerWindow ?? 5;
     this.otpMaxVerifyAttempts = options.otpMaxVerifyAttempts ?? 5;
+    this.delivery = options.delivery;
+    this.generateOtp = options.generateOtp ?? (() => String(randomInt(100_000, 1_000_000)));
   }
 
-  requestOtp(input: RequestOtpInput): RequestOtpResult {
+  async requestOtp(input: RequestOtpInput): Promise<RequestOtpResult> {
     this.assertOtpDeliveryAvailable();
     const phone = normalizePhoneOrThrow(input.phone);
     const purpose = input.purpose ?? 'login';
@@ -174,7 +253,9 @@ export class AuthService {
     const nowIso = now.toISOString();
     const windowStartIso = new Date(now.getTime() - this.otpRateLimitWindowMs).toISOString();
 
-    return this.database.transaction(() => {
+    const code = this.environment === 'production' ? this.generateOtp() : this.devOtp;
+    if (!/^\d{6}$/.test(code)) throw new Error('generateOtp must return exactly 6 digits');
+    const result = this.database.transaction(() => {
       const recent = this.database.prepare(`
         SELECT created_at
         FROM otp_challenges
@@ -210,7 +291,7 @@ export class AuthService {
       this.database.prepare(`
         INSERT INTO otp_challenges(id, phone, purpose, code_hash, attempts, expires_at, consumed_at, created_at)
         VALUES (?, ?, ?, ?, 0, ?, NULL, ?)
-      `).run(challengeId, phone, purpose, hashOtpCode(this.devOtp), expiresAt, nowIso);
+      `).run(challengeId, phone, purpose, hashOtpCode(code), expiresAt, nowIso);
 
       return {
         challengeId,
@@ -221,6 +302,16 @@ export class AuthService {
         ...(this.environment === 'development' ? { devCode: this.devOtp } : {}),
       };
     })();
+
+    if (this.environment === 'production') {
+      try {
+        await this.delivery!.send({ phone, code, purpose, expiresAt: result.expiresAt });
+      } catch {
+        this.database.prepare('DELETE FROM otp_challenges WHERE id = ? AND consumed_at IS NULL').run(result.challengeId);
+        throw new AuthError('OTP_DELIVERY_UNAVAILABLE', 'Không thể gửi mã OTP. Vui lòng thử lại sau.', 503);
+      }
+    }
+    return result;
   }
 
   verifyOtp(input: VerifyOtpInput): VerifyOtpResult {
@@ -286,6 +377,156 @@ export class AuthService {
     return result;
   }
 
+  registerWithPassword(input: PasswordRegistrationInput): VerifyOtpResult {
+    const email = normalizeEmailOrThrow(input.email);
+    const password = assertPassword(input.password);
+    const name = input.name.trim();
+    if (name.length < 2 || name.length > 100) {
+      throw new AuthError('INVALID_NAME', 'Họ và tên cần có từ 2 đến 100 ký tự.', 400);
+    }
+    const now = this.now();
+    const timestamp = now.toISOString();
+
+    try {
+      return this.database.transaction(() => {
+        const existing = this.database.prepare(`
+          SELECT 1 FROM users WHERE email = ?
+          UNION ALL SELECT 1 FROM auth_identities WHERE email = ?
+          LIMIT 1
+        `).get(email, email);
+        if (existing) throw new AuthError('EMAIL_ALREADY_REGISTERED', 'Email này đã được đăng ký. Hãy đăng nhập để tiếp tục.', 409);
+
+        const user = this.createEmailUser({ email, name, nowIso: timestamp });
+        this.database.prepare(`
+          INSERT INTO auth_identities(id, user_id, provider, provider_subject, email, password_hash, created_at, updated_at)
+          VALUES (?, ?, 'password', ?, ?, ?, ?, ?)
+        `).run(this.generateId(), user.id, email, email, hashPassword(password), timestamp, timestamp);
+        this.database.prepare('DELETE FROM password_login_attempts WHERE email = ?').run(email);
+        return this.createSessionForUser(user, now);
+      })();
+    } catch (error) {
+      if (error instanceof AuthError) throw error;
+      if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
+        throw new AuthError('EMAIL_ALREADY_REGISTERED', 'Email này đã được đăng ký. Hãy đăng nhập để tiếp tục.', 409);
+      }
+      throw error;
+    }
+  }
+
+  loginWithPassword(input: PasswordLoginInput): VerifyOtpResult {
+    const email = normalizeEmailOrThrow(input.email);
+    const password = typeof input.password === 'string' ? input.password : '';
+    const now = this.now();
+
+    return this.database.transaction(() => {
+      const attempt = this.database.prepare(`
+        SELECT failures, first_failed_at, locked_until FROM password_login_attempts WHERE email = ?
+      `).get(email) as LoginAttemptRow | undefined;
+      if (attempt?.locked_until && new Date(attempt.locked_until).getTime() > now.getTime()) {
+        const retryAfterSeconds = Math.max(1, Math.ceil((new Date(attempt.locked_until).getTime() - now.getTime()) / 1_000));
+        throw new AuthError('AUTH_RATE_LIMITED', 'Bạn đã đăng nhập sai quá nhiều lần. Vui lòng thử lại sau.', 429, { retryAfterSeconds });
+      }
+
+      const identity = this.database.prepare(`
+        SELECT u.id, u.public_id, u.phone, u.email, u.name, u.role, u.status, u.created_at, u.updated_at,
+               ai.password_hash
+        FROM auth_identities ai INNER JOIN users u ON u.id = ai.user_id
+        WHERE ai.provider = 'password' AND ai.email = ?
+      `).get(email) as PasswordIdentityRow | undefined;
+
+      if (!identity || !identity.password_hash || !verifyPasswordHash(password, identity.password_hash)) {
+        this.recordPasswordFailure(email, now, attempt);
+        throw new AuthError('INVALID_CREDENTIALS', 'Email hoặc mật khẩu không chính xác.', 401);
+      }
+      if (identity.status === 'suspended') {
+        throw new AuthError('ACCOUNT_SUSPENDED', 'Tài khoản đang bị tạm khóa. Vui lòng liên hệ hỗ trợ.', 403);
+      }
+      this.database.prepare('DELETE FROM password_login_attempts WHERE email = ?').run(email);
+      return this.createSessionForUser(identity, now);
+    })();
+  }
+
+  beginGoogleLogin(redirectPath: string): GoogleLoginState {
+    const now = this.now();
+    const state = this.generateToken();
+    const nonce = this.generateToken();
+    this.database.prepare('DELETE FROM google_oauth_states WHERE expires_at <= ?').run(now.toISOString());
+    this.database.prepare(`
+      INSERT INTO google_oauth_states(state_hash, nonce, redirect_path, expires_at, created_at)
+      VALUES (?, ?, ?, ?, ?)
+    `).run(
+      hashSessionToken(state), nonce, normalizeRedirectPath(redirectPath),
+      new Date(now.getTime() + 10 * 60 * 1_000).toISOString(), now.toISOString(),
+    );
+    return { state, nonce };
+  }
+
+  consumeGoogleLoginState(state: string, cookieState: string | undefined): ConsumedGoogleLoginState {
+    if (!cookieState || cookieState !== state) {
+      throw new AuthError('GOOGLE_STATE_INVALID', 'Phiên đăng nhập Google không hợp lệ. Vui lòng thử lại.', 400);
+    }
+    const now = this.now();
+    return this.database.transaction(() => {
+      const stateHash = hashSessionToken(state);
+      const row = this.database.prepare(`
+        SELECT nonce, redirect_path, expires_at FROM google_oauth_states WHERE state_hash = ?
+      `).get(stateHash) as GoogleStateRow | undefined;
+      this.database.prepare('DELETE FROM google_oauth_states WHERE state_hash = ?').run(stateHash);
+      if (!row || new Date(row.expires_at).getTime() <= now.getTime()) {
+        throw new AuthError('GOOGLE_STATE_INVALID', 'Phiên đăng nhập Google đã hết hạn. Vui lòng thử lại.', 400);
+      }
+      return { nonce: row.nonce, redirectPath: normalizeRedirectPath(row.redirect_path) };
+    })();
+  }
+
+  authenticateWithGoogle(input: GoogleIdentityInput): VerifyOtpResult {
+    const subject = input.subject.trim();
+    const email = normalizeEmailOrThrow(input.email);
+    if (!subject || subject.length > 255) throw new AuthError('GOOGLE_IDENTITY_INVALID', 'Tài khoản Google không hợp lệ.', 400);
+    const fallbackName = email.split('@')[0] ?? 'Thành viên';
+    const name = input.name?.trim().slice(0, 100) || fallbackName;
+    const now = this.now();
+    const timestamp = now.toISOString();
+
+    try {
+      return this.database.transaction(() => {
+        const existingGoogle = this.database.prepare(`
+          SELECT u.id, u.public_id, u.phone, u.email, u.name, u.role, u.status, u.created_at, u.updated_at
+          FROM auth_identities ai INNER JOIN users u ON u.id = ai.user_id
+          WHERE ai.provider = 'google' AND ai.provider_subject = ?
+        `).get(subject) as GoogleIdentityRow | undefined;
+        if (existingGoogle) {
+          if (existingGoogle.status === 'suspended') {
+            throw new AuthError('ACCOUNT_SUSPENDED', 'Tài khoản đang bị tạm khóa. Vui lòng liên hệ hỗ trợ.', 403);
+          }
+          return this.createSessionForUser(existingGoogle, now);
+        }
+
+        const emailInUse = this.database.prepare(`
+          SELECT 1 FROM users WHERE email = ?
+          UNION ALL SELECT 1 FROM auth_identities WHERE email = ?
+          LIMIT 1
+        `).get(email, email);
+        if (emailInUse) {
+          throw new AuthError('EMAIL_ALREADY_REGISTERED', 'Email này đã có tài khoản. Hãy đăng nhập bằng phương thức đã đăng ký.', 409);
+        }
+
+        const user = this.createEmailUser({ email, name, nowIso: timestamp });
+        this.database.prepare(`
+          INSERT INTO auth_identities(id, user_id, provider, provider_subject, email, password_hash, created_at, updated_at)
+          VALUES (?, ?, 'google', ?, ?, NULL, ?, ?)
+        `).run(this.generateId(), user.id, subject, email, timestamp, timestamp);
+        return this.createSessionForUser(user, now);
+      })();
+    } catch (error) {
+      if (error instanceof AuthError) throw error;
+      if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
+        throw new AuthError('EMAIL_ALREADY_REGISTERED', 'Email này đã có tài khoản. Hãy đăng nhập bằng phương thức đã đăng ký.', 409);
+      }
+      throw error;
+    }
+  }
+
   getCurrentUser(sessionToken: string | undefined): AuthUser {
     if (!sessionToken) throw new AuthError('AUTH_REQUIRED', 'Bạn cần đăng nhập để tiếp tục.', 401);
 
@@ -340,8 +581,59 @@ export class AuthService {
     return user;
   }
 
+  private createEmailUser(input: { email: string; name: string; nowIso: string }): UserRow {
+    const id = this.generateId();
+    const user: UserRow = {
+      id,
+      public_id: `HTV${this.generateId().replaceAll('-', '').slice(0, 12).toUpperCase()}`,
+      phone: `identity:${this.generateId()}`,
+      email: input.email,
+      name: input.name,
+      role: 'user',
+      status: 'active',
+      created_at: input.nowIso,
+      updated_at: input.nowIso,
+    };
+    this.database.prepare(`
+      INSERT INTO users(id, public_id, phone, email, name, role, status, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, 'user', 'active', ?, ?)
+    `).run(user.id, user.public_id, user.phone, user.email, user.name, user.created_at, user.updated_at);
+    return user;
+  }
+
+  private createSessionForUser(user: UserRow, now: Date): VerifyOtpResult {
+    const sessionToken = this.generateToken();
+    const nowIso = now.toISOString();
+    const sessionExpiresAt = new Date(now.getTime() + this.sessionTtlMs).toISOString();
+    this.database.prepare(`
+      INSERT INTO sessions(id, user_id, token_hash, expires_at, last_seen_at, created_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(this.generateId(), user.id, hashSessionToken(sessionToken), sessionExpiresAt, nowIso, nowIso);
+    return { user: toAuthUser(user), sessionToken, sessionExpiresAt };
+  }
+
+  private recordPasswordFailure(email: string, now: Date, existing: LoginAttemptRow | undefined): void {
+    const timestamp = now.toISOString();
+    const firstFailedAt = existing && now.getTime() - new Date(existing.first_failed_at).getTime() < this.passwordLoginWindowMs
+      ? existing.first_failed_at
+      : timestamp;
+    const failures = existing && firstFailedAt === existing.first_failed_at ? existing.failures + 1 : 1;
+    const lockedUntil = failures >= this.passwordLoginMaxFailures
+      ? new Date(now.getTime() + this.passwordLoginWindowMs).toISOString()
+      : null;
+    this.database.prepare(`
+      INSERT INTO password_login_attempts(email, failures, first_failed_at, locked_until, updated_at)
+      VALUES (?, ?, ?, ?, ?)
+      ON CONFLICT(email) DO UPDATE SET
+        failures = excluded.failures,
+        first_failed_at = excluded.first_failed_at,
+        locked_until = excluded.locked_until,
+        updated_at = excluded.updated_at
+    `).run(email, failures, firstFailedAt, lockedUntil, timestamp);
+  }
+
   private assertOtpDeliveryAvailable(): void {
-    if (this.environment === 'production') {
+    if (this.environment === 'production' && !this.delivery) {
       throw new AuthError(
         'OTP_DELIVERY_UNAVAILABLE',
         'Dịch vụ gửi OTP chưa được cấu hình cho môi trường production.',

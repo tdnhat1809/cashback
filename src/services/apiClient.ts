@@ -6,22 +6,13 @@ export type UserRole = 'user' | 'support' | 'operation' | 'finance' | 'admin';
 export interface AuthUser {
   id: string;
   publicId: string;
-  phone: string;
+  phone: string | null;
   email: string | null;
   name: string;
   role: UserRole;
   status: 'active' | 'suspended';
   createdAt: string;
   updatedAt: string;
-}
-
-export interface OtpChallenge {
-  challengeId: string;
-  phone: string;
-  purpose: 'login' | 'password_reset';
-  expiresAt: string;
-  retryAfterSeconds: number;
-  devCode?: string;
 }
 
 export interface VerifiedSession {
@@ -148,19 +139,22 @@ const apiData = async <T>(path: string, options?: ApiRequestOptions): Promise<T>
 };
 
 export const authApi = {
-  requestOtp: (phone: string): Promise<OtpChallenge> => apiData('/api/v1/auth/otp/request', {
+  register: (input: { name: string; email: string; password: string }): Promise<VerifiedSession> => apiData('/api/v1/auth/register', {
     method: 'POST',
-    body: { phone, purpose: 'login' },
+    body: input,
   }),
 
-  verifyOtp: (input: {
-    challengeId: string;
-    phone: string;
-    code: string;
-  }): Promise<VerifiedSession> => apiData('/api/v1/auth/otp/verify', {
+  login: (input: { email: string; password: string }): Promise<VerifiedSession> => apiData('/api/v1/auth/login', {
     method: 'POST',
-    body: { ...input, purpose: 'login' },
+    body: input,
   }),
+
+  providers: () => apiData<{ google: boolean }>('/api/v1/auth/providers'),
+
+  googleStartUrl: (redirect: string): string => {
+    const query = new URLSearchParams({ redirect });
+    return makeApiUrl(`/api/v1/auth/google/start?${query.toString()}`);
+  },
 
   me: async (): Promise<AuthUser> => {
     const result = await apiData<{ user: AuthUser }>('/api/v1/auth/me');
@@ -260,7 +254,7 @@ export const dashboardApi = {
   cashbackOrders: () => apiData<CashbackOrderRecord[]>('/api/v1/cashback/orders'),
   ledger: () => apiData<Array<{ id: string; reference_type: string; reference_id: string; description: string; policy_version: string | null; created_at: string; bucket: string; amount_vnd: number }>>('/api/v1/wallet/ledger'),
   withdrawals: () => apiData<WithdrawalRecord[]>('/api/v1/withdrawals'),
-  requestWithdrawal: (input: { amountVnd: number; bankName: string; bankAccountNumber: string; accountName: string; idempotencyKey: string }) => apiData<WithdrawalRecord>('/api/v1/withdrawals', {
+  requestWithdrawal: (input: { amountVnd: number; idempotencyKey: string; bankAccountId?: string; bankName?: string; bankAccountNumber?: string; accountName?: string }) => apiData<WithdrawalRecord>('/api/v1/withdrawals', {
     method: 'POST', headers: { 'Idempotency-Key': input.idempotencyKey }, body: input,
   }),
 };
@@ -288,7 +282,26 @@ export const userFeaturesApi = {
   referrals: () => apiData<{ referralCode: string; counts: Record<string, number>; items: unknown[] }>('/api/v1/referrals/summary'),
   profile: () => apiData<AuthUser>('/api/v1/profile'),
   updateProfile: (input: { name?: string; email?: string | null }) => apiData<AuthUser>('/api/v1/profile', { method: 'PATCH', body: input }),
+  bankAccounts: () => apiData<Array<{ id: string; bankCode: string; bankName: string; accountNumberMasked: string; accountName: string; verifiedAt: string | null; active: boolean }>>('/api/v1/bank-accounts'),
+  replaceDefaultBankAccount: (input: { bankCode: string; bankName: string; accountNumber: string; accountName: string }) => apiData<{ id: string; bankCode: string; bankName: string; accountNumberMasked: string; accountName: string; active: boolean }>('/api/v1/bank-accounts/default', { method: 'PUT', body: input }),
   notifications: () => apiData<{ items: Array<{ id: string; type: string; title: string; body: string; deepLink: string | null; readAt: string | null; createdAt: string }>; unread: number }>('/api/v1/notifications'),
   markAllNotificationsRead: () => apiData<{ updated: number }>('/api/v1/notifications/read-all', { method: 'PATCH' }),
+  notificationPreferences: () => apiData<{ inApp: boolean; email: boolean; push: boolean; shipmentUpdates: boolean; cashbackUpdates: boolean; promotions: boolean }>('/api/v1/notifications/preferences'),
+  updateNotificationPreferences: (input: Partial<{ inApp: boolean; email: boolean; push: boolean; shipmentUpdates: boolean; cashbackUpdates: boolean; promotions: boolean }>) => apiData<unknown>('/api/v1/notifications/preferences', { method: 'PATCH', body: input }),
   activityLogs: () => apiData<{ items: Array<{ id: string; action: string; targetType: string; targetId: string; createdAt: string }> }>('/api/v1/activity-logs'),
+  supportTickets: () => apiData<{ items: Array<{ id: string; subject: string; category: string; priority: string; status: string; updatedAt: string; lastMessage: string | null }> }>('/api/v1/support/tickets'),
+  createSupportTicket: (input: { subject: string; category: string; priority: 'low' | 'medium' | 'high'; message: string }) => apiData<{ id: string }>('/api/v1/support/tickets', { method: 'POST', body: input }),
+  supportTicket: (id: string) => apiData<{ id: string; subject: string; category: string; priority: string; status: string; createdAt: string; updatedAt: string; messages: Array<{ id: string; senderType: 'user' | 'agent' | 'system'; body: string; createdAt: string }> }>(`/api/v1/support/tickets/${encodeURIComponent(id)}`),
+  addSupportMessage: (id: string, body: string) => apiData<unknown>(`/api/v1/support/tickets/${encodeURIComponent(id)}/messages`, { method: 'POST', body: { body } }),
+  closeSupportTicket: (id: string) => apiData<unknown>(`/api/v1/support/tickets/${encodeURIComponent(id)}/close`, { method: 'PATCH' }),
+};
+
+export const adminApi = {
+  providers: () => apiData<Array<{ provider: string; mode: string; healthy: boolean; configured: boolean; message?: string; checkedAt?: string; payable?: boolean }>>('/api/v1/admin/providers'),
+  syncRuns: () => apiData<Array<{ id: string; provider: string; stream: string; mode: string; status: string; record_count: number; error: string | null; started_at: string; finished_at: string | null }>>('/api/v1/admin/sync-runs'),
+  settlements: () => apiData<Array<{ id: string; platform: string; external_validation_id: string; status: string; gross_commission_vnd: number; distributable_net_vnd: number; observed_at: string; reconciled_at: string | null }>>('/api/v1/admin/settlements'),
+  withdrawals: () => apiData<Array<{ id: string; user_public_id: string; user_name: string; amount_vnd: number; bank_name: string; bank_account_masked: string; account_name: string; status: 'pending' | 'approved' | 'rejected' | 'paid'; transaction_code: string | null; rejection_reason: string | null; created_at: string }>>('/api/v1/admin/withdrawals'),
+  approveWithdrawal: (id: string, idempotencyKey: string) => apiData<unknown>(`/api/v1/admin/withdrawals/${encodeURIComponent(id)}/approve`, { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey } }),
+  rejectWithdrawal: (id: string, reason: string, idempotencyKey: string) => apiData<unknown>(`/api/v1/admin/withdrawals/${encodeURIComponent(id)}/reject`, { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, body: { reason } }),
+  markWithdrawalPaid: (id: string, transactionCode: string, idempotencyKey: string) => apiData<unknown>(`/api/v1/admin/withdrawals/${encodeURIComponent(id)}/mark-paid`, { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, body: { transactionCode } }),
 };

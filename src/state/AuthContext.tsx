@@ -49,14 +49,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     void refreshSession();
   }, [refreshSession]);
 
-  const requestOtp = useCallback((phone: string) => authApi.requestOtp(phone), []);
+  const register = useCallback(async (input: { name: string; email: string; password: string }) => {
+    const session = await authApi.register(input);
+    setUser(session.user);
+    setError(null);
+    setStatus('authenticated');
+    return session;
+  }, []);
 
-  const verifyOtp = useCallback(async (input: {
-    challengeId: string;
-    phone: string;
-    code: string;
-  }) => {
-    const session = await authApi.verifyOtp(input);
+  const login = useCallback(async (input: { email: string; password: string }) => {
+    const session = await authApi.login(input);
     setUser(session.user);
     setError(null);
     setStatus('authenticated');
@@ -77,11 +79,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     user,
     status,
     error,
-    requestOtp,
-    verifyOtp,
+    register,
+    login,
     refreshSession,
     logout,
-  }), [error, logout, refreshSession, requestOtp, status, user, verifyOtp]);
+  }), [error, login, logout, refreshSession, register, status, user]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

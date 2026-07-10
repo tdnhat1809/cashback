@@ -8,7 +8,7 @@ import { ToastContainer } from '../../components/Toast';
 import { defaultToastState, triggerToast } from '../../components/toast-state';
 import type { ToastState } from '../../components/toast-state';
 import { CreditCard, Landmark, AlertCircle, ArrowUpRight } from 'lucide-react';
-import { dashboardApi, type WalletBalances, type WithdrawalRecord } from '../../services/apiClient';
+import { dashboardApi, userFeaturesApi, type WalletBalances, type WithdrawalRecord } from '../../services/apiClient';
 
 type WithdrawalRequest = {
   id: string;
@@ -35,6 +35,7 @@ const toRequest = (record: WithdrawalRecord): WithdrawalRequest => ({
 export const Withdrawal: React.FC = () => {
   const [wallet, setWallet] = useState<WalletBalances>({ pending: 0, available: 0, reserved: 0, withdrawn: 0 });
   const [requests, setRequests] = useState<WithdrawalRequest[]>([]);
+  const [savedBank, setSavedBank] = useState<{ id: string; bankName: string; accountNumberMasked: string; accountName: string } | null>(null);
   const [withdrawalAmount, setWithdrawalAmount] = useState('');
   const [bankName, setBankName] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
@@ -44,9 +45,10 @@ export const Withdrawal: React.FC = () => {
   const [toast, setToast] = useState<ToastState>(defaultToastState);
 
   const reload = useCallback(async () => {
-    const [dashboard, withdrawals] = await Promise.all([dashboardApi.get(), dashboardApi.withdrawals()]);
+    const [dashboard, withdrawals, bankAccounts] = await Promise.all([dashboardApi.get(), dashboardApi.withdrawals(), userFeaturesApi.bankAccounts()]);
     setWallet(dashboard.wallet);
     setRequests(withdrawals.map(toRequest));
+    setSavedBank(bankAccounts.find((account) => account.active) ?? null);
   }, []);
 
   useEffect(() => { void reload().catch((error: unknown) => setErrorAmount(error instanceof Error ? error.message : 'Không thể tải ví.')); }, [reload]);
@@ -69,7 +71,7 @@ export const Withdrawal: React.FC = () => {
       setErrorAmount('Số dư khả dụng không đủ để thực hiện yêu cầu này.');
       return;
     }
-    if (bankName.trim().length < 2 || !/^\d{6,20}$/.test(accountNumber) || accountName.trim().length < 2) {
+    if (!savedBank && (bankName.trim().length < 2 || !/^\d{6,20}$/.test(accountNumber) || accountName.trim().length < 2)) {
       setErrorAmount('Vui lòng nhập đầy đủ và chính xác thông tin tài khoản ngân hàng.');
       return;
     }
@@ -78,9 +80,7 @@ export const Withdrawal: React.FC = () => {
     try {
       await dashboardApi.requestWithdrawal({
         amountVnd: amount,
-        bankName: bankName.trim(),
-        bankAccountNumber: accountNumber,
-        accountName: accountName.trim(),
+        ...(savedBank ? { bankAccountId: savedBank.id } : { bankName: bankName.trim(), bankAccountNumber: accountNumber, accountName: accountName.trim() }),
         idempotencyKey: globalThis.crypto.randomUUID(),
       });
       setWithdrawalAmount('');
@@ -173,17 +173,13 @@ export const Withdrawal: React.FC = () => {
               helperText="Số tiền rút tối thiểu là 50.000đ"
             />
 
-            {/* Bank details are sent directly to the server and encrypted at rest. */}
+            {/* A saved bank account is encrypted on the server and selected by ID only. */}
             <div className="bg-surface-container-low p-4 rounded-xl border border-outline-variant/20 space-y-2">
               <div className="flex gap-2 items-center text-xs font-bold text-on-surface">
                 <Landmark size={14} className="text-primary" />
                 <span>Tài khoản ngân hàng nhận tiền</span>
               </div>
-              <div className="grid gap-3 pl-5 pt-1">
-                <Input label="Ngân hàng" value={bankName} onChange={(event) => setBankName(event.target.value)} disabled={loading} />
-                <Input label="Số tài khoản" inputMode="numeric" value={accountNumber} onChange={(event) => setAccountNumber(event.target.value.replace(/\D/g, '').slice(0, 20))} disabled={loading} />
-                <Input label="Chủ tài khoản" value={accountName} onChange={(event) => setAccountName(event.target.value.toUpperCase())} disabled={loading} />
-              </div>
+              {savedBank ? <div className="pl-5 text-xs text-on-surface-variant"><p className="font-bold text-on-surface">{savedBank.bankName}</p><p>{savedBank.accountNumberMasked} · {savedBank.accountName}</p><p className="mt-2 text-[10px]">Muốn đổi tài khoản? Cập nhật tại Thiết lập tài khoản.</p></div> : <div className="grid gap-3 pl-5 pt-1"><Input label="Ngân hàng" value={bankName} onChange={(event) => setBankName(event.target.value)} disabled={loading} /><Input label="Số tài khoản" inputMode="numeric" value={accountNumber} onChange={(event) => setAccountNumber(event.target.value.replace(/\D/g, '').slice(0, 20))} disabled={loading} /><Input label="Chủ tài khoản" value={accountName} onChange={(event) => setAccountName(event.target.value.toUpperCase())} disabled={loading} /></div>}
             </div>
 
             <Button

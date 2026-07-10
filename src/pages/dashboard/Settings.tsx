@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { mockUserProfile } from '../../mockData';
+import React, { useEffect, useState } from 'react';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Dropdown } from '../../components/Dropdown';
@@ -7,30 +6,39 @@ import { ToastContainer } from '../../components/Toast';
 import { defaultToastState, triggerToast } from '../../components/toast-state';
 import type { ToastState } from '../../components/toast-state';
 import { Landmark, User, Mail, ShieldCheck } from 'lucide-react';
+import { userFeaturesApi } from '../../services/apiClient';
 
 export const Settings: React.FC = () => {
-  const [profile, setProfile] = useState(mockUserProfile);
-  const [name, setName] = useState(profile.name);
-  const [email, setEmail] = useState(profile.email);
-  const [bankName, setBankName] = useState(profile.bankName);
-  const [bankAccount, setBankAccount] = useState(profile.bankAccount);
-  const [bankAccountName, setBankAccountName] = useState(profile.bankAccountName);
-  const [emailNotify, setEmailNotify] = useState(true);
-  const [pushNotify, setPushNotify] = useState(true);
+  const [profile, setProfile] = useState<{ email: string | null }>({ email: null });
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [bankName, setBankName] = useState('');
+  const [bankAccount, setBankAccount] = useState('');
+  const [bankAccountName, setBankAccountName] = useState('');
+  const [activeBank, setActiveBank] = useState<{ bankName: string; accountNumberMasked: string; accountName: string } | null>(null);
+  const [emailNotify, setEmailNotify] = useState(false);
+  const [pushNotify, setPushNotify] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<ToastState>(defaultToastState);
 
   const bankOptions = [
-    { value: 'Techcombank', label: 'Techcombank' },
-    { value: 'Vietcombank', label: 'Vietcombank' },
-    { value: 'Vietinbank', label: 'Vietinbank' },
-    { value: 'MB Bank', label: 'MB Bank (Quân Đội)' },
-    { value: 'VPBank', label: 'VPBank' },
-    { value: 'BIDV', label: 'BIDV' },
-    { value: 'ACB', label: 'ACB' }
+    { value: 'TCB', label: 'Techcombank' }, { value: 'VCB', label: 'Vietcombank' },
+    { value: 'CTG', label: 'Vietinbank' }, { value: 'MBB', label: 'MB Bank (Quân Đội)' },
+    { value: 'VPB', label: 'VPBank' }, { value: 'BIDV', label: 'BIDV' }, { value: 'ACB', label: 'ACB' },
   ];
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  useEffect(() => {
+    void Promise.all([userFeaturesApi.profile(), userFeaturesApi.bankAccounts(), userFeaturesApi.notificationPreferences()])
+      .then(([nextProfile, accounts, preferences]) => {
+        setProfile({ email: nextProfile.email }); setName(nextProfile.name); setEmail(nextProfile.email ?? '');
+        const selected = accounts.find((account) => account.active) ?? null;
+        setActiveBank(selected);
+        setEmailNotify(preferences.email); setPushNotify(preferences.push);
+      })
+      .catch((error: unknown) => triggerToast(setToast, error instanceof Error ? error.message : 'Không thể tải thiết lập tài khoản.', 'error'));
+  }, []);
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
       triggerToast(setToast, 'Tên người dùng không được bỏ trống.', 'error');
@@ -38,14 +46,17 @@ export const Settings: React.FC = () => {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setProfile(prev => ({ ...prev, name, email }));
+    try {
+      const updated = await userFeaturesApi.updateProfile({ name: name.trim() });
+      setProfile({ email: updated.email });
+      setName(updated.name); setEmail(updated.email ?? '');
       triggerToast(setToast, 'Cập nhật thông tin tài khoản thành công!', 'success');
-    }, 1200);
+    } catch (error) {
+      triggerToast(setToast, error instanceof Error ? error.message : 'Không thể lưu thông tin cá nhân.', 'error');
+    } finally { setLoading(false); }
   };
 
-  const handleSaveBank = (e: React.FormEvent) => {
+  const handleSaveBank = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!bankAccount.trim()) {
       triggerToast(setToast, 'Số tài khoản không được bỏ trống.', 'error');
@@ -58,16 +69,26 @@ export const Settings: React.FC = () => {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setProfile(prev => ({ 
-        ...prev, 
-        bankName, 
-        bankAccount, 
-        bankAccountName: bankAccountName.toUpperCase() 
-      }));
+    try {
+      const bankOption = bankOptions.find((option) => option.value === bankName);
+      if (!bankOption) throw new Error('Vui lòng chọn ngân hàng nhận tiền.');
+      const updated = await userFeaturesApi.replaceDefaultBankAccount({
+        bankCode: bankName, bankName: bankOption.label, accountNumber: bankAccount, accountName: bankAccountName,
+      });
+      setActiveBank(updated); setBankAccount(''); setBankAccountName('');
       triggerToast(setToast, 'Cập nhật liên kết tài khoản ngân hàng thành công!', 'success');
-    }, 1200);
+    } catch (error) {
+      triggerToast(setToast, error instanceof Error ? error.message : 'Không thể lưu tài khoản ngân hàng.', 'error');
+    } finally { setLoading(false); }
+  };
+
+  const savePreference = async (key: 'email' | 'push', value: boolean) => {
+    if (key === 'email') setEmailNotify(value); else setPushNotify(value);
+    try { await userFeaturesApi.updateNotificationPreferences({ [key]: value }); }
+    catch (error) {
+      if (key === 'email') setEmailNotify(!value); else setPushNotify(!value);
+      triggerToast(setToast, error instanceof Error ? error.message : 'Không thể cập nhật thông báo.', 'error');
+    }
   };
 
   return (
@@ -93,20 +114,13 @@ export const Settings: React.FC = () => {
             />
 
             <Input
-              label="Số điện thoại đăng nhập"
-              value={profile.phone}
-              readOnly
-              disabled
-              helperText="Số điện thoại định danh tài khoản, không thể tự thay đổi vì lý do bảo mật."
-            />
-
-            <Input
-              label="Địa chỉ Email"
+              label="Địa chỉ Email đăng nhập"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
+              readOnly
+              disabled
               startIcon={<Mail size={16} />}
+              helperText={profile.email ? 'Email đăng nhập được xác định khi tạo tài khoản.' : 'Tài khoản này chưa có email đăng nhập.'}
             />
 
             <Button
@@ -150,6 +164,8 @@ export const Settings: React.FC = () => {
               helperText="Tên chủ tài khoản phải khớp hoàn toàn với đăng ký tại ngân hàng."
             />
 
+            {activeBank && <p className="rounded-xl bg-tertiary/5 p-3 text-xs text-tertiary">Tài khoản đang dùng: {activeBank.bankName} · {activeBank.accountNumberMasked} · {activeBank.accountName}</p>}
+
             <Button
               type="submit"
               variant="success"
@@ -177,7 +193,7 @@ export const Settings: React.FC = () => {
                 <input 
                   type="checkbox" 
                   checked={emailNotify} 
-                  onChange={(e) => setEmailNotify(e.target.checked)}
+                  onChange={(e) => void savePreference('email', e.target.checked)}
                   className="rounded text-primary focus:ring-primary/20 w-4 h-4"
                 />
                 <span className="text-xs font-semibold text-on-surface-variant">Nhận thông báo lịch sử số dư ví qua Email</span>
@@ -186,7 +202,7 @@ export const Settings: React.FC = () => {
                 <input 
                   type="checkbox" 
                   checked={pushNotify} 
-                  onChange={(e) => setPushNotify(e.target.checked)}
+                  onChange={(e) => void savePreference('push', e.target.checked)}
                   className="rounded text-primary focus:ring-primary/20 w-4 h-4"
                 />
                 <span className="text-xs font-semibold text-on-surface-variant">Nhận thông báo cập nhật vận đơn trên màn hình điện thoại (Push)</span>

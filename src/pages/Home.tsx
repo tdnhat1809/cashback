@@ -92,7 +92,7 @@ export const Home: React.FC = () => {
   };
 
   const handleBuyProduct = (product: Product) => {
-    navigate(product.sourceUrl ? `/link-generator?url=${encodeURIComponent(product.sourceUrl)}` : `/product/${product.id}`);
+    navigate(product.sourceUrl ? `/link-generator?url=${encodeURIComponent(product.sourceUrl)}` : '/deals');
   };
 
   const handleGenerateLink = () => {

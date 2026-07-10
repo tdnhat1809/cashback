@@ -46,7 +46,7 @@ npm run build
 | `/deals` | `Deals.tsx` | `t_m_ki_m_deal_hoantienvip` | Tìm kiếm & lọc deal theo sàn, danh mục, giá, cashback, sắp xếp linh hoạt |
 | `/product/:id` | `ProductDetail.tsx` | `chi_ti_t_s_n_ph_m_hoantienvip` | Chi tiết deal: ảnh, shop, giá sale/gốc, ước tính hoàn tiền, điều kiện, mã coupon, deal liên quan |
 | `/link-generator` | `LinkGenerator.tsx` | `t_o_link_ho_n_ti_n_hoantienvip` | Chuyển đổi link sản phẩm Shopee/TikTok Shop thành link tracking hoàn tiền |
-| `/login` | `Login.tsx` | `ng_nh_p_ng_k_hoantienvip` | Đăng nhập/Đăng ký nhanh qua số điện thoại nhận OTP giả lập (123456) |
+| `/login` | `Login.tsx` | `ng_nh_p_ng_k_hoantienvip` | Đăng nhập/Đăng ký bằng email và mật khẩu; hỗ trợ Google OAuth khi máy chủ được cấu hình |
 | `/faq` | `FAQ.tsx` | `h_tr_faq_hoantienvip` | Hỏi đáp hỗ trợ, hướng dẫn nhận hoàn tiền tránh mất cookie ghi nhận |
 
 ### B. Màn hình Bảng điều khiển người dùng (User Dashboard)

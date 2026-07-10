@@ -1,26 +1,25 @@
-import React, { useState } from 'react';
-import type { RewardGift } from '../../mockData';
+import React, { useEffect, useState } from 'react';
+import { mockGifts, mockTasks, type RewardGift } from '../../mockData';
 import { Button } from '../../components/Button';
 import { Badge } from '../../components/Badge';
 import { ToastContainer } from '../../components/Toast';
 import { defaultToastState, triggerToast } from '../../components/toast-state';
 import type { ToastState } from '../../components/toast-state';
 import { Award, Sparkles, Check, Gift } from 'lucide-react';
-import { useAppData } from '../../state/AppDataContext';
+import { userFeaturesApi } from '../../services/apiClient';
 
 export const Rewards: React.FC = () => {
-  const { points, tasks, gifts, completeRewardTask, redeemRewardGift } = useAppData();
+  const [points, setPoints] = useState(0);
+  const tasks = mockTasks;
+  const gifts = mockGifts;
   const [toast, setToast] = useState<ToastState>(defaultToastState);
+
+  useEffect(() => { void userFeaturesApi.points().then((result) => setPoints(result.balance)).catch(() => setPoints(0)); }, []);
 
   const handleCheckIn = (taskId: string) => {
     const task = tasks.find((item) => item.id === taskId);
     if (!task || task.completed) return;
-    try {
-      completeRewardTask(taskId);
-      triggerToast(setToast, `Điểm danh thành công! Nhận ngay +${task.reward} Xu thưởng.`, 'success');
-    } catch (error) {
-      triggerToast(setToast, error instanceof Error ? error.message : 'Không thể nhận Xu thưởng.', 'error');
-    }
+    triggerToast(setToast, `Nhiệm vụ “${task.title}” đang được hoàn thiện phía máy chủ; Xu chỉ được ghi có khi đối soát hợp lệ.`, 'info');
   };
 
   const handleRedeem = (gift: RewardGift) => {
@@ -29,12 +28,7 @@ export const Rewards: React.FC = () => {
       return;
     }
 
-    try {
-      redeemRewardGift(gift.id);
-      triggerToast(setToast, `Đổi quà thành công: ${gift.title}! Vui lòng kiểm tra email của bạn.`, 'success');
-    } catch (error) {
-      triggerToast(setToast, error instanceof Error ? error.message : 'Không thể đổi quà.', 'error');
-    }
+    triggerToast(setToast, `Đổi quà “${gift.title}” chưa được mở vì cần luồng duyệt vận hành.`, 'info');
   };
 
   return (

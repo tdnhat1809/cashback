@@ -1,5 +1,6 @@
 import type { SqliteDatabase } from '../../db/database.js';
 import { createId, nowIso } from '../../lib/ids.js';
+import { encryptString, maskBankAccount } from '../../lib/security.js';
 
 export class UserFeatureError extends Error {
   constructor(
@@ -17,6 +18,7 @@ export interface UserFeaturesServiceOptions {
   database: SqliteDatabase;
   now?: () => Date;
   generateId?: (prefix: string) => string;
+  encryptionKey?: string;
 }
 
 export interface PaginationInput {
@@ -172,7 +174,7 @@ const toNotificationPreferences = (row: NotificationPreferencesRow) => ({
 const toProfile = (row: UserProfileRow) => ({
   id: row.id,
   publicId: row.public_id,
-  phone: row.phone,
+  phone: row.phone.startsWith('identity:') ? null : row.phone,
   email: row.email,
   name: row.name,
   role: row.role,
@@ -185,11 +187,13 @@ export class UserFeaturesService {
   private readonly database: SqliteDatabase;
   private readonly now: () => Date;
   private readonly generateId: (prefix: string) => string;
+  private readonly encryptionKey: string;
 
   constructor(options: UserFeaturesServiceOptions) {
     this.database = options.database;
     this.now = options.now ?? (() => new Date());
     this.generateId = options.generateId ?? createId;
+    this.encryptionKey = options.encryptionKey ?? 'development-only-encryption-key';
   }
 
   listSavedProducts(userId: string, pagination: PaginationInput) {
@@ -383,6 +387,56 @@ export class UserFeaturesService {
     };
   }
 
+  listBankAccounts(userId: string) {
+    return this.database.prepare(`
+      SELECT id, bank_code, bank_name, account_number_masked, account_name, verified_at, active, created_at, updated_at
+      FROM bank_accounts WHERE user_id = ? ORDER BY active DESC, updated_at DESC
+    `).all(userId).map((row) => {
+      const account = row as {
+        id: string; bank_code: string; bank_name: string; account_number_masked: string;
+        account_name: string; verified_at: string | null; active: number; created_at: string; updated_at: string;
+      };
+      return {
+        id: account.id, bankCode: account.bank_code, bankName: account.bank_name,
+        accountNumberMasked: account.account_number_masked, accountName: account.account_name,
+        verifiedAt: account.verified_at, active: account.active === 1,
+        createdAt: account.created_at, updatedAt: account.updated_at,
+      };
+    });
+  }
+
+  replaceDefaultBankAccount(userId: string, input: { bankCode: string; bankName: string; accountNumber: string; accountName: string }) {
+    const timestamp = this.timestamp();
+    const normalized = {
+      bankCode: input.bankCode.trim().toUpperCase(),
+      bankName: input.bankName.trim(),
+      accountNumber: input.accountNumber.trim(),
+      accountName: input.accountName.trim().toUpperCase(),
+    };
+    if (!/^[A-Z0-9_-]{2,32}$/.test(normalized.bankCode) || normalized.bankName.length < 2 || normalized.bankName.length > 100) {
+      throw new UserFeatureError('bank_invalid', 'Thông tin ngân hàng không hợp lệ.', 422);
+    }
+    if (!/^\d{6,20}$/.test(normalized.accountNumber) || normalized.accountName.length < 2 || normalized.accountName.length > 150) {
+      throw new UserFeatureError('bank_account_invalid', 'Số tài khoản hoặc tên chủ tài khoản không hợp lệ.', 422);
+    }
+    const accountId = this.generateId('bank');
+    this.database.transaction(() => {
+      this.database.prepare('UPDATE bank_accounts SET active = 0, updated_at = ? WHERE user_id = ? AND active = 1')
+        .run(timestamp, userId);
+      this.database.prepare(`
+        INSERT INTO bank_accounts(
+          id, user_id, bank_code, bank_name, account_number_masked, account_number_ciphertext,
+          account_name, active, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
+      `).run(
+        accountId, userId, normalized.bankCode, normalized.bankName, maskBankAccount(normalized.accountNumber),
+        encryptString(normalized.accountNumber, this.encryptionKey), normalized.accountName, timestamp, timestamp,
+      );
+      this.writeAudit(userId, 'bank_account.replaced', 'bank_account', accountId, { bankCode: normalized.bankCode });
+    })();
+    return this.listBankAccounts(userId).find((account) => account.id === accountId)!;
+  }
+
   getReferralSummary(userId: string, pagination: PaginationInput) {
     const profile = this.getProfile(userId);
     const counts = this.database.prepare(`
@@ -529,6 +583,24 @@ export class UserFeaturesService {
     })();
   }
 
+  closeSupportTicket(userId: string, ticketId: string) {
+    const ticket = this.database.prepare('SELECT status FROM support_tickets WHERE id = ? AND user_id = ?')
+      .get(ticketId, userId) as { status: string } | undefined;
+    if (!ticket) throw new UserFeatureError('support_ticket_not_found', 'Không tìm thấy yêu cầu hỗ trợ.', 404);
+    if (ticket.status === 'closed') return this.getSupportTicket(userId, ticketId);
+    const timestamp = this.timestamp();
+    this.database.transaction(() => {
+      this.database.prepare(`UPDATE support_tickets SET status = 'closed', updated_at = ? WHERE id = ? AND user_id = ?`)
+        .run(timestamp, ticketId, userId);
+      this.database.prepare(`
+        INSERT INTO support_messages(id, ticket_id, sender_type, body, created_at)
+        VALUES (?, ?, 'system', ?, ?)
+      `).run(this.generateId('support_message'), ticketId, 'Người dùng đã đóng yêu cầu hỗ trợ.', timestamp);
+      this.writeAudit(userId, 'support_ticket.closed', 'support_ticket', ticketId);
+    })();
+    return this.getSupportTicket(userId, ticketId);
+  }
+
   getProfile(userId: string) {
     const row = this.database.prepare(`
       SELECT id, public_id, phone, email, name, role, status, created_at, updated_at
@@ -543,9 +615,26 @@ export class UserFeaturesService {
     const nextName = patch.name ?? current.name;
     const nextEmail = patch.email === undefined ? current.email : patch.email;
     const timestamp = this.timestamp();
+    const identity = this.database.prepare(`
+      SELECT provider FROM auth_identities WHERE user_id = ? LIMIT 1
+    `).get(userId) as { provider: 'password' | 'google' } | undefined;
+    if (patch.email !== undefined && patch.email !== current.email && identity?.provider === 'google') {
+      throw new UserFeatureError('email_change_not_available', 'Tài khoản Google dùng email đã được xác thực bởi Google và không thể đổi tại đây.', 422);
+    }
+    if (patch.email === null && identity?.provider === 'password') {
+      throw new UserFeatureError('email_required', 'Tài khoản dùng mật khẩu cần có email đăng nhập.', 422);
+    }
     try {
-      this.database.prepare('UPDATE users SET name = ?, email = ?, updated_at = ? WHERE id = ?')
-        .run(nextName, nextEmail, timestamp, userId);
+      this.database.transaction(() => {
+        this.database.prepare('UPDATE users SET name = ?, email = ?, updated_at = ? WHERE id = ?')
+          .run(nextName, nextEmail, timestamp, userId);
+        if (patch.email !== undefined && patch.email !== current.email && identity?.provider === 'password' && nextEmail) {
+          this.database.prepare(`
+            UPDATE auth_identities SET email = ?, provider_subject = ?, updated_at = ?
+            WHERE user_id = ? AND provider = 'password'
+          `).run(nextEmail, nextEmail, timestamp, userId);
+        }
+      })();
     } catch (error) {
       if (isUniqueConstraint(error)) throw new UserFeatureError('email_already_used', 'Email đã được sử dụng bởi tài khoản khác.', 409);
       throw error;
