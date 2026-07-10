@@ -12,6 +12,7 @@ import { openDatabase, type SqliteDatabase } from './db/database.js';
 import { seedDatabase } from './db/seed.js';
 import { decryptString, hmacSha256 } from './lib/security.js';
 import { nowIso } from './lib/ids.js';
+import { createFixedWindowRateLimiter, RequestSecurityError, requireTrustedOrigin } from './middleware/request-security.js';
 import { AffiliateLinkService } from './modules/affiliate/AffiliateLinkService.js';
 import { AuthError, AuthService, authErrorHandler, createAuthRouter, createOtpDelivery, createPasswordResetDelivery, getSessionToken } from './modules/auth/index.js';
 import { WalletError, WalletService } from './modules/wallet/WalletService.js';
@@ -75,7 +76,26 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
   app.use(cookieParser());
   app.use(pinoHttp({
     enabled: config.NODE_ENV !== 'test',
-    redact: ['req.headers.cookie', 'req.headers.authorization', 'req.body.code', 'req.body.password', 'req.body.bankAccountNumber', 'req.body.email'],
+    redact: ['req.headers.cookie', 'req.headers.authorization', 'req.headers.x-riohub-signature', 'req.body.code', 'req.body.password', 'req.body.bankAccountNumber', 'req.body.email'],
+  }));
+  app.use(requireTrustedOrigin(config.APP_URL, config.NODE_ENV));
+  app.use('/api/v1/auth', createFixedWindowRateLimiter({
+    windowMs: 15 * 60 * 1_000,
+    max: 30,
+    key: (request) => `auth:${request.ip ?? 'unknown'}`,
+    code: 'AUTH_REQUEST_RATE_LIMITED',
+  }));
+  app.use('/api/v1/affiliate-links', createFixedWindowRateLimiter({
+    windowMs: 60 * 1_000,
+    max: 30,
+    key: (request) => `links:${request.ip ?? 'unknown'}`,
+    code: 'LINK_REQUEST_RATE_LIMITED',
+  }));
+  app.use('/api/v1/withdrawals', createFixedWindowRateLimiter({
+    windowMs: 60 * 1_000,
+    max: 10,
+    key: (request) => `withdrawals:${request.ip ?? 'unknown'}`,
+    code: 'WITHDRAWAL_REQUEST_RATE_LIMITED',
   }));
 
   const cookieOptions = { cookieName: config.SESSION_COOKIE, environment: config.NODE_ENV, sessionTtlHours: config.SESSION_TTL_HOURS } as const;
@@ -268,6 +288,14 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
   }
 
   app.use(authErrorHandler);
+  app.use((error: unknown, _request: Request, response: Response, next: NextFunction) => {
+    if (error instanceof RequestSecurityError) {
+      if (error.retryAfterSeconds) response.setHeader('Retry-After', String(error.retryAfterSeconds));
+      response.status(error.status).json({ error: { code: error.code, message: error.message } });
+      return;
+    }
+    next(error);
+  });
   app.use((error: unknown, _request: Request, response: Response, _next: NextFunction) => {
     if (error instanceof z.ZodError) { response.status(422).json({ error: { code: 'validation_error', message: 'Dữ liệu không hợp lệ.', details: z.flattenError(error).fieldErrors } }); return; }
     if (error instanceof ProviderError) { response.status(error.statusCode).json({ error: { code: error.code, message: error.message } }); return; }
