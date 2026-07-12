@@ -1,210 +1,143 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, EyeOff, Lock, ShieldCheck } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Eye, EyeOff, Lock } from 'lucide-react';
 import { Button } from '../components/Button';
 import { ToastContainer } from '../components/Toast';
 import { defaultToastState, triggerToast } from '../components/toast-state';
 import type { ToastState } from '../components/toast-state';
+import { ApiError, authApi } from '../services/apiClient';
+
+interface ResetProgress {
+  email: string;
+  challengeId: string;
+  expiresAt: string;
+  retryAfterSeconds: number;
+}
+
+const getStoredProgress = (): ResetProgress | null => {
+  try {
+    const value = sessionStorage.getItem('password-reset-progress');
+    if (!value) return null;
+    const parsed = JSON.parse(value) as Partial<ResetProgress>;
+    if (typeof parsed.email !== 'string' || typeof parsed.challengeId !== 'string' || typeof parsed.expiresAt !== 'string') return null;
+    return { email: parsed.email, challengeId: parsed.challengeId, expiresAt: parsed.expiresAt, retryAfterSeconds: Number(parsed.retryAfterSeconds) || 0 };
+  } catch {
+    return null;
+  }
+};
 
 export const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const progress = useMemo(() => (location.state as ResetProgress | null) ?? getStoredProgress(), [location.state]);
+  const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [logoutEverywhere, setLogoutEverywhere] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [retryAfter, setRetryAfter] = useState(progress?.retryAfterSeconds ?? 0);
   const [toast, setToast] = useState<ToastState>(defaultToastState);
-  const [shakeError, setShakeError] = useState(false);
 
-  const getStrengthLevel = (val: string) => {
-    if (val.length === 0) return { label: 'Độ mạnh mật khẩu', width: 'w-0', color: 'bg-outline-variant', textClass: 'text-on-surface-variant' };
-    if (val.length < 6) return { label: 'Yếu', width: 'w-1/3', color: 'bg-error', textClass: 'text-error font-bold' };
-    if (val.length < 10) return { label: 'Trung bình', width: 'w-2/3', color: 'bg-amber-500', textClass: 'text-amber-600 font-bold' };
-    return { label: 'Mạnh', width: 'w-full', color: 'bg-tertiary', textClass: 'text-tertiary font-bold' };
-  };
+  useEffect(() => {
+    if (retryAfter <= 0) return undefined;
+    const timer = window.setInterval(() => setRetryAfter((seconds) => Math.max(0, seconds - 1)), 1_000);
+    return () => window.clearInterval(timer);
+  }, [retryAfter]);
 
-  const strength = getStrengthLevel(newPassword);
+  const passwordLabel = newPassword.length === 0 ? 'Độ mạnh mật khẩu' : newPassword.length < 10 || !/[A-Za-z]/.test(newPassword) || !/\d/.test(newPassword) ? 'Chưa đạt yêu cầu' : 'Đạt yêu cầu';
+  const passwordColor = passwordLabel === 'Đạt yêu cầu' ? 'text-tertiary' : passwordLabel === 'Độ mạnh mật khẩu' ? 'text-on-surface-variant' : 'text-error';
 
-  const handleUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newPassword || !confirmPassword) {
-      setShakeError(true);
-      setTimeout(() => setShakeError(false), 500);
-      triggerToast(setToast, 'Vui lòng điền đầy đủ thông tin mật khẩu.', 'error');
+  const handleUpdate = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!progress) {
+      navigate('/forgot-password', { replace: true });
       return;
     }
-
+    if (!/^\d{6}$/.test(code)) {
+      triggerToast(setToast, 'Mã xác thực phải gồm 6 chữ số.', 'error');
+      return;
+    }
     if (newPassword !== confirmPassword) {
-      setShakeError(true);
-      setTimeout(() => setShakeError(false), 500);
       triggerToast(setToast, 'Mật khẩu xác nhận không khớp.', 'error');
       return;
     }
-
     setLoading(true);
-    // Simulate API update
-    setTimeout(() => {
+    try {
+      await authApi.confirmPasswordReset({ email: progress.email, challengeId: progress.challengeId, code, password: newPassword });
+      sessionStorage.removeItem('password-reset-progress');
+      navigate('/login?password_reset=success', { replace: true });
+    } catch (error) {
+      const apiError = error instanceof ApiError ? error : null;
+      if (apiError?.code === 'PASSWORD_RESET_EXPIRED' || apiError?.code === 'PASSWORD_RESET_INVALID') {
+        sessionStorage.removeItem('password-reset-progress');
+        triggerToast(setToast, 'Mã đã hết hạn hoặc không hợp lệ. Vui lòng yêu cầu mã mới.', 'error');
+      } else {
+        triggerToast(setToast, apiError?.message ?? 'Không thể cập nhật mật khẩu. Vui lòng thử lại.', 'error');
+      }
+    } finally {
       setLoading(false);
-      setSuccess(true);
-    }, 1500);
+    }
   };
 
+  const handleResend = async () => {
+    if (!progress || retryAfter > 0) return;
+    setResending(true);
+    try {
+      const reset = await authApi.requestPasswordReset({ email: progress.email });
+      const next = { email: progress.email, ...reset };
+      sessionStorage.setItem('password-reset-progress', JSON.stringify(next));
+      navigate('/reset-password', { replace: true, state: next });
+      setRetryAfter(reset.retryAfterSeconds);
+      setCode('');
+      triggerToast(setToast, 'Nếu email có tài khoản dùng mật khẩu, mã mới đã được gửi.', 'success');
+    } catch (error) {
+      const apiError = error instanceof ApiError ? error : null;
+      if (apiError?.retryAfterSeconds) setRetryAfter(apiError.retryAfterSeconds);
+      triggerToast(setToast, apiError?.message ?? 'Không thể gửi lại mã. Vui lòng thử lại.', 'error');
+    } finally {
+      setResending(false);
+    }
+  };
+
+  if (!progress) {
+    return (
+      <main className="min-h-[70vh] grid place-items-center px-4 text-center">
+        <div className="max-w-md rounded-3xl bg-white p-8 shadow-soft border border-outline-variant/30">
+          <Lock className="mx-auto text-primary" size={36} />
+          <h1 className="mt-4 text-xl font-bold">Yêu cầu mã xác thực trước</h1>
+          <p className="mt-2 text-sm text-on-surface-variant">Để bảo vệ tài khoản, hãy yêu cầu mã đặt lại mật khẩu từ email đã đăng ký.</p>
+          <Button className="mt-6" onClick={() => navigate('/forgot-password')}>Yêu cầu mã</Button>
+        </div>
+      </main>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4 py-8 relative overflow-hidden text-on-surface">
-      {/* Decorative Blur Circles */}
-      <div className="fixed -bottom-16 -right-16 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="fixed -top-16 -left-16 w-48 h-48 bg-tertiary-container/5 rounded-full blur-3xl pointer-events-none" />
-
-      {/* Screen Wrapper */}
-      <div className="w-full max-w-[400px] bg-white rounded-3xl border border-outline-variant/30 shadow-soft p-6 flex flex-col relative z-10">
-        
-        {/* Header */}
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8 text-on-surface">
+      <div className="w-full max-w-[400px] bg-white rounded-3xl border border-outline-variant/30 shadow-soft p-6">
         <header className="flex items-center gap-3 mb-6">
-          <button 
-            onClick={() => navigate(-1)} 
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors"
-            aria-label="Quay lại"
-          >
-            <ArrowLeft className="text-primary" size={20} />
-          </button>
-          <h1 className="font-headline-md text-lg font-bold text-on-surface">Đặt lại mật khẩu</h1>
+          <button onClick={() => navigate('/forgot-password')} className="w-10 h-10 grid place-items-center rounded-full bg-surface-container hover:bg-surface-container-high" aria-label="Quay lại"><ArrowLeft className="text-primary" size={20} /></button>
+          <h1 className="font-headline-md text-lg font-bold">Đặt lại mật khẩu</h1>
         </header>
-
-        {/* Hero Section */}
-        <div className="mb-6 relative overflow-hidden">
-          <div className="h-28 w-full rounded-2xl bg-gradient-to-br from-primary-container/10 to-secondary-container/20 flex items-center justify-center relative overflow-hidden">
-            <span className="text-primary text-4xl transform"><Lock size={36} /></span>
-          </div>
-        </div>
-
-        {/* Content Description */}
-        <p className="font-body-md text-xs text-on-surface-variant mb-6 text-left leading-relaxed">
-          Vui lòng nhập mật khẩu mới và xác nhận để tiếp tục bảo mật tài khoản của bạn.
-        </p>
-
-        {/* Form */}
-        <form 
-          onSubmit={handleUpdate} 
-          className={`space-y-5 flex-grow text-left
-            ${shakeError ? 'animate-shake' : ''}
-          `}
-        >
-          {/* New Password */}
+        <p className="text-xs text-on-surface-variant leading-relaxed mb-6">Nhập mã gồm 6 chữ số đã gửi đến <strong>{progress.email}</strong>, sau đó tạo mật khẩu mới. Mọi phiên đăng nhập hiện có sẽ được đăng xuất.</p>
+        <form onSubmit={handleUpdate} className="space-y-5 text-left">
+          <label className="block text-xs font-bold text-on-surface-variant" htmlFor="reset-code">Mã xác thực</label>
+          <input id="reset-code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))} disabled={loading} className="block w-full rounded-xl border border-outline-variant/50 bg-surface-container-low/40 px-4 py-3.5 text-center font-mono text-lg tracking-[0.4em] outline-none focus:border-primary" />
           <div className="space-y-1">
-            <label className="font-label-md text-xs font-bold text-on-surface-variant ml-1" htmlFor="newPassword">
-              Mật khẩu mới
-            </label>
-            <div className="relative group">
-              <input 
-                id="newPassword"
-                type={showNewPassword ? 'text' : 'password'}
-                placeholder="Nhập mật khẩu mới"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                disabled={loading}
-                className="block w-full px-4 pr-12 py-3.5 bg-surface-container-low/40 border border-outline-variant/50 rounded-xl font-body-md text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-              />
-              <button 
-                type="button"
-                onClick={() => setShowNewPassword(!showNewPassword)}
-                className="absolute right-4 top-3.5 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-                aria-label={showNewPassword ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu'}
-              >
-                {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-            
-            {/* Strength Indicator */}
-            <div className="pt-2 px-1">
-              <div className="w-full bg-surface-container rounded-full h-1 overflow-hidden mb-1">
-                <div className={`h-full transition-all duration-300 ${strength.color} ${strength.width}`} />
-              </div>
-              <div className="flex justify-between items-center text-[10px]">
-                <span className="text-on-surface-variant font-semibold">Độ mạnh mật khẩu</span>
-                <span className={strength.textClass}>{strength.label}</span>
-              </div>
-            </div>
+            <label className="block text-xs font-bold text-on-surface-variant" htmlFor="newPassword">Mật khẩu mới</label>
+            <div className="relative"><input id="newPassword" type={showNewPassword ? 'text' : 'password'} autoComplete="new-password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} disabled={loading} className="block w-full rounded-xl border border-outline-variant/50 bg-surface-container-low/40 px-4 py-3.5 pr-12 outline-none focus:border-primary" /><button type="button" onClick={() => setShowNewPassword((visible) => !visible)} className="absolute right-4 top-3.5 text-on-surface-variant" aria-label={showNewPassword ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu'}>{showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
+            <p className={`text-[11px] ${passwordColor}`}>{passwordLabel} — 10–128 ký tự, có cả chữ và số.</p>
           </div>
-
-          {/* Confirm Password */}
           <div className="space-y-1">
-            <label className="font-label-md text-xs font-bold text-on-surface-variant ml-1" htmlFor="confirmPassword">
-              Xác nhận mật khẩu
-            </label>
-            <div className="relative">
-              <input 
-                id="confirmPassword"
-                type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="Nhập lại mật khẩu mới"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                disabled={loading}
-                className="block w-full px-4 pr-12 py-3.5 bg-surface-container-low/40 border border-outline-variant/50 rounded-xl font-body-md text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-              />
-              <button 
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-3.5 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
-                aria-label={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu'}
-              >
-                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
+            <label className="block text-xs font-bold text-on-surface-variant" htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+            <div className="relative"><input id="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} disabled={loading} className="block w-full rounded-xl border border-outline-variant/50 bg-surface-container-low/40 px-4 py-3.5 pr-12 outline-none focus:border-primary" /><button type="button" onClick={() => setShowConfirmPassword((visible) => !visible)} className="absolute right-4 top-3.5 text-on-surface-variant" aria-label={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu'}>{showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
           </div>
-
-          {/* Logout Everywhere */}
-          <label className="flex items-start gap-3 p-4 rounded-2xl bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors select-none">
-            <div className="pt-0.5">
-              <input 
-                type="checkbox"
-                checked={logoutEverywhere}
-                onChange={(e) => setLogoutEverywhere(e.target.checked)}
-                className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer"
-              />
-            </div>
-            <div className="flex flex-col text-left">
-              <span className="text-xs font-bold text-on-surface">Đăng xuất khỏi mọi thiết bị</span>
-              <span className="text-[10px] text-on-surface-variant leading-normal mt-0.5">
-                Đảm bảo an toàn tuyệt đối bằng cách đăng xuất khỏi các phiên đăng nhập khác.
-              </span>
-            </div>
-          </label>
-
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full py-4 font-bold shadow-lg shadow-primary/10 h-[52px] !mt-8"
-            loading={loading}
-          >
-            Cập nhật mật khẩu
-          </Button>
+          <Button type="submit" variant="primary" className="w-full py-4 font-bold" loading={loading}>Cập nhật mật khẩu</Button>
         </form>
-
+        <button type="button" onClick={() => void handleResend()} disabled={resending || retryAfter > 0} className="mt-5 w-full text-xs font-bold text-primary disabled:text-on-surface-variant disabled:cursor-not-allowed">{retryAfter > 0 ? `Gửi lại mã sau ${retryAfter}s` : resending ? 'Đang gửi lại mã…' : 'Gửi lại mã xác thực'}</button>
       </div>
-
-      {/* Success Modal Overlay */}
-      {success && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-          <div className="w-full max-w-[340px] bg-white rounded-3xl p-6 flex flex-col items-center text-center shadow-2xl animate-scale-up">
-            <div className="w-16 h-16 bg-tertiary/10 rounded-full flex items-center justify-center mb-5 text-tertiary">
-              <ShieldCheck size={36} />
-            </div>
-            <h3 className="font-headline-md text-lg font-bold text-on-surface mb-2">Thành công!</h3>
-            <p className="font-body-md text-xs text-on-surface-variant mb-6 leading-relaxed">
-              Mật khẩu đã được thay đổi thành công. Bạn có thể sử dụng mật khẩu mới để đăng nhập.
-            </p>
-            <button 
-              onClick={() => navigate('/login')}
-              className="w-full h-12 bg-primary text-white font-bold rounded-xl hover:brightness-105 active:scale-95 transition-all text-xs cursor-pointer shadow-soft"
-            >
-              Đăng nhập ngay
-            </button>
-          </div>
-        </div>
-      )}
-
       <ToastContainer toast={toast} setToast={setToast} />
     </div>
   );

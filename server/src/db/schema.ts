@@ -517,4 +517,69 @@ export const migrations: readonly Migration[] = [
       CREATE INDEX IF NOT EXISTS idx_google_oauth_states_expiry ON google_oauth_states(expires_at);
     `,
   },
+  {
+    version: 6,
+    name: 'password_reset_challenges',
+    sql: `
+      CREATE TABLE IF NOT EXISTS password_reset_challenges (
+        id TEXT PRIMARY KEY,
+        email TEXT NOT NULL COLLATE NOCASE,
+        user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+        code_hash TEXT NOT NULL,
+        attempts INTEGER NOT NULL DEFAULT 0,
+        expires_at TEXT NOT NULL,
+        consumed_at TEXT,
+        created_at TEXT NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS idx_password_reset_email_created
+        ON password_reset_challenges(email, created_at DESC);
+    `,
+  },
+  {
+    version: 7,
+    name: 'offline_payout_batches',
+    sql: `
+      -- These tables model an internal, offline review workflow only. They do
+      -- not represent a bank instruction or evidence of a completed payment.
+      CREATE TABLE IF NOT EXISTS payout_batches (
+        id TEXT PRIMARY KEY,
+        reference TEXT NOT NULL UNIQUE,
+        memo TEXT,
+        gateway_mode TEXT NOT NULL CHECK (gateway_mode = 'deterministic_mock'),
+        status TEXT NOT NULL CHECK (status IN ('draft','approved','mock_submitted','reconciled')),
+        created_by TEXT NOT NULL REFERENCES users(id),
+        checked_by TEXT REFERENCES users(id),
+        checked_at TEXT,
+        submitted_at TEXT,
+        reconciled_at TEXT,
+        reconciliation_summary_json TEXT,
+        idempotency_key TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        UNIQUE(created_by, idempotency_key)
+      );
+      CREATE INDEX IF NOT EXISTS idx_payout_batches_status_created
+        ON payout_batches(status, created_at DESC);
+
+      CREATE TABLE IF NOT EXISTS payout_batch_items (
+        id TEXT PRIMARY KEY,
+        payout_batch_id TEXT NOT NULL REFERENCES payout_batches(id) ON DELETE CASCADE,
+        withdrawal_request_id TEXT NOT NULL UNIQUE REFERENCES withdrawal_requests(id),
+        amount_vnd INTEGER NOT NULL CHECK (amount_vnd > 0),
+        bank_name TEXT NOT NULL,
+        bank_account_masked TEXT NOT NULL,
+        account_name TEXT NOT NULL,
+        status TEXT NOT NULL CHECK (status IN ('queued','mock_submitted','reconciled_mock')),
+        mock_gateway_reference TEXT,
+        mock_gateway_status TEXT CHECK (mock_gateway_status IN ('accepted')),
+        reconciliation_status TEXT NOT NULL DEFAULT 'pending' CHECK (reconciliation_status IN ('pending','matched_mock')),
+        reconciliation_note TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        UNIQUE(payout_batch_id, withdrawal_request_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_payout_batch_items_batch
+        ON payout_batch_items(payout_batch_id, created_at);
+    `,
+  },
 ];

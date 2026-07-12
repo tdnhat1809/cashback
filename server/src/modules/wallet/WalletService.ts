@@ -67,7 +67,9 @@ export class WalletService {
       if (available.balance_vnd < input.amountVnd) throw new WalletError('Số dư khả dụng không đủ.', 'insufficient_available_balance', 409);
       this.database.prepare(`UPDATE wallet_buckets SET balance_vnd = balance_vnd - ?, updated_at = ? WHERE wallet_account_id = ? AND bucket = 'available'`).run(input.amountVnd, timestamp, walletId);
       this.database.prepare(`UPDATE wallet_buckets SET balance_vnd = balance_vnd + ?, updated_at = ? WHERE wallet_account_id = ? AND bucket = 'reserved'`).run(input.amountVnd, timestamp, walletId);
-      this.database.prepare(`INSERT INTO wallet_journals(id, idempotency_key, reference_type, reference_id, description, created_at) VALUES (?, ?, 'withdrawal', ?, ?, ?)`).run(journalId, `withdrawal:reserve:${input.idempotencyKey}`, withdrawalId, `Giữ tiền cho yêu cầu rút ${withdrawalId}`, timestamp);
+      // Withdrawal requests are idempotent per user, so the corresponding global
+      // journal key must include the same user scope.
+      this.database.prepare(`INSERT INTO wallet_journals(id, idempotency_key, reference_type, reference_id, description, created_at) VALUES (?, ?, 'withdrawal', ?, ?, ?)`).run(journalId, `withdrawal:reserve:${input.userId}:${input.idempotencyKey}`, withdrawalId, `Giữ tiền cho yêu cầu rút ${withdrawalId}`, timestamp);
       const posting = this.database.prepare(`INSERT INTO wallet_postings(id, journal_id, wallet_account_id, bucket, amount_vnd, created_at) VALUES (?, ?, ?, ?, ?, ?)`);
       posting.run(createId('posting'), journalId, walletId, 'available', -input.amountVnd, timestamp);
       posting.run(createId('posting'), journalId, walletId, 'reserved', input.amountVnd, timestamp);

@@ -162,8 +162,8 @@ export const NotFound: React.FC = () => {
             <div className="flex flex-col gap-2">
               <h5 className="font-label-md text-xs font-bold text-on-surface uppercase mb-1">Về chúng tôi</h5>
               <Link to="/faq" className="text-xs text-on-surface-variant hover:text-primary">Liên hệ</Link>
-              <a href="#" className="text-xs text-on-surface-variant hover:text-primary">Chính sách bảo mật</a>
-              <a href="#" className="text-xs text-on-surface-variant hover:text-primary">Điều khoản sử dụng</a>
+              <Link to="/legal?tab=privacy" className="text-xs text-on-surface-variant hover:text-primary">Chính sách bảo mật</Link>
+              <Link to="/legal?tab=terms" className="text-xs text-on-surface-variant hover:text-primary">Điều khoản sử dụng</Link>
             </div>
             <div className="flex flex-col gap-2">
               <h5 className="font-label-md text-xs font-bold text-on-surface uppercase mb-1">Kết nối</h5>

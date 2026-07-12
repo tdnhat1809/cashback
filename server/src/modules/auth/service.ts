@@ -1,6 +1,6 @@
 import { randomInt, randomUUID } from 'node:crypto';
 import type { SqliteDatabase } from '../../db/database.js';
-import type { OtpDelivery } from './delivery.js';
+import type { OtpDelivery, PasswordResetDelivery } from './delivery.js';
 import {
   createOpaqueToken,
   hashOtpCode,
@@ -65,6 +65,25 @@ export interface PasswordLoginInput {
   password: string;
 }
 
+export interface PasswordResetRequestInput {
+  email: string;
+}
+
+export interface PasswordResetRequestResult {
+  challengeId: string;
+  expiresAt: string;
+  retryAfterSeconds: number;
+  /** Present only in development to support local testing without an email gateway. */
+  devCode?: string;
+}
+
+export interface PasswordResetConfirmInput {
+  email: string;
+  challengeId: string;
+  code: string;
+  password: string;
+}
+
 export interface GoogleIdentityInput {
   subject: string;
   email: string;
@@ -95,6 +114,7 @@ export interface AuthServiceOptions {
   otpMaxRequestsPerWindow?: number;
   otpMaxVerifyAttempts?: number;
   delivery?: OtpDelivery;
+  passwordResetDelivery?: PasswordResetDelivery;
   generateOtp?: () => string;
 }
 
@@ -154,6 +174,16 @@ interface GoogleStateRow {
   nonce: string;
   redirect_path: string;
   expires_at: string;
+}
+
+interface PasswordResetChallengeRow {
+  id: string;
+  email: string;
+  user_id: string | null;
+  code_hash: string;
+  attempts: number;
+  expires_at: string;
+  consumed_at: string | null;
 }
 
 const toAuthUser = (row: UserRow): AuthUser => ({
@@ -219,6 +249,7 @@ export class AuthService {
   private readonly otpMaxRequestsPerWindow: number;
   private readonly otpMaxVerifyAttempts: number;
   private readonly delivery?: OtpDelivery;
+  private readonly passwordResetDelivery?: PasswordResetDelivery;
   private readonly generateOtp: () => string;
   private readonly passwordLoginWindowMs = 15 * 60 * 1_000;
   private readonly passwordLoginMaxFailures = 5;
@@ -242,6 +273,7 @@ export class AuthService {
     this.otpMaxRequestsPerWindow = options.otpMaxRequestsPerWindow ?? 5;
     this.otpMaxVerifyAttempts = options.otpMaxVerifyAttempts ?? 5;
     this.delivery = options.delivery;
+    this.passwordResetDelivery = options.passwordResetDelivery;
     this.generateOtp = options.generateOtp ?? (() => String(randomInt(100_000, 1_000_000)));
   }
 
@@ -418,13 +450,13 @@ export class AuthService {
     const password = typeof input.password === 'string' ? input.password : '';
     const now = this.now();
 
-    return this.database.transaction(() => {
+    const result = this.database.transaction((): VerifyOtpResult | { failure: AuthError } => {
       const attempt = this.database.prepare(`
         SELECT failures, first_failed_at, locked_until FROM password_login_attempts WHERE email = ?
       `).get(email) as LoginAttemptRow | undefined;
       if (attempt?.locked_until && new Date(attempt.locked_until).getTime() > now.getTime()) {
         const retryAfterSeconds = Math.max(1, Math.ceil((new Date(attempt.locked_until).getTime() - now.getTime()) / 1_000));
-        throw new AuthError('AUTH_RATE_LIMITED', 'Bạn đã đăng nhập sai quá nhiều lần. Vui lòng thử lại sau.', 429, { retryAfterSeconds });
+        return { failure: new AuthError('AUTH_RATE_LIMITED', 'Bạn đã đăng nhập sai quá nhiều lần. Vui lòng thử lại sau.', 429, { retryAfterSeconds }) };
       }
 
       const identity = this.database.prepare(`
@@ -436,13 +468,132 @@ export class AuthService {
 
       if (!identity || !identity.password_hash || !verifyPasswordHash(password, identity.password_hash)) {
         this.recordPasswordFailure(email, now, attempt);
-        throw new AuthError('INVALID_CREDENTIALS', 'Email hoặc mật khẩu không chính xác.', 401);
+        return { failure: new AuthError('INVALID_CREDENTIALS', 'Email hoặc mật khẩu không chính xác.', 401) };
       }
       if (identity.status === 'suspended') {
-        throw new AuthError('ACCOUNT_SUSPENDED', 'Tài khoản đang bị tạm khóa. Vui lòng liên hệ hỗ trợ.', 403);
+        return { failure: new AuthError('ACCOUNT_SUSPENDED', 'Tài khoản đang bị tạm khóa. Vui lòng liên hệ hỗ trợ.', 403) };
       }
       this.database.prepare('DELETE FROM password_login_attempts WHERE email = ?').run(email);
       return this.createSessionForUser(identity, now);
+    })();
+    if ('failure' in result) throw result.failure;
+    return result;
+  }
+
+  async requestPasswordReset(input: PasswordResetRequestInput): Promise<PasswordResetRequestResult> {
+    this.assertPasswordResetDeliveryAvailable();
+    const email = normalizeEmailOrThrow(input.email);
+    const now = this.now();
+    const nowIso = now.toISOString();
+    const expiresAt = new Date(now.getTime() + this.otpTtlMs).toISOString();
+    const genericResult = (): PasswordResetRequestResult => ({
+      challengeId: this.generateToken(),
+      expiresAt,
+      retryAfterSeconds: Math.ceil(this.otpCooldownMs / 1_000),
+    });
+
+    const passwordIdentity = this.database.prepare(`
+      SELECT u.id, u.status
+      FROM auth_identities ai INNER JOIN users u ON u.id = ai.user_id
+      WHERE ai.provider = 'password' AND ai.email = ?
+    `).get(email) as { id: string; status: AuthUser['status'] } | undefined;
+    if (!passwordIdentity || passwordIdentity.status !== 'active') return genericResult();
+
+    const code = this.environment === 'production' ? this.generateOtp() : this.devOtp;
+    if (!/^\d{6}$/.test(code)) throw new Error('generateOtp must return exactly 6 digits');
+    const result = this.database.transaction(() => {
+      const windowStartIso = new Date(now.getTime() - this.otpRateLimitWindowMs).toISOString();
+      const recent = this.database.prepare(`
+        SELECT created_at FROM password_reset_challenges
+        WHERE email = ? AND created_at >= ? ORDER BY created_at DESC
+      `).all(email, windowStartIso) as Array<{ created_at: string }>;
+      const latest = recent[0]?.created_at;
+      if (latest) {
+        const elapsedMs = now.getTime() - new Date(latest).getTime();
+        if (elapsedMs < this.otpCooldownMs) {
+          throw new AuthError('PASSWORD_RESET_RATE_LIMITED', 'Vui lòng chờ trước khi yêu cầu mã mới.', 429, {
+            retryAfterSeconds: Math.max(1, Math.ceil((this.otpCooldownMs - elapsedMs) / 1_000)),
+          });
+        }
+      }
+      if (recent.length >= this.otpMaxRequestsPerWindow) {
+        const oldest = recent[recent.length - 1];
+        const retryAfterSeconds = Math.max(1, Math.ceil((new Date(oldest!.created_at).getTime() + this.otpRateLimitWindowMs - now.getTime()) / 1_000));
+        throw new AuthError('PASSWORD_RESET_RATE_LIMITED', 'Bạn đã yêu cầu quá nhiều mã. Vui lòng thử lại sau.', 429, { retryAfterSeconds });
+      }
+
+      this.database.prepare('UPDATE password_reset_challenges SET consumed_at = ? WHERE email = ? AND consumed_at IS NULL').run(nowIso, email);
+      const challengeId = this.generateId();
+      this.database.prepare(`
+        INSERT INTO password_reset_challenges(id, email, user_id, code_hash, attempts, expires_at, consumed_at, created_at)
+        VALUES (?, ?, ?, ?, 0, ?, NULL, ?)
+      `).run(challengeId, email, passwordIdentity.id, hashOtpCode(code), expiresAt, nowIso);
+      return {
+        challengeId,
+        expiresAt,
+        retryAfterSeconds: Math.ceil(this.otpCooldownMs / 1_000),
+        ...(this.environment === 'development' ? { devCode: this.devOtp } : {}),
+      };
+    })();
+
+    if (this.environment === 'production') {
+      try {
+        await this.passwordResetDelivery!.send({ email, code, expiresAt: result.expiresAt });
+      } catch {
+        this.database.prepare('DELETE FROM password_reset_challenges WHERE id = ? AND consumed_at IS NULL').run(result.challengeId);
+        throw new AuthError('PASSWORD_RESET_DELIVERY_UNAVAILABLE', 'Không thể gửi mã đặt lại mật khẩu. Vui lòng thử lại sau.', 503);
+      }
+    }
+    return result;
+  }
+
+  confirmPasswordReset(input: PasswordResetConfirmInput): void {
+    const email = normalizeEmailOrThrow(input.email);
+    const code = assertOtpCode(input.code);
+    const password = assertPassword(input.password);
+    const now = this.now();
+    const nowIso = now.toISOString();
+
+    this.database.transaction(() => {
+      const challenge = this.database.prepare(`
+        SELECT id, email, user_id, code_hash, attempts, expires_at, consumed_at
+        FROM password_reset_challenges WHERE id = ? AND email = ?
+      `).get(input.challengeId, email) as PasswordResetChallengeRow | undefined;
+      if (!challenge || challenge.consumed_at || !challenge.user_id) {
+        throw new AuthError('PASSWORD_RESET_INVALID', 'Mã đặt lại mật khẩu không hợp lệ.', 400);
+      }
+      if (new Date(challenge.expires_at).getTime() <= now.getTime()) {
+        throw new AuthError('PASSWORD_RESET_EXPIRED', 'Mã đặt lại mật khẩu đã hết hạn.', 400);
+      }
+      if (challenge.attempts >= this.otpMaxVerifyAttempts) {
+        throw new AuthError('PASSWORD_RESET_ATTEMPTS_EXCEEDED', 'Bạn đã nhập sai mã quá số lần cho phép.', 429);
+      }
+      this.database.prepare('UPDATE password_reset_challenges SET attempts = attempts + 1 WHERE id = ?').run(challenge.id);
+      if (!verifyOtpCodeHash(code, challenge.code_hash)) {
+        throw new AuthError('PASSWORD_RESET_INVALID', 'Mã đặt lại mật khẩu không hợp lệ.', 400, {
+          attemptsRemaining: Math.max(0, this.otpMaxVerifyAttempts - challenge.attempts - 1),
+        });
+      }
+
+      const identity = this.database.prepare(`
+        SELECT ai.user_id, u.status FROM auth_identities ai
+        INNER JOIN users u ON u.id = ai.user_id
+        WHERE ai.provider = 'password' AND ai.user_id = ? AND ai.email = ?
+      `).get(challenge.user_id, email) as { user_id: string; status: AuthUser['status'] } | undefined;
+      if (!identity || identity.status !== 'active') {
+        throw new AuthError('PASSWORD_RESET_INVALID', 'Mã đặt lại mật khẩu không hợp lệ.', 400);
+      }
+      this.database.prepare(`
+        UPDATE auth_identities SET password_hash = ?, updated_at = ?
+        WHERE provider = 'password' AND user_id = ?
+      `).run(hashPassword(password), nowIso, identity.user_id);
+      this.database.prepare('UPDATE password_reset_challenges SET consumed_at = ? WHERE id = ?').run(nowIso, challenge.id);
+      this.database.prepare('DELETE FROM sessions WHERE user_id = ?').run(identity.user_id);
+      this.database.prepare('DELETE FROM password_login_attempts WHERE email = ?').run(email);
+      this.database.prepare(`
+        INSERT INTO audit_logs(id, actor_user_id, action, target_type, target_id, metadata_json, created_at)
+        VALUES (?, ?, 'password_reset', 'user', ?, '{"method":"email_otp"}', ?)
+      `).run(this.generateId(), identity.user_id, identity.user_id, nowIso);
     })();
   }
 
@@ -637,6 +788,16 @@ export class AuthService {
       throw new AuthError(
         'OTP_DELIVERY_UNAVAILABLE',
         'Dịch vụ gửi OTP chưa được cấu hình cho môi trường production.',
+        503,
+      );
+    }
+  }
+
+  private assertPasswordResetDeliveryAvailable(): void {
+    if (this.environment === 'production' && !this.passwordResetDelivery) {
+      throw new AuthError(
+        'PASSWORD_RESET_DELIVERY_UNAVAILABLE',
+        'Dịch vụ gửi mã đặt lại mật khẩu chưa được cấu hình cho môi trường production.',
         503,
       );
     }

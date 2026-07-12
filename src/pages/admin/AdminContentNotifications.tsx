@@ -13,8 +13,8 @@ import {
 
 export const AdminContentNotifications: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'banners' | 'push' | 'faq' | 'deals'>('banners');
-  const [banners, setBanners] = useState<AdminPromoBanner[]>(mockAdminPromoBanners);
-  const [notifications, setNotifications] = useState<AdminPushNotification[]>(mockAdminPushNotifications);
+  const banners: AdminPromoBanner[] = mockAdminPromoBanners;
+  const notifications: AdminPushNotification[] = mockAdminPushNotifications;
   
   const [searchTerm, setSearchTerm] = useState('');
   const [toast, setToast] = useState<ToastState>(defaultToastState);
@@ -38,24 +38,11 @@ export const AdminContentNotifications: React.FC = () => {
 
   // Handlers
   const handleAddBanner = () => {
-    const newBanner: AdminPromoBanner = {
-      id: `b_${Date.now()}`,
-      title: 'Đại tiệc công nghệ - Hoàn tiền tới 20%',
-      imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800',
-      link: 'hoantienvip.com/deals/tech-week',
-      startDate: new Date().toISOString().substring(0, 10),
-      endDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().substring(0, 10),
-      status: 'Active'
-    };
-    setBanners(prev => [...prev, newBanner]);
-    triggerToast(setToast, 'Đã tải lên và kích hoạt banner mới thành công.', 'success');
+    triggerToast(setToast, 'Chưa thể thêm banner vì backend quản trị nội dung chưa được triển khai.', 'info');
   };
 
-  const handleDeleteBanner = (id: string, title: string) => {
-    if (window.confirm(`Bạn có muốn xóa banner "${title}" không?`)) {
-      setBanners(prev => prev.filter(b => b.id !== id));
-      triggerToast(setToast, 'Đã gỡ bỏ banner thành công.', 'warning');
-    }
+  const handleDeleteBanner = (_id: string, _title: string) => {
+    triggerToast(setToast, 'Chưa thể xóa banner vì backend quản trị nội dung chưa được triển khai.', 'info');
   };
 
   const handleSendPush = (e: React.FormEvent) => {
@@ -65,28 +52,11 @@ export const AdminContentNotifications: React.FC = () => {
       return;
     }
 
-    const created: AdminPushNotification = {
-      id: `pn_${Date.now()}`,
-      title: pushTitle.trim(),
-      body: pushBody.trim(),
-      target: pushTarget,
-      sentCount: pushTarget === 'All Users' ? 124500 : pushTarget === 'Gold Tier Only' ? 12800 : 5400,
-      status: pushSchedule ? 'Scheduled' : 'Delivered',
-      sentDate: pushSchedule ? undefined : 'Hôm nay',
-      scheduleTime: pushSchedule || undefined
-    };
-
-    setNotifications(prev => [created, ...prev]);
     triggerToast(
-      setToast, 
-      pushSchedule ? 'Đã lên lịch gửi thông báo thành công.' : 'Thông báo push đã được gửi đến thiết bị người dùng!', 
-      'success'
+      setToast,
+      'Chưa thể gửi hoặc lên lịch thông báo vì dịch vụ push chưa được triển khai.',
+      'info'
     );
-
-    // Reset inputs
-    setPushTitle('');
-    setPushBody('');
-    setPushSchedule('');
   };
 
   return (
@@ -94,26 +64,31 @@ export const AdminContentNotifications: React.FC = () => {
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-outline-variant/20 pb-4">
         <div>
-          <h1 className="font-headline-md text-xl font-bold text-primary">Quản lý nội dung & Thông báo</h1>
-          <p className="text-xs text-on-surface-variant">Soạn thảo tin push báo động số dư, cập nhật banner trang chủ và danh sách hỏi đáp FAQ.</p>
+          <h1 className="font-headline-md text-xl font-bold text-primary text-wrap-balance">Quản lý nội dung & Thông báo</h1>
+          <p className="mt-1 max-w-2xl text-xs leading-5 text-on-surface-variant">Xem trước banner, chiến dịch thông báo, FAQ và deal nổi bật trong cùng một không gian biên tập.</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="relative flex items-center bg-white px-3 py-2 border border-outline-variant/30 focus-within:border-primary rounded-xl w-64">
-            <Search className="text-on-surface-variant mr-2" size={16} />
-            <input 
-              type="text" 
+          <label className="relative flex w-full items-center rounded-xl border border-outline-variant/30 bg-white px-3 py-2 focus-within:border-primary sm:w-64">
+            <Search className="mr-2 text-on-surface-variant" size={16} aria-hidden="true" />
+            <span className="sr-only">Tìm kiếm tài nguyên</span>
+            <input
+              type="search"
               placeholder="Tìm kiếm tài nguyên..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-transparent border-none focus:ring-0 text-xs w-full outline-none placeholder:text-on-surface-variant/40"
+              className="w-full border-none bg-transparent text-xs outline-none placeholder:text-on-surface-variant/40"
             />
-          </div>
+          </label>
         </div>
       </header>
 
+      <div className="rounded-2xl border border-amber-500/20 bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-900" role="status">
+        <strong>Chế độ xem trước:</strong> backend xuất bản nội dung và dịch vụ push chưa được kết nối. Các nút thao tác bên dưới không lưu, xóa hoặc gửi dữ liệu thật.
+      </div>
+
       {/* Tabs */}
-      <div className="flex border-b border-outline-variant/30 text-sm font-bold">
+      <div className="flex overflow-x-auto border-b border-outline-variant/30 text-sm font-bold scrollbar-none">
         <button 
           onClick={() => setActiveTab('banners')}
           className={`flex items-center gap-2 px-5 py-3 border-b-2 transition-colors cursor-pointer
@@ -155,7 +130,7 @@ export const AdminContentNotifications: React.FC = () => {
         {activeTab === 'banners' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="font-title-lg text-sm font-bold text-on-surface">Banners đang hiển thị</h3>
+              <h3 className="font-title-lg text-sm font-bold text-on-surface">Banner mẫu để xem trước</h3>
               <Button
                 variant="primary"
                 onClick={handleAddBanner}
@@ -179,7 +154,7 @@ export const AdminContentNotifications: React.FC = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                     />
                     <div className="absolute top-3 right-3">
-                      <Badge variant="success">Active</Badge>
+                      <Badge variant="success">Mẫu hiển thị</Badge>
                     </div>
                   </div>
                   <div className="p-5 flex-1 flex flex-col justify-between text-left">
@@ -190,21 +165,25 @@ export const AdminContentNotifications: React.FC = () => {
 
                     <div className="flex items-center justify-between border-t border-outline-variant/10 pt-4 mt-4">
                       <div>
-                        <span className="text-[8px] font-black uppercase text-on-surface-variant tracking-wider block">Thời hạn</span>
+                        <span className="text-[8px] font-black uppercase text-on-surface-variant tracking-wider block">Thời hạn mẫu</span>
                         <span className="text-[10px] font-bold text-on-surface">{banner.startDate} ~ {banner.endDate}</span>
                       </div>
                       <div className="flex gap-1">
-                        <button 
-                          onClick={() => alert('Sửa đổi banner đang được xử lý...')}
+                        <button
+                          type="button"
+                          onClick={handleAddBanner}
                           className="p-2 text-on-surface-variant hover:text-primary rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer"
+                          aria-label={`Xem trạng thái chỉnh sửa banner ${banner.title}`}
                         >
-                          <Edit size={16} />
+                          <Edit size={16} aria-hidden="true" />
                         </button>
-                        <button 
+                        <button
+                          type="button"
                           onClick={() => handleDeleteBanner(banner.id, banner.title)}
                           className="p-2 text-on-surface-variant hover:text-error rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer"
+                          aria-label={`Xem trạng thái xóa banner ${banner.title}`}
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={16} aria-hidden="true" />
                         </button>
                       </div>
                     </div>
@@ -212,19 +191,19 @@ export const AdminContentNotifications: React.FC = () => {
                 </div>
               ))}
 
-              {/* Upload Placeholder */}
-              <div 
+              <button
+                type="button"
                 onClick={handleAddBanner}
-                className="bg-surface-container-low/40 border-2 border-dashed border-outline-variant/50 rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container-low transition-all min-h-[300px]"
+                className="bg-surface-container-low/40 border-2 border-dashed border-outline-variant/50 rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container-low transition-all min-h-[300px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
-                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-on-surface-variant/70 border border-outline-variant/30 mb-4 shadow-sm">
-                  <Image size={22} />
-                </div>
-                <p className="text-xs font-bold text-on-surface">Tải lên Banner mới</p>
-                <p className="text-[10px] text-on-surface-variant max-w-[200px] mt-1 leading-normal">
-                  Định dạng ảnh JPG/PNG. Kích thước khuyến nghị: 1200x400px.
-                </p>
-              </div>
+                <span className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-on-surface-variant/70 border border-outline-variant/30 mb-4 shadow-sm">
+                  <Image size={22} aria-hidden="true" />
+                </span>
+                <span className="text-xs font-bold text-on-surface">Trình tải banner chưa khả dụng</span>
+                <span className="text-[10px] text-on-surface-variant max-w-[220px] mt-1 leading-normal">
+                  Sau khi kết nối backend, khu vực này sẽ nhận ảnh JPG/PNG tỷ lệ 3:1 và thông tin xuất bản.
+                </span>
+              </button>
             </div>
           </div>
         )}
@@ -234,7 +213,7 @@ export const AdminContentNotifications: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Sent logs */}
             <div className="lg:col-span-7 space-y-4">
-              <h3 className="font-title-lg text-sm font-bold text-on-surface">Lịch sử thông báo đã gửi</h3>
+              <h3 className="font-title-lg text-sm font-bold text-on-surface">Thông báo mẫu để xem trước</h3>
               
               <div className="space-y-3">
                 {filteredNotifications.map((notif) => (
@@ -258,7 +237,7 @@ export const AdminContentNotifications: React.FC = () => {
                     </div>
 
                     <Badge variant={notif.status === 'Delivered' ? 'success' : 'warning'}>
-                      {notif.status === 'Delivered' ? 'Đã gửi' : 'Chờ gửi'}
+                      {notif.status === 'Delivered' ? 'Mẫu: đã gửi' : 'Mẫu: chờ gửi'}
                     </Badge>
                   </div>
                 ))}
@@ -365,12 +344,12 @@ export const AdminContentNotifications: React.FC = () => {
                     >
                       Bản nháp
                     </Button>
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       variant="primary"
                       className="flex-1 py-3 font-bold shadow-soft"
                     >
-                      Gửi ngay
+                      Kiểm tra khả dụng
                     </Button>
                   </div>
                 </form>

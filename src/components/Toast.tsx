@@ -37,7 +37,7 @@ export const Toast: React.FC<ToastProps> = ({
   };
 
   return (
-    <div role="status" aria-live="polite" className={`fixed bottom-6 right-6 z-[99] flex items-center gap-3 p-4 rounded-2xl border min-w-80 max-w-md pwa-entry ${bgColors[type]}`}>
+    <div role="status" aria-live="polite" className={`fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 right-4 z-[99] flex items-center gap-3 rounded-2xl border p-4 sm:bottom-6 sm:left-auto sm:right-6 sm:min-w-80 sm:max-w-md pwa-entry ${bgColors[type]}`}>
       <div className="flex-shrink-0">{icons[type]}</div>
       <div className="flex-1 text-sm font-label-md text-on-surface text-left">
         {message}

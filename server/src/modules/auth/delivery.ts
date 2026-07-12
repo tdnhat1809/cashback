@@ -45,7 +45,48 @@ class WebhookOtpDelivery implements OtpDelivery {
   }
 }
 
+export interface PasswordResetDeliveryRequest {
+  email: string;
+  code: string;
+  expiresAt: string;
+}
+
+export interface PasswordResetDelivery {
+  send(input: PasswordResetDeliveryRequest): Promise<void>;
+}
+
+class WebhookPasswordResetDelivery implements PasswordResetDelivery {
+  constructor(private readonly endpoint: string, private readonly token: string) {}
+
+  async send(input: PasswordResetDeliveryRequest): Promise<void> {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10_000);
+    try {
+      const response = await fetch(this.endpoint, {
+        method: 'POST',
+        signal: controller.signal,
+        headers: {
+          'content-type': 'application/json',
+          ...(this.token ? { authorization: `Bearer ${this.token}` } : {}),
+        },
+        body: JSON.stringify({ ...input, purpose: 'password_reset' }),
+      });
+      if (!response.ok) throw new OtpDeliveryError(`Password reset delivery webhook responded with HTTP ${response.status}.`);
+    } catch (error) {
+      if (error instanceof OtpDeliveryError) throw error;
+      throw new OtpDeliveryError('Password reset delivery webhook is unavailable.');
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+}
+
 export const createOtpDelivery = (config: AppConfig): OtpDelivery | undefined => {
   if (!config.OTP_DELIVERY_WEBHOOK_URL) return undefined;
   return new WebhookOtpDelivery(config.OTP_DELIVERY_WEBHOOK_URL, config.OTP_DELIVERY_WEBHOOK_TOKEN);
+};
+
+export const createPasswordResetDelivery = (config: AppConfig): PasswordResetDelivery | undefined => {
+  if (!config.OTP_DELIVERY_WEBHOOK_URL) return undefined;
+  return new WebhookPasswordResetDelivery(config.OTP_DELIVERY_WEBHOOK_URL, config.OTP_DELIVERY_WEBHOOK_TOKEN);
 };

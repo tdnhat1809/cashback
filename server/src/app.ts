@@ -12,11 +12,13 @@ import { openDatabase, type SqliteDatabase } from './db/database.js';
 import { seedDatabase } from './db/seed.js';
 import { decryptString, hmacSha256 } from './lib/security.js';
 import { nowIso } from './lib/ids.js';
+import { createFixedWindowRateLimiter, RequestSecurityError, requireTrustedOrigin } from './middleware/request-security.js';
 import { AffiliateLinkService } from './modules/affiliate/AffiliateLinkService.js';
-import { AuthError, AuthService, authErrorHandler, createAuthRouter, getSessionToken } from './modules/auth/index.js';
+import { AuthError, AuthService, authErrorHandler, createAuthRouter, createOtpDelivery, createPasswordResetDelivery, getSessionToken } from './modules/auth/index.js';
 import { WalletError, WalletService } from './modules/wallet/WalletService.js';
 import { ShipmentError, ShipmentService } from './modules/shipments/ShipmentService.js';
 import { createFinanceAdminRouter } from './modules/finance/index.js';
+import { ProviderSyncService } from './modules/provider-sync/index.js';
 import { createUserFeaturesRouter, UserFeaturesService } from './modules/user-features/index.js';
 import { ProviderError } from './providers/errors.js';
 import { rioHubTikTokMockProvider } from './providers/mock/index.js';
@@ -51,12 +53,18 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
   const database = dependencies.database ?? openDatabase(config.DATABASE_PATH);
   if (config.SEED_DEMO_DATA) seedDatabase(database);
   const auth = new AuthService({
-    database, environment: config.NODE_ENV, devOtp: config.DEV_OTP ?? '000000', sessionTtlHours: config.SESSION_TTL_HOURS,
+    database,
+    environment: config.NODE_ENV,
+    devOtp: config.DEV_OTP ?? '000000',
+    sessionTtlHours: config.SESSION_TTL_HOURS,
+    delivery: createOtpDelivery(config),
+    passwordResetDelivery: createPasswordResetDelivery(config),
   });
   const shopee = dependencies.shopeeProvider ?? ShopeeAffiliateProvider.fromConfig(config);
   const tikTok = dependencies.tikTokProvider ?? rioHubTikTokMockProvider;
   const affiliateLinks = new AffiliateLinkService(database, shopee, tikTok);
   const wallet = new WalletService(database, config.DATA_ENCRYPTION_KEY);
+  const providerSync = new ProviderSyncService(database);
   const shipments = new ShipmentService(database);
   const userFeatures = new UserFeaturesService({ database, encryptionKey: config.DATA_ENCRYPTION_KEY });
   const app = express();
@@ -68,7 +76,26 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
   app.use(cookieParser());
   app.use(pinoHttp({
     enabled: config.NODE_ENV !== 'test',
-    redact: ['req.headers.cookie', 'req.headers.authorization', 'req.body.code', 'req.body.bankAccountNumber'],
+    redact: ['req.headers.cookie', 'req.headers.authorization', 'req.headers.x-riohub-signature', 'req.body.code', 'req.body.password', 'req.body.bankAccountNumber', 'req.body.email'],
+  }));
+  app.use(requireTrustedOrigin(config.APP_URL, config.NODE_ENV));
+  app.use('/api/v1/auth', createFixedWindowRateLimiter({
+    windowMs: 15 * 60 * 1_000,
+    max: 30,
+    key: (request) => `auth:${request.ip ?? 'unknown'}`,
+    code: 'AUTH_REQUEST_RATE_LIMITED',
+  }));
+  app.use('/api/v1/affiliate-links', createFixedWindowRateLimiter({
+    windowMs: 60 * 1_000,
+    max: 30,
+    key: (request) => `links:${request.ip ?? 'unknown'}`,
+    code: 'LINK_REQUEST_RATE_LIMITED',
+  }));
+  app.use('/api/v1/withdrawals', createFixedWindowRateLimiter({
+    windowMs: 60 * 1_000,
+    max: 10,
+    key: (request) => `withdrawals:${request.ip ?? 'unknown'}`,
+    code: 'WITHDRAWAL_REQUEST_RATE_LIMITED',
   }));
 
   const cookieOptions = { cookieName: config.SESSION_COOKIE, environment: config.NODE_ENV, sessionTtlHours: config.SESSION_TTL_HOURS } as const;
@@ -79,6 +106,24 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
     return user;
   };
 
+  app.get('/api/v1/health/live', (_request, response) => {
+    response.json({ data: { status: 'ok', timestamp: nowIso() } });
+  });
+  app.get('/api/v1/health/ready', asyncHandler(async (_request, response) => {
+    database.prepare('SELECT 1 AS ready').get();
+    const [failedSyncRuns, unmatchedConversions] = [
+      database.prepare("SELECT COUNT(*) AS count FROM provider_sync_runs WHERE status = 'failed'").get() as { count: number },
+      database.prepare('SELECT COUNT(*) AS count FROM conversions WHERE user_id IS NULL').get() as { count: number },
+    ];
+    const provider = await shopee.healthCheck();
+    response.json({ data: {
+      status: 'ready',
+      database: 'ok',
+      providers: [provider],
+      sync: { failedRuns: failedSyncRuns.count, unmatchedConversions: unmatchedConversions.count },
+      timestamp: nowIso(),
+    } });
+  }));
   app.get('/api/v1/health', asyncHandler(async (_request, response) => {
     const provider = await shopee.healthCheck();
     response.json({ data: { status: 'ok', database: 'ok', providers: [provider], timestamp: nowIso() } });
@@ -261,6 +306,14 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
   }
 
   app.use(authErrorHandler);
+  app.use((error: unknown, _request: Request, response: Response, next: NextFunction) => {
+    if (error instanceof RequestSecurityError) {
+      if (error.retryAfterSeconds) response.setHeader('Retry-After', String(error.retryAfterSeconds));
+      response.status(error.status).json({ error: { code: error.code, message: error.message } });
+      return;
+    }
+    next(error);
+  });
   app.use((error: unknown, _request: Request, response: Response, _next: NextFunction) => {
     if (error instanceof z.ZodError) { response.status(422).json({ error: { code: 'validation_error', message: 'Dữ liệu không hợp lệ.', details: z.flattenError(error).fieldErrors } }); return; }
     if (error instanceof ProviderError) { response.status(error.statusCode).json({ error: { code: error.code, message: error.message } }); return; }
@@ -269,7 +322,7 @@ export const createApp = (config: AppConfig, dependencies: AppDependencies = {})
     response.status(500).json({ error: { code: 'internal_error', message: 'Hệ thống gặp lỗi. Vui lòng thử lại.' } });
   });
 
-  return { app, database, services: { auth, wallet, affiliateLinks, shipments, userFeatures, shopee, tikTok } };
+  return { app, database, services: { auth, wallet, providerSync, affiliateLinks, shipments, userFeatures, shopee, tikTok } };
 };
 
 export const createHttpAppServer = (config: AppConfig, dependencies?: AppDependencies) => {

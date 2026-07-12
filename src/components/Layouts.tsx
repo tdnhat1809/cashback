@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Home, LayoutDashboard, History, Heart, Share2, 
   CreditCard, Award, Truck, Settings, LogOut, ShieldAlert, 
-  X, Bell, User, Menu, Flame, Link2, Gift, FileText, WalletCards, HelpCircle, RefreshCw
+  X, Bell, User, Menu, Flame, Link2, Gift, FileText, WalletCards, HelpCircle, RefreshCw,
+  MoreHorizontal
 } from 'lucide-react';
+import { dashboardApi, userFeaturesApi } from '../services/apiClient';
 import { useAuth } from '../state/auth-context';
 
 // Public Layout
@@ -217,7 +219,7 @@ export const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children
             <ul className="flex flex-col gap-2">
               <li><Link to="/faq" className="text-on-surface-variant hover:text-primary text-sm">Hướng dẫn hoàn tiền</Link></li>
               <li><Link to="/faq" className="text-on-surface-variant hover:text-primary text-sm">Câu hỏi thường gặp FAQ</Link></li>
-              <li><a href="#" className="text-on-surface-variant hover:text-primary text-sm">Chính sách bảo mật</a></li>
+              <li><Link to="/legal?tab=privacy" className="text-on-surface-variant hover:text-primary text-sm">Chính sách bảo mật</Link></li>
             </ul>
           </div>
           <div className="text-left">
@@ -262,6 +264,19 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const [availableBalance, setAvailableBalance] = useState<number | null>(null);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    void Promise.allSettled([dashboardApi.get(), userFeaturesApi.notifications()]).then(([dashboard, notifications]) => {
+      if (!active) return;
+      if (dashboard.status === 'fulfilled') setAvailableBalance(dashboard.value.wallet.available);
+      if (notifications.status === 'fulfilled') setUnreadNotifications(notifications.value.unread);
+    });
+    return () => { active = false; };
+  }, []);
+
   const initials = user?.name
     .split(/\s+/)
     .filter(Boolean)
@@ -373,15 +388,16 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
           </div>
 
           <div className="flex items-center gap-4 ml-auto">
-            {/* Quick Balance */}
-            <div className="bg-tertiary/10 border border-tertiary/20 rounded-xl px-3 py-1.5 hidden sm:flex items-center gap-1.5 text-xs font-bold text-tertiary">
-              <CreditCard size={14} />
-              <span>Khả dụng: 425.000đ</span>
-            </div>
-            
-            <button aria-label="Mở trung tâm thông báo" onClick={() => navigate('/dashboard/notifications')} className="p-2 text-outline hover:text-on-surface hover:bg-surface-container rounded-full transition-colors relative cursor-pointer">
+            {availableBalance !== null && (
+              <div className="bg-tertiary/10 border border-tertiary/20 rounded-xl px-3 py-1.5 hidden sm:flex items-center gap-1.5 text-xs font-bold text-tertiary">
+                <CreditCard size={14} aria-hidden="true" />
+                <span className="tabular-nums">Khả dụng: {availableBalance.toLocaleString('vi-VN')}đ</span>
+              </div>
+            )}
+
+            <button aria-label={unreadNotifications > 0 ? `Mở trung tâm thông báo, ${unreadNotifications} thông báo chưa đọc` : 'Mở trung tâm thông báo'} onClick={() => navigate('/dashboard/notifications')} className="p-2 text-outline hover:text-on-surface hover:bg-surface-container rounded-full transition-colors relative cursor-pointer">
               <Bell size={20} />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
+              {unreadNotifications > 0 && <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" aria-hidden="true" />}
             </button>
           </div>
         </header>
@@ -430,6 +446,11 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const [mobileAdminMenuOpen, setMobileAdminMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileAdminMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     await logout().catch(() => undefined);
@@ -516,7 +537,33 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
           <div className="hidden lg:flex items-center gap-2 text-sm font-semibold text-on-surface-variant">
             <span>Bảng điều khiển quản trị viên</span>
           </div>
+          <button
+            type="button"
+            onClick={() => setMobileAdminMenuOpen((open) => !open)}
+            className="rounded-xl p-2 text-on-surface-variant hover:bg-surface-container lg:hidden"
+            aria-label={mobileAdminMenuOpen ? 'Đóng menu quản trị' : 'Mở menu quản trị'}
+            aria-expanded={mobileAdminMenuOpen}
+          >
+            {mobileAdminMenuOpen ? <X size={22} /> : <MoreHorizontal size={22} />}
+          </button>
         </header>
+
+        {mobileAdminMenuOpen && (
+          <nav className="border-b border-outline-variant/30 bg-white p-3 shadow-soft lg:hidden" aria-label="Menu quản trị di động">
+            <div className="grid grid-cols-2 gap-2">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-bold ${location.pathname === item.path ? 'bg-primary-container text-white' : 'bg-surface-container-low text-on-surface-variant'}`}
+                >
+                  {React.cloneElement(item.icon, { size: 16 })}
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </div>
+          </nav>
+        )}
 
         {/* Dynamic page content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1200px] mx-auto w-full text-left">
@@ -525,23 +572,30 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
       </div>
 
       {/* Mobile Bottom Tab Bar Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 min-h-16 pb-[env(safe-area-inset-bottom)] bg-white border-t border-outline-variant/30 flex justify-around items-center lg:hidden z-30 shadow-2xl">
-        {menuItems.map((item) => {
+      <nav className="fixed bottom-0 left-0 right-0 min-h-16 pb-[env(safe-area-inset-bottom)] bg-white border-t border-outline-variant/30 grid grid-cols-4 items-center lg:hidden z-30 shadow-2xl" aria-label="Điều hướng quản trị chính">
+        {menuItems.slice(0, 3).map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <Link
               key={item.path}
               to={item.path}
-              className={`
-                flex flex-col items-center justify-center flex-1 h-full gap-1 text-[10px] font-bold transition-all
-                ${isActive ? 'text-primary' : 'text-on-surface-variant'}
-              `}
+              className={`flex min-h-16 flex-col items-center justify-center gap-1 px-1 text-[10px] font-bold transition-all ${isActive ? 'text-primary' : 'text-on-surface-variant'}`}
             >
               {React.cloneElement(item.icon, { size: 18 })}
-              <span className="truncate max-w-[80px]">{item.label}</span>
+              <span className="max-w-[76px] truncate">{item.label}</span>
             </Link>
           );
         })}
+        <button
+          type="button"
+          onClick={() => setMobileAdminMenuOpen((open) => !open)}
+          className={`flex min-h-16 flex-col items-center justify-center gap-1 px-1 text-[10px] font-bold transition-all ${mobileAdminMenuOpen || menuItems.slice(3).some((item) => item.path === location.pathname) ? 'text-primary' : 'text-on-surface-variant'}`}
+          aria-label={mobileAdminMenuOpen ? 'Đóng menu quản trị' : 'Mở thêm mục quản trị'}
+          aria-expanded={mobileAdminMenuOpen}
+        >
+          <MoreHorizontal size={18} aria-hidden="true" />
+          <span>Thêm</span>
+        </button>
       </nav>
     </div>
   );

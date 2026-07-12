@@ -6,8 +6,9 @@ import {
   Truck, 
   BellOff, 
   Headset, 
-  SearchCode, 
-  WifiOff 
+  SearchCode,
+  Sparkles,
+  WifiOff
 } from 'lucide-react';
 
 export type EmptyStateVariant = 
@@ -17,6 +18,7 @@ export type EmptyStateVariant =
   | 'notifications'
   | 'tickets'
   | 'deal-search'
+  | 'rewards'
   | 'offline';
 
 interface EmptyStateProps {
@@ -77,6 +79,13 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       actionText: 'Làm mới bộ lọc',
       glowClass: 'bg-surface-container-high/40',
       icon: <SearchCode size={48} className="text-on-surface-variant/80" />
+    },
+    rewards: {
+      title: 'Chưa có phần thưởng',
+      description: 'Nhiệm vụ và danh mục đổi quà chưa được mở.',
+      actionText: '',
+      glowClass: 'bg-amber-100/60',
+      icon: <Sparkles size={48} className="text-amber-600" />
     },
     offline: {
       title: 'Mất kết nối mạng',

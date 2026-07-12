@@ -231,6 +231,25 @@ describe('AuthService email and Google authentication', () => {
     );
   });
 
+  it('resets a password once, revokes existing sessions, and keeps only a code hash', async () => {
+    const fixture = createFixture();
+    const registered = fixture.service.registerWithPassword({ name: 'Người dùng', email: 'member@example.com', password: 'Password1234' });
+    const reset = await fixture.service.requestPasswordReset({ email: 'member@example.com' });
+    const row = fixture.database.prepare('SELECT code_hash FROM password_reset_challenges WHERE id = ?').get(reset.challengeId) as { code_hash: string };
+    expect(row.code_hash).not.toContain('123456');
+    expect(verifyOtpCodeHash('123456', row.code_hash)).toBe(true);
+
+    fixture.service.confirmPasswordReset({ email: 'member@example.com', challengeId: reset.challengeId, code: '123456', password: 'Changed1234' });
+    await expectAuthError(() => fixture.service.getCurrentUser(registered.sessionToken), 'AUTH_REQUIRED', 401);
+    await expectAuthError(() => fixture.service.loginWithPassword({ email: 'member@example.com', password: 'Password1234' }), 'INVALID_CREDENTIALS', 401);
+    expect(fixture.service.loginWithPassword({ email: 'member@example.com', password: 'Changed1234' }).user.id).toBe(registered.user.id);
+    await expectAuthError(
+      () => fixture.service.confirmPasswordReset({ email: 'member@example.com', challengeId: reset.challengeId, code: '123456', password: 'Again12345' }),
+      'PASSWORD_RESET_INVALID',
+      400,
+    );
+  });
+
   it('creates one-time Google state and uses Google subject as the account identity', async () => {
     const fixture = createFixture();
     const loginState = fixture.service.beginGoogleLogin('/dashboard/referral');

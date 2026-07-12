@@ -15,6 +15,17 @@ const loginSchema = z.object({
   password: z.string().min(1).max(128),
 }).strict();
 
+const passwordResetRequestSchema = z.object({
+  email: z.string().trim().email().max(254),
+}).strict();
+
+const passwordResetConfirmSchema = z.object({
+  email: z.string().trim().email().max(254),
+  challengeId: z.string().trim().min(1).max(512),
+  code: z.string().trim().regex(/^\d{6}$/),
+  password: z.string().min(1).max(128),
+}).strict();
+
 export interface SessionCookieOptions {
   cookieName: string;
   environment: AuthEnvironment;
@@ -114,6 +125,14 @@ export const createAuthHandlers = (options: AuthHttpOptions) => {
       setSessionCookie(response, result.sessionToken, cookieOptions);
       response.json({ data: { user: result.user, sessionExpiresAt: result.sessionExpiresAt } });
     }),
+    passwordResetRequest: handler(async (request, response) => {
+      const result = await options.service.requestPasswordReset(parseBody(passwordResetRequestSchema, request.body));
+      response.status(202).json({ data: result });
+    }),
+    passwordResetConfirm: handler((request, response) => {
+      options.service.confirmPasswordReset(parseBody(passwordResetConfirmSchema, request.body));
+      response.status(204).end();
+    }),
     providers: handler((_request, response) => {
       response.json({ data: { google: isGoogleConfigured(options.google) } });
     }),
@@ -186,6 +205,8 @@ export const createAuthRouter = (options: AuthHttpOptions): Router => {
   const handlers = createAuthHandlers(options);
   router.post('/register', handlers.register);
   router.post('/login', handlers.login);
+  router.post('/password-reset/request', handlers.passwordResetRequest);
+  router.post('/password-reset/confirm', handlers.passwordResetConfirm);
   router.get('/providers', handlers.providers);
   router.get('/google/start', handlers.googleStart);
   router.get('/google/callback', handlers.googleCallback);
@@ -200,10 +221,8 @@ export const authErrorHandler = (error: unknown, _request: Request, response: Re
     return;
   }
 
-  if (error.code === 'AUTH_RATE_LIMITED') {
-    const retryAfterSeconds = error.details?.retryAfterSeconds;
-    if (typeof retryAfterSeconds === 'number') response.setHeader('Retry-After', String(retryAfterSeconds));
-  }
+  const retryAfterSeconds = error.details?.retryAfterSeconds;
+  if (typeof retryAfterSeconds === 'number') response.setHeader('Retry-After', String(retryAfterSeconds));
 
   response.status(error.status).json({
     error: {
